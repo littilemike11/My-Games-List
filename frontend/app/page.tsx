@@ -1,10 +1,20 @@
+"use client";
 import Navbar from "./components/Navbar";
 import Carousel from "./components/Carousel";
 import Footer from "./components/Footer";
 import PostList from "./components/PostList";
 import { exampleReviews } from "./mockData/reviews";
 import { exampleDiscussions } from "./mockData/discussions";
+import getGames from "./api";
+import { useEffect } from "react";
 export default function Home() {
+  const fetchData = async () => {
+    const response = await getGames();
+    console.log(response);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <div>
       <Navbar />

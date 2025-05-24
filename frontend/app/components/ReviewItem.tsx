@@ -6,7 +6,7 @@ const ReviewItem: React.FC<{ review: Review }> = ({ review }) => {
   for (let i = 1; i <= 10; i++) {
     ratings.push(i / 2);
   }
-  console.log(ratings);
+
   return (
     <>
       <div className="card sm:card-side bg-base-100 border w-full h-56 shadow-sm">
