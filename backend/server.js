@@ -1,23 +1,25 @@
-import express from "express";
-import dotenv from "dotenv";
-import axios from "axios";
-import cors from "cors";
+const express = require("express");
+const dotenv = require("dotenv");
+const axios = require("axios");
+const cors = require("cors");
 dotenv.config();
 const app = express();
 
 const PORT = process.env.PORT || 3001;
 app.use(cors());
-app.use(express.json());
+app.use(express.text());// this parses raw text bodies , needed for igdb
 
 const CLIENT_ID = process.env.IGDB_CLIENT_ID;
 const ACCESS_TOKEN = process.env.IGDB_ACCESS_TOKEN;
 console.log("CLIENT_ID:" + CLIENT_ID);
 console.log("ACCESS_TOKEN: " + ACCESS_TOKEN);
-app.get("/games", async (req, res) => {
+app.post("/games", async (req, res) => {
   try {
+    const body = req.body
+    console.log(body)
     const response = await axios.post(
       "https://api.igdb.com/v4/games", //url
-      "fields *;", //body
+      body, //body
       {
         headers: {
           "Client-ID": CLIENT_ID,

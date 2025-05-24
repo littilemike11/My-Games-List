@@ -12,13 +12,20 @@ export interface User {
 
 export interface Game {
   id: string;
-  title: string;
-  date: Date;
-  publisher: string;
-  studio: string;
-  reviews: Review[];
-  played: number;
-  liked: number;
+  name: string;
+  slug:string;
+  release_date?: Date;
+  cover?:string;
+  genres:string[];
+  platforms:string[];
+  storyline:string;
+  summary:string;
+  themes:string[];
+  publisher?: string;
+  studio?: string;
+  reviews?: Review[];
+  played?: number;
+  liked?: number;
 }
 
 export interface Review {
