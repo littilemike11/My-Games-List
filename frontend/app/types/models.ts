@@ -1,5 +1,33 @@
 export type Post = Review | Discussion;
 
+export interface User {
+  id: string;
+  username: string;
+  password: string;
+  email: string;
+  favorites: string[];
+  reviews: Review[];
+  discussion: Discussion[];
+}
+
+export interface Game {
+  id: string;
+  name: string;
+  slug:string;
+  release_date?: Date;
+  cover?:string;
+  genres:string[];
+  platforms:string[];
+  storyline:string;
+  summary:string;
+  themes:string[];
+  publisher?: string;
+  studio?: string;
+  reviews?: Review[];
+  played?: number;
+  liked?: number;
+}
+
 export interface Review {
   id: string;
   userID: string;
