@@ -16,7 +16,6 @@ console.log("ACCESS_TOKEN: " + ACCESS_TOKEN);
 app.post("/games", async (req, res) => {
   try {
     const body = req.body
-    console.log(body)
     const response = await axios.post(
       "https://api.igdb.com/v4/games", //url
       body, //body
