@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Game } from "../types/models";
 type CarouselProps ={
     title:string;
@@ -9,11 +10,13 @@ const Carousel:React.FC<CarouselProps>= ({title, games})=>{
         <h2 className="text-xl font-medium text-left">{title}</h2>
         <div className="carousel h-56 rounded-box">
             {games.map((game)=>(
-                <div className="carousel-item " key={game.id}>
-                    <img
-                    src={game.cover?.replace("t_thumb", "t_cover_big")}// makes cover clearer
-                    alt={`${game.name} cover`} />
-                </div>
+                
+                <Link className=" px-2 hover:scale-105 transition-200 carousel-item " title={game.name} href={`/game/${game.slug}`} key={game.id}>   
+                        <img
+                        src={game.cover}
+                        alt={`${game.name} cover`}
+                        />
+                </Link>  
             ))}
             
         </div>

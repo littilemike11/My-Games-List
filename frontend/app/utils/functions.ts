@@ -7,10 +7,10 @@ export const parseGame = (gameInfo: any): Game => {
     summary: gameInfo.summary,
     storyline: gameInfo.storyline,
     release_date: gameInfo.first_release_date,
-    cover: gameInfo.cover ? gameInfo.cover.url : "",
-    genres: gameInfo.genres?.map((genre: any) => ({ name: genre.name })) ?? [],
-    platforms: gameInfo.platforms?.map((p: any) => ({ name: p.name })) ?? [],
-    themes: gameInfo.themes?.map((t: any) => ({name: t.name })) ?? [],
+    cover: gameInfo.cover ? gameInfo.cover.url.replace("t_thumb", "t_cover_big") : "",
+    genres: gameInfo.genres?.map((genre: any) => genre.name) ?? [],
+    platforms: gameInfo.platforms?.map((platform: any) => platform.name) ?? [],
+    themes: gameInfo.themes?.map((t: any) =>  t.name) ?? [],
   };
 };
 
