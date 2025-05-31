@@ -1,56 +1,69 @@
 export type Post = Review | Discussion;
 
 export interface User {
-  id: string;
-  username: string;
-  password: string;
+  discussion: Discussion[];
   email: string;
   favorites: string[];
+  id: string;
+  password: string;
   reviews: Review[];
-  discussion: Discussion[];
+  username: string;
 }
 
 export interface Game {
-  id: string;
-  name: string;
-  slug:string;
-  release_date?: Date;
-  cover?:string;
-  genres:string[];
-  platforms:string[];
-  storyline:string;
-  summary:string;
-  themes:string[];
-  publisher?: string;
-  studio?: string;
-  reviews?: Review[];
-  played?: number;
+  cover?: string;
+  developers: string[];
+  franchise?:GamePreview[]
+  genres: string[];
+  id: number;
   liked?: number;
+  name: string;
+  platforms: string[];
+  played?: number;
+  publishers: string[];
+  rating: number;
+  ratingCount: number;
+  release_date?: string;
+  reviews?: Review[];
+  screenshots: string[];
+  similarGames: GamePreview[];
+  slug: string;
+  storyline: string;
+  summary: string;
+  themes: string[];
+}
+
+export interface GamePreview{
+  id:number,
+  cover?:string,
+  name:string,
+  slug:string,
 }
 
 export interface Review {
-  id: string;
-  userID: string;
-  title: string;
-  text: string;
-  rating: number;
+  comments?: string[];
+  date: Date;
+  dislikes: number;
   gameID: string;
-  comments?: string[];
-  date: Date;
-  likes: number;
-  dislikes: number;
-}
-export interface Discussion {
   id: string;
-  userID: string;
-  title: string;
+  likes: number;
+  rating: number;
   text: string;
-  tags?: string[];
-  gameID?: string;
+  title: string;
+  userID: string;
+}
+
+export interface Discussion {
   comments?: string[];
   date: Date;
-  likes: number;
   dislikes: number;
+  gameID?: string;
+  id: string;
+  likes: number;
+  tags?: string[];
+  text: string;
+  title: string;
+  userID: string;
 }
 
 export interface Comment {
