@@ -1,4 +1,4 @@
-import { Game,GamePreview } from "../types/models";
+import { Game, GamePreview } from "../types/models";
 export const parseGame = (gameInfo: any): Game => {
   return {
     id: gameInfo.id,
@@ -6,37 +6,51 @@ export const parseGame = (gameInfo: any): Game => {
     slug: gameInfo.slug,
     summary: gameInfo.summary,
     storyline: gameInfo.storyline,
-    developers:gameInfo.involved_companies?.filter((c: any) => c.developer && c.company).map((c: any) => c.company.name) || [],
-    publishers:gameInfo.involved_companies?.filter((c:any)=>c.publisher && c.company).map((c:any)=>c.company.name) || [],
-    screenshots:gameInfo.screenshots?.map((screenshot:any)=>screenshot.url.replace("t_thumb", "t_cover_big")) ?? [],
+    developers:
+      gameInfo.involved_companies
+        ?.filter((c: any) => c.developer && c.company)
+        .map((c: any) => c.company.name) || [],
+    publishers:
+      gameInfo.involved_companies
+        ?.filter((c: any) => c.publisher && c.company)
+        .map((c: any) => c.company.name) || [],
+    screenshots:
+      gameInfo.screenshots?.map((screenshot: any) =>
+        screenshot.url.replace("t_thumb", "t_cover_big")
+      ) ?? [],
     release_date: convertDate(gameInfo.first_release_date),
-    rating:gameInfo.rating,
-    liked:gameInfo.hypes,
-    ratingCount:gameInfo.rating_count,
+    rating: gameInfo.rating,
+    liked: gameInfo.hypes,
+    ratingCount: gameInfo.rating_count,
     franchise:
       gameInfo.franchises?.flatMap((franchise: any) =>
         franchise.games.map((game: any) => parseGamePreview(game))
       ) ?? [],
-    similarGames:gameInfo.similar_games?.map((game:any)=>(parseGamePreview(game))) ??[],
-    cover: gameInfo.cover ? gameInfo.cover.url.replace("t_thumb", "t_cover_big") : "",
+    similarGames:
+      gameInfo.similar_games?.map((game: any) => parseGamePreview(game)) ?? [],
+    cover: gameInfo.cover
+      ? gameInfo.cover.url.replace("t_thumb", "t_cover_big")
+      : "",
     genres: gameInfo.genres?.map((genre: any) => genre.name) ?? [],
     platforms: gameInfo.platforms?.map((platform: any) => platform.name) ?? [],
-    themes: gameInfo.themes?.map((t: any) =>  t.name) ?? [],
+    themes: gameInfo.themes?.map((t: any) => t.name) ?? [],
   };
 };
 
-export const parseGamePreview = (gameInfo:any):GamePreview=>{
-  return{
-    id:gameInfo.id,
-    name:gameInfo.name,
-    slug:gameInfo.slug,
-    cover: gameInfo.cover ? gameInfo.cover.url.replace("t_thumb", "t_cover_big") : "",
-  }
-}
+export const parseGamePreview = (gameInfo: any): GamePreview => {
+  return {
+    id: gameInfo.id,
+    name: gameInfo.name,
+    slug: gameInfo.slug,
+    cover: gameInfo.cover
+      ? gameInfo.cover.url.replace("t_thumb", "t_cover_big")
+      : "",
+  };
+};
 
 export function convertDate(timestamp: number): string {
   const date = new Date(timestamp * 1000); // Multiply by 1000 to convert seconds → milliseconds
   // return date.toUTCString(); // or use toLocaleString() for local time
   // return date.toLocaleDateString();
-  return date.toDateString();
+  return date.toLocaleDateString();
 }

@@ -13,7 +13,8 @@ export interface User {
 export interface Game {
   cover?: string;
   developers: string[];
-  franchise?:GamePreview[]
+  discussions?: Discussion[];
+  franchise?: GamePreview[];
   genres: string[];
   id: number;
   liked?: number;
@@ -33,11 +34,11 @@ export interface Game {
   themes: string[];
 }
 
-export interface GamePreview{
-  id:number,
-  cover?:string,
-  name:string,
-  slug:string,
+export interface GamePreview {
+  id: number;
+  cover?: string;
+  name: string;
+  slug: string;
 }
 
 export interface Review {
