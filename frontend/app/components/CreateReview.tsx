@@ -6,7 +6,8 @@ import RatingInput from "./RatingInput";
 type ReviewProps = {
   game: Game;
 };
-
+// issues with modal appearing on conditionally rendered cta
+// 1 Solution have review on new - /game/slug/review
 const CreateReview: React.FC<ReviewProps> = ({ game }) => {
   const [title, setTitle] = useState(`${game.name}'s Review`);
   const [platform, setPlatform] = useState("");
