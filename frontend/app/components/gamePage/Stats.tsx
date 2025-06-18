@@ -8,8 +8,6 @@ const Stats: React.FC<StatsProps> = ({ rating, liked, ratingCount }) => {
   // ****** MAY NEED MORE ACCURATE STAR SYSTEM***********
   for (let i = 1; i <= 20; i++) {
     starCount.push(i / 2);
-    console.log(starCount);
-    console.log(Math.round(rating / 5) / 2);
   }
   return (
     <>

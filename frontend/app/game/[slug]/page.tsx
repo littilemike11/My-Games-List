@@ -47,7 +47,7 @@ export default async function GamePage({ params }: Props) {
             <p className="text-gray-400 text-sm">{game.release_date}</p>
 
             <div className="block lg:hidden">
-              <CTA />
+              <CTA game={game} />
             </div>
 
             {game.summary && (
@@ -59,7 +59,7 @@ export default async function GamePage({ params }: Props) {
             {/* <p className="text-md text-pretty">{game.storyline}</p> */}
 
             <div className="hidden lg:block py-6">
-              <CTA />
+              <CTA game={game} />
             </div>
           </div>
           {/* Sidebar Info */}
