@@ -1,13 +1,14 @@
-import { FaSquarePen, FaPlus, FaChevronDown } from "react-icons/fa6";
-
-const CTA = () => {
+import { FaPlus, FaChevronDown } from "react-icons/fa6";
+import CreateReview from "../CreateReview";
+import { Game } from "@/app/types/models";
+type CTAProps = {
+  game: Game;
+};
+const CTA: React.FC<CTAProps> = ({ game }) => {
   return (
     <>
       <div className="flex flex-col sm:flex-row  gap-6">
-        <button className="btn btn-primary w-max btn-lg">
-          <FaSquarePen />
-          Write a Review
-        </button>
+        <CreateReview game={game}></CreateReview>
         <div className="flex gap-4 items-center">
           <div className="join">
             <button className="btn btn-primary btn-lg join-item">
