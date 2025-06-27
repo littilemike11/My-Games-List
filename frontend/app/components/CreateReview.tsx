@@ -64,12 +64,12 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
               />
               <label className="label">Platform Played</label>
               <select
+                required
                 value={platform}
                 onChange={(e) => setPlatform(e.target.value)}
-                defaultValue={"Pick a Platform"}
                 className="select"
               >
-                <option value={"Pick a Platform"} disabled={true}>
+                <option hidden value={""} disabled={true}>
                   Pick a Platform
                 </option>
                 {game.platforms.map((platform, index) => (

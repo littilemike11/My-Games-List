@@ -5,6 +5,7 @@ import { exampleDiscussions } from "./mockData/discussions";
 import getGames from "./api";
 import { parseGamePreview } from "./utils/functions";
 import { GamePreview } from "./types/models";
+import CreateDiscussion from "./components/CreateDiscussion";
 
 export default async function Home() {
   const queries = [
@@ -24,10 +25,10 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col gap-2 items-center">
       <h1 className="text-3xl">Welcome to My Games List.</h1>
       <h2 className="mt-5 text-xl">A game review site for gamers by gamers.</h2>
-
+      <CreateDiscussion />
       <Carousel title="Popular" games={popularGames} />
       <Carousel title="Recent" games={recentGames} />
       <PostList posts={exampleReviews} type="Review" />
