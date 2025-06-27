@@ -46,20 +46,17 @@ export default async function GamePage({ params }: Props) {
             </h1>
             <p className="text-gray-400 text-sm">{game.release_date}</p>
 
-            <div className="block lg:hidden">
-              <CTA game={game} />
-            </div>
+            <div className="flex flex-col lg:flex-col-reverse">
+              {/* <p className="text-md text-pretty">{game.storyline}</p> */}
 
-            {game.summary && (
-              <p className="text-base sm:text-lg leading-relaxed text-pretty">
-                {game.summary}
-              </p>
-            )}
-
-            {/* <p className="text-md text-pretty">{game.storyline}</p> */}
-
-            <div className="hidden lg:block py-6">
-              <CTA game={game} />
+              <div className=" py-6">
+                <CTA game={game} />
+              </div>
+              {game.summary && (
+                <p className="text-base sm:text-lg leading-relaxed text-pretty">
+                  {game.summary}
+                </p>
+              )}
             </div>
           </div>
           {/* Sidebar Info */}
