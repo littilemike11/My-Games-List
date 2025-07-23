@@ -1,13 +1,22 @@
 export type Post = Review | Discussion;
 
 export interface User {
-  discussion: Discussion[];
+  discussions: Discussion[];
   email: string;
-  favorites: string[];
+  favorites: List;
+  likes: List;
   id: string;
+  followers: User[];
+  following: User[];
   password: string;
   reviews: Review[];
   username: string;
+  bio: string;
+  lists: List[];
+  played: List;
+  playing: List;
+  wishlist: List;
+  avatar: string;
 }
 
 export interface Game {
@@ -74,3 +83,15 @@ export interface Comment {
   text: string;
   userID: string;
 }
+export interface List {
+  id: string;
+  userID: User["id"];
+  name: string;
+  tags: string[];
+  visibility: ListVisibility;
+  ranked: Boolean;
+  description: string;
+  games: Game["slug"][];
+}
+
+type ListVisibility = "private" | "public" | "friends";
