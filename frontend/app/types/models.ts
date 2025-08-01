@@ -18,6 +18,11 @@ export interface User {
   wishlist: List;
   avatar: string;
 }
+export interface Profile {
+  username: String;
+  avatar: String;
+  bio: String;
+}
 
 export interface Game {
   cover?: string;
@@ -55,12 +60,12 @@ export interface Review {
   date: Date;
   dislikes: number;
   gameID: string;
-  id: string;
+  id?: string;
   likes: number;
   rating: number;
   text: string;
   title: string;
-  userID: string;
+  userID?: string;
 }
 
 export interface Discussion {
@@ -68,12 +73,12 @@ export interface Discussion {
   date: Date;
   dislikes: number;
   gameID?: string;
-  id: string;
+  id?: string;
   likes: number;
   tags?: string[];
   text: string;
   title: string;
-  userID: string;
+  userID?: string;
 }
 
 export interface Comment {

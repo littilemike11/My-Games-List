@@ -1,11 +1,28 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {
+  createDiscussion,
+  getDiscussions,
+} from "../api/supabase-api/discussion-api";
 const CreateDiscussion = () => {
+  const [tagInput, setTagInput] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const handleSubmit = () => {
-    const newReview = {};
-
-    console.log(newReview);
+    createDiscussion({ title, content, tags });
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const response = await getDiscussions();
+    console.log(response);
+    return response;
+  };
+
   const openModal = () => {
     const modal = document.getElementById(
       "my_modal_4"
@@ -18,9 +35,6 @@ const CreateDiscussion = () => {
     ) as HTMLDialogElement | null;
     modal?.close();
   };
-
-  const [tagInput, setTagInput] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
 
   const groupedTags = {
     "Popular Tags": ["Hot takes", "Hidden gems", "Controversial"],
@@ -65,11 +79,16 @@ const CreateDiscussion = () => {
               </legend>
 
               <label className="label">Post Title</label>
-              <input type="text" className="input" />
+              <input
+                onChange={(e) => setTitle(e.target.value)}
+                type="text"
+                className="input"
+              />
 
               <textarea
                 className="textarea"
                 placeholder="What's on your mind?"
+                onChange={(e) => setContent(e.target.value)}
               />
 
               {/* Tag Input */}

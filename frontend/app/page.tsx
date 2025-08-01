@@ -2,10 +2,11 @@ import Carousel from "./components/Carousel";
 import PostList from "./components/PostList";
 import { exampleReviews } from "./mockData/reviews";
 import { exampleDiscussions } from "./mockData/discussions";
-import getGames from "./api";
+import getGames from "./api/igdb-api";
 import { parseGamePreview } from "./utils/functions";
 import { GamePreview } from "./types/models";
 import CreateDiscussion from "./components/CreateDiscussion";
+import { getReviews } from "./api/supabase-api/review-api";
 
 export default async function Home() {
   const queries = [
@@ -20,6 +21,8 @@ export default async function Home() {
     const responses = await Promise.all(queries.map((q) => getGames(q)));
     popularGames = responses[0].map(parseGamePreview);
     recentGames = responses[1].map(parseGamePreview);
+    // const reviews = await getReviews();
+    // console.log(reviews);
   } catch (error) {
     console.error("Failed to fetch home page games:", error);
   }
