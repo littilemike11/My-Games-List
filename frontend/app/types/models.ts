@@ -55,12 +55,12 @@ export interface Review {
   date: Date;
   dislikes: number;
   gameID: string;
-  id: string;
+  id?: string;
   likes: number;
   rating: number;
   text: string;
   title: string;
-  userID: string;
+  userID?: string;
 }
 
 export interface Discussion {
@@ -68,12 +68,12 @@ export interface Discussion {
   date: Date;
   dislikes: number;
   gameID?: string;
-  id: string;
+  id?: string;
   likes: number;
   tags?: string[];
   text: string;
   title: string;
-  userID: string;
+  userID?: string;
 }
 
 export interface Comment {

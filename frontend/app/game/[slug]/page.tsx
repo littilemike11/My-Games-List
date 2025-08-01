@@ -1,4 +1,4 @@
-import getGames from "@/app/api";
+import getGames from "@/app/api/igdb-api";
 import { Game } from "@/app/types/models";
 import { parseGame } from "@/app/utils/functions";
 import Stats from "@/app/components/gamePage/Stats";
