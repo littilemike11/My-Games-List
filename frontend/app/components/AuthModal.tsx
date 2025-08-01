@@ -22,7 +22,7 @@ export default function AuthModal({
     setError(null);
 
     if (mode === "signup") {
-      const { data, error: signUpError } = await supabase.auth.signUp({
+      const { data: newUser, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -31,10 +31,31 @@ export default function AuthModal({
           },
         },
       });
-      console.log(data);
+
       if (signUpError) {
         setError(signUpError.message);
+        setLoading(false);
+        return;
       } else {
+        //after user is created, insert username into profile
+        const userID = newUser.user?.id;
+        if (userID) {
+          const { error: profileError } = await supabase
+            .from("profiles")
+            .insert([
+              {
+                id: userID,
+                username,
+              },
+            ]);
+
+          if (profileError) {
+            setError(
+              "User created, but failed to set username: " +
+                profileError.message
+            );
+          }
+        }
         onClose(); // Close modal or redirect to onboarding
       }
     } else {

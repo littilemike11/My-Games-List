@@ -18,6 +18,11 @@ export interface User {
   wishlist: List;
   avatar: string;
 }
+export interface Profile {
+  username: String;
+  avatar: String;
+  bio: String;
+}
 
 export interface Game {
   cover?: string;
