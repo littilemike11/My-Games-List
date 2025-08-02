@@ -57,15 +57,17 @@ export interface GamePreview {
 
 export interface Review {
   comments?: string[];
-  date: Date;
-  dislikes: number;
-  gameID: string;
-  id?: string;
-  likes: number;
+  date?: Date;
+  dislikes?: number;
+  gameID: number;
+  id?: number;
+  likes?: number;
   rating: number;
   text: string;
   title: string;
   userID?: string;
+  platform: string;
+  hoursPlayed: number;
 }
 
 export interface Discussion {

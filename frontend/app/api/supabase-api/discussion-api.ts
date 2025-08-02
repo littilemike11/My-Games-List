@@ -10,19 +10,21 @@ export const getDiscussions = async () => {
 };
 
 export const createDiscussion = async ({
+  user_id,
   title,
   content,
   tags,
 }: {
+  user_id: string;
   title: string;
   content: string;
   tags: string[];
 }) => {
   const { data, error } = await supabase
     .from("discussions")
-    .insert([{ title, content, tags }]);
+    .insert([{ user_id, title, content, tags }]);
   if (error) {
-    console.log("Error fetching: ", error);
+    console.log("Error Inserting: ", error);
     throw error;
   }
   return data;

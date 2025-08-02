@@ -1,7 +1,7 @@
 import { Review } from "../types/models";
 
 const ReviewItem: React.FC<{ review: Review }> = ({ review }) => {
-  const formattedDate = new Date(review.date).toLocaleDateString();
+  const formattedDate = new Date(review.date!).toLocaleDateString();
   const ratings = [];
   for (let i = 1; i <= 10; i++) {
     ratings.push(i / 2);

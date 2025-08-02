@@ -4,18 +4,42 @@ import {
   createDiscussion,
   getDiscussions,
 } from "../api/supabase-api/discussion-api";
+import AuthModal from "./AuthModal";
+import { useAuth } from "../auth/auth-context";
 const CreateDiscussion = () => {
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const { session, profile, loading } = useAuth();
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const handleSubmit = () => {
-    createDiscussion({ title, content, tags });
+
+  const handleSubmit = async () => {
+    try {
+      if (!title || !content || !session) return;
+      const result = await createDiscussion({
+        user_id: session.user.id,
+        title,
+        content,
+        tags,
+      });
+
+      console.log("Created discussion:", result);
+      // maybe close modal or reset form here
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
+      alert("Something went wrong. Check console for details.");
+    }
   };
 
   useEffect(() => {
     fetchData();
   }, []);
+  useEffect(() => {
+    if (profile) {
+      setTitle(`${profile.username}'s Post`);
+    }
+  }, [profile]);
 
   const fetchData = async () => {
     const response = await getDiscussions();
@@ -24,6 +48,7 @@ const CreateDiscussion = () => {
   };
 
   const openModal = () => {
+    if (!session) return;
     const modal = document.getElementById(
       "my_modal_4"
     ) as HTMLDialogElement | null;
@@ -83,12 +108,17 @@ const CreateDiscussion = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 type="text"
                 className="input"
+                value={title}
+                required
+                autoFocus
               />
 
               <textarea
                 className="textarea"
                 placeholder="What's on your mind?"
                 onChange={(e) => setContent(e.target.value)}
+                value={content}
+                required
               />
 
               {/* Tag Input */}
