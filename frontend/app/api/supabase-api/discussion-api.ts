@@ -29,3 +29,37 @@ export const createDiscussion = async ({
   }
   return data;
 };
+
+//user cant change user id or ownership
+export const updateDiscussion = async (
+  id: number,
+  updates: {
+    title: string;
+    content: string;
+    tags: string[];
+  }
+) => {
+  const { data, error } = await supabase
+    .from("discussions")
+    .update(updates)
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) {
+    console.error("Error Updating discussion", error);
+    throw error;
+  }
+  return data;
+};
+
+export const deleteDiscussion = async (id: number) => {
+  const { data, error } = await supabase
+    .from("discussions")
+    .delete()
+    .eq("id", id);
+  if (error) {
+    console.error("Error deleting discussion", error);
+    throw error;
+  }
+  return data;
+};

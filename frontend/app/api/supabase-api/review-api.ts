@@ -25,3 +25,37 @@ export const createReview = async (review: Review) => {
   }
   return data;
 };
+
+// users cannot update user or game id
+// users can only update their own reviews
+export const updateReview = async (
+  id: number,
+  updates: {
+    title?: string;
+    content?: string;
+    rating?: number;
+    platform?: string;
+    hours_played?: number;
+  }
+) => {
+  const { data, error } = await supabase
+    .from("reviews")
+    .upsert(updates)
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) {
+    console.log("Error updating:", error);
+    throw error;
+  }
+  return data;
+};
+
+export const deleteReview = async (id: number) => {
+  const { data, error } = await supabase.from("reviews").delete().eq("id", id);
+  if (error) {
+    console.error("Error deleting review", error);
+    throw error;
+  }
+  return data;
+};

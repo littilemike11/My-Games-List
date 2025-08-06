@@ -16,11 +16,29 @@ const Navbar = () => {
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="flex-1">
-        <Link href={"/"} className="btn btn-ghost text-xl">
+        <Link href={"/"} className="btn  btn-ghost text-xl">
           My Games List
         </Link>
       </div>
       <div className="flex gap-2">
+        <Link href={""} className="link link-hover">
+          Contact
+        </Link>
+        <Link href={"/reviews"} className="link link-hover">
+          Reviews
+        </Link>
+        <Link href={"/discussions"} className="link link-hover">
+          Discussions
+        </Link>
+        <Link href={"/lists"} className="link link-hover">
+          Lists
+        </Link>
+        <Link href={"/player"} className="link link-hover">
+          Players
+        </Link>
+        <Link href={"/articles"} className="link link-hover">
+          Articles
+        </Link>
         <input
           type="text"
           placeholder="Search"
