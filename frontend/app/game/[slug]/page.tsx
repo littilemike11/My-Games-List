@@ -73,10 +73,10 @@ export default async function GamePage({ params }: Props) {
         {/* tabs section */}
         {/* name of each tab group should be unique */}
         <TabSection
+          game={game}
           screenshots={game.screenshots}
           franchise={game.franchise ?? []}
           similarGames={game.similarGames}
-          reviews={game.reviews ?? []}
           discussions={game.discussions ?? []}
         />
       </div>

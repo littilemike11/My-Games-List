@@ -22,6 +22,31 @@ export const getReviews = async () => {
   return mappedData;
 };
 
+export const getReviewsByGame = async (slug: string) => {
+  const { data, error } = await supabase
+    .from("reviews_with_game_slug")
+    .select("*")
+    .eq("game_slug", slug);
+
+  if (error) {
+    console.error(`Error Fetching reviews for ${slug}`, error);
+    throw error;
+  }
+  const mappedData = data.map((review: any) => ({
+    ...review,
+
+    profiles: review.profiles,
+    games: {
+      game_id: review.game_id,
+      cover: review.game_cover,
+      slug: review.game_slug,
+      name: review.game_name,
+    },
+  }));
+
+  return mappedData;
+};
+
 export const createReview = async (review: Review) => {
   const { data, error } = await supabase.from("reviews").insert({
     title: review.title,

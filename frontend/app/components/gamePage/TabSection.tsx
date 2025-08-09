@@ -1,19 +1,22 @@
 "use client";
-import { Discussion, GamePreview, Review } from "@/app/types/models";
-import { useState } from "react";
+import { Discussion, Game, GamePreview, Review } from "@/app/types/models";
+import { getReviewsByGame } from "@/app/api/supabase-api/review-api";
+import { useEffect, useState } from "react";
 import GamePreviewLink from "../GamePreviewLink";
+import CreateReview from "../CreateReview";
+import ReviewItem from "../ReviewItem";
 type TabProps = {
+  game: Game;
   screenshots: string[];
   similarGames: GamePreview[];
   franchise: GamePreview[];
-  reviews: Review[];
   discussions: Discussion[];
 };
 const TabSection: React.FC<TabProps> = ({
+  game,
   screenshots,
   similarGames,
   franchise,
-  reviews,
   discussions,
 }) => {
   const tabs = [
@@ -24,23 +27,31 @@ const TabSection: React.FC<TabProps> = ({
     "Related Content",
   ];
   const [activeTab, setActiveTab] = useState("Reviews");
-
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const fetchReviews = async () => {
+    const response = await getReviewsByGame(game.slug);
+    console.log("id", game.slug);
+    console.log(response);
+    setReviews(response);
+  };
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+  // const reviews: Review[] = await getReviewsByGame();
   const renderTabContent = () => {
     switch (activeTab) {
       case "Reviews":
         return reviews?.length ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {screenshots.map((url, index) => (
-              <img
-                key={index}
-                src={url}
-                alt={`screenshot-${index}`}
-                className="rounded-xl shadow-md w-full object-cover"
-              />
+          <div className="grid grid-cols-1  gap-4">
+            {reviews.map((review) => (
+              <ReviewItem showCover={false} key={review.id} review={review} />
             ))}
           </div>
         ) : (
-          <p>Be the first to leave a Review</p>
+          <div className="flex flex-col gap-4">
+            <p>Be the first to leave a Review!</p>
+            <CreateReview game={game} />
+          </div>
         );
       case "Discussions":
         return discussions?.length ? (
