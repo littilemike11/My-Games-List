@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { Game, GamePreview } from "../types/models";
+import { GamePreview } from "../types/models";
 import GamePreviewLink from "./GamePreviewLink";
 type CarouselProps = {
   title: string;
@@ -9,9 +8,9 @@ const Carousel: React.FC<CarouselProps> = ({ title, games }) => {
   return (
     <>
       <h2 className="text-xl font-medium text-left">{title}</h2>
-      <div className="carousel h-56">
+      <div className="carousel">
         {games.map((game) => (
-          <div key={game.id} className="carousel-item">
+          <div key={game.id} className="carousel-item h-56">
             <GamePreviewLink game={game} />
           </div>
         ))}

@@ -26,7 +26,7 @@ export async function upsertGame(igdbGame: Game) {
   const { data: newGame, error: insertError } = await supabase
     .from("games")
     .insert({
-      title: igdbGame.name,
+      name: igdbGame.name,
       slug: igdbGame.slug,
       igdb_id: igdbGame.id,
       cover: igdbGame.cover,

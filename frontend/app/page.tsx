@@ -6,7 +6,6 @@ import getGames from "./api/igdb-api";
 import { parseGamePreview } from "./utils/functions";
 import { GamePreview } from "./types/models";
 import CreateDiscussion from "./components/CreateDiscussion";
-import { getReviews } from "./api/supabase-api/review-api";
 
 export default async function Home() {
   const queries = [

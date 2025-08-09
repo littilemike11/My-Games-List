@@ -2,31 +2,36 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <footer className="footer footer-horizontal footer-center bg-base-200 text-base-content rounded p-10">
-      <nav className="grid grid-flow-col gap-4">
-        <Link href={"/about-us"} className="link link-hover">
-          About us
-        </Link>
-        <Link href={""} className="link link-hover">
-          Contact
-        </Link>
-        <Link href={"/welcome"} className="link link-hover">
-          Welcome
-        </Link>
-        <Link href={"/reviews"} className="link link-hover">
-          Reviews
-        </Link>
-        <Link href={"/discussions"} className="link link-hover">
-          Discussions
-        </Link>
-        <Link href={"/lists"} className="link link-hover">
-          Lists
-        </Link>
-        <Link href={"/players"} className="link link-hover">
-          Players
-        </Link>
-        <Link href={"/articles"} className="link link-hover">
-          Articles
-        </Link>
+      <nav className=" flex flex-col gap-4 sm:flex-row items-center">
+        <div className="grid grid-flow-col gap-4">
+          <Link href={"/about-us"} className="link link-hover">
+            About us
+          </Link>
+          <Link href={""} className="link link-hover">
+            Contact
+          </Link>
+          <Link href={"/welcome"} className="link link-hover">
+            Welcome
+          </Link>
+          <Link href={"/reviews"} className="link link-hover">
+            Reviews
+          </Link>
+        </div>
+        <div className="grid grid-flow-col gap-4">
+          <Link href={"/discussions"} className="link link-hover">
+            Discussions
+          </Link>
+          <Link href={"/lists"} className="link link-hover">
+            Lists
+          </Link>
+          <Link href={"/players"} className="link link-hover">
+            Players
+          </Link>
+          <Link href={"/articles"} className="link link-hover">
+            Articles
+          </Link>
+        </div>
+
         {/* <Link href={"/reviews"} className="link link-hover">Reviews</Link> */}
       </nav>
       <nav>

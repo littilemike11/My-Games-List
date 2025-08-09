@@ -1,23 +1,36 @@
 import supabase from "@/supabase-client";
 import { Review } from "@/app/types/models";
 export const getReviews = async () => {
-  const { data, error } = await supabase.from("reviews").select("*");
+  const { data, error } = await supabase
+    .from("reviews")
+    .select(
+      "id,created_at,title,content,rating,likes,dislikes,platform,hours_played, profiles(username,avatar),games(name,cover,slug)"
+    );
   if (error) {
     console.log("Error fetching: ", error);
     throw error;
   }
-  return data;
+  // Map arrays to single objects for profiles and games
+  //idk typescript error expect array not object, but supabase return it as an object
+  // works w/o this but typescript no like
+  const mappedData = data.map((review: any) => ({
+    ...review,
+    profiles: review.profiles,
+    games: review.games,
+  }));
+
+  return mappedData;
 };
 
 export const createReview = async (review: Review) => {
   const { data, error } = await supabase.from("reviews").insert({
     title: review.title,
-    content: review.text,
+    content: review.content,
     rating: review.rating,
-    game_id: review.gameID,
-    user_id: review.userID,
+    game_id: review.game_id,
+    user_id: review.user_id,
     platform: review.platform,
-    hours_played: review.hoursPlayed,
+    hours_played: review.hours_played,
   });
   if (error) {
     console.log("Error Inserting: ", error);

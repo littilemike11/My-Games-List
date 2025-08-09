@@ -21,7 +21,7 @@ export interface User {
 export interface Profile {
   username: String;
   avatar: String;
-  bio: String;
+  bio?: String;
 }
 
 export interface Game {
@@ -49,7 +49,7 @@ export interface Game {
 }
 
 export interface GamePreview {
-  id: number;
+  id?: number;
   cover?: string;
   name: string;
   slug: string;
@@ -57,17 +57,19 @@ export interface GamePreview {
 
 export interface Review {
   comments?: string[];
-  date?: Date;
+  created_at?: Date;
   dislikes?: number;
-  gameID: number;
+  games?: GamePreview;
+  profiles?: Profile;
+  game_id?: number;
   id?: number;
   likes?: number;
   rating: number;
-  text: string;
+  content: string;
   title: string;
-  userID?: string;
+  user_id?: string;
   platform: string;
-  hoursPlayed: number;
+  hours_played: number;
 }
 
 export interface Discussion {

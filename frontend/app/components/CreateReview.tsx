@@ -29,12 +29,12 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
 
       //  Then: Create review with correct gameID
       const newReview: Review = {
-        userID: session.user.id,
-        gameID: newGame.id, // use the ID from Supabase, not from IGDB
+        user_id: session.user.id,
+        game_id: newGame.id, // use the ID from Supabase, not from IGDB
         title: title,
         platform: platform,
-        hoursPlayed: hoursPlayed,
-        text: summary,
+        hours_played: hoursPlayed,
+        content: summary,
         rating: rating,
       };
       console.log("Review to submit:", newReview);
