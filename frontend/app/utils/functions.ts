@@ -54,3 +54,10 @@ export function convertDate(timestamp: number): string {
   // return date.toLocaleDateString();
   return date.toLocaleDateString();
 }
+
+export function formatDate(date: Date) {
+  const formattedDate = new Date(date).toLocaleDateString("en-US", {
+    dateStyle: "medium",
+  });
+  return formattedDate;
+}
