@@ -9,7 +9,7 @@ type PostListProps = {
 const PostList: React.FC<PostListProps> = ({ posts, type }) => {
   return (
     <>
-      <ul className="list bg-base-100 rounded-box shadow-md">
+      <ul className="list bg-base-100">
         <li className="p-4 pb-2 text-lg opacity-60 tracking-wide">
           {type == "Review"
             ? "Popular Reviews this week"
@@ -19,7 +19,7 @@ const PostList: React.FC<PostListProps> = ({ posts, type }) => {
           ? posts
               .filter((post): post is Review => "rating" in post)
               .map((review) => (
-                <li key={review.id} className="list-row">
+                <li key={review.id} className="list-row flex p-2">
                   <ReviewItem review={review} />
                 </li>
               ))

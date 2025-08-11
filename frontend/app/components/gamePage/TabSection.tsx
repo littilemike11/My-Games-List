@@ -42,7 +42,7 @@ const TabSection: React.FC<TabProps> = ({
     switch (activeTab) {
       case "Reviews":
         return reviews?.length ? (
-          <div className="grid grid-cols-1  gap-4">
+          <div className="grid grid-cols-1 gap-4">
             {reviews.map((review) => (
               <ReviewItem showCover={false} key={review.id} review={review} />
             ))}
@@ -114,7 +114,7 @@ const TabSection: React.FC<TabProps> = ({
   return (
     <>
       <div>
-        <div className="sticky top-0">
+        <div className="sticky z-10 bg-base-100 top-0">
           {/* Mobile Dropdown */}
           <div className="md:hidden">
             <select
@@ -131,7 +131,7 @@ const TabSection: React.FC<TabProps> = ({
           </div>
 
           {/* Desktop Tabs */}
-          <div className="hidden md:flex space-x-6  border-base-300">
+          <div className="hidden md:flex space-x-6   border-base-300">
             {tabs.map((tab) => (
               <button
                 key={tab}

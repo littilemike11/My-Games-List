@@ -17,9 +17,9 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
 
   return (
     <>
-      <div className="card card-xs sm:card-md card-side bg-base-100 border w-full max-h-80 shadow-sm">
+      <div className="card card-xs sm:card-md card-side bg-base-100 w-full h-full shadow-sm">
         {showCover && (
-          <figure className="h-32 sm:h-56 w-1/12 sm:w-44 min-w-28  ">
+          <figure className="flex-shrink-0 w-28 sm:w-44 h-32 sm:h-56">
             <GamePreviewLink game={review.games!} />
           </figure>
         )}
