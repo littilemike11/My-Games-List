@@ -13,6 +13,7 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
   return (
     <>
       <div className="card card-xs md:card-md card-side bg-base-100 w-full h-full shadow-sm">
+        {/* game cover img Optional */}
         {showCover && (
           <figure className="flex-shrink-0 w-28 sm:w-44 h-32 sm:h-56">
             <GamePreviewLink game={review.games!} />
@@ -20,11 +21,13 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
         )}
 
         <div className="card-body">
+          {/* title */}
           <h2 className="card-title text-lg line-clamp-2 text-pretty font-semibold">
             {review.title}
           </h2>
           <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-start gap-2 ">
             <div className="flex flex-col gap-2 ">
+              {/* user info */}
               <div className="flex items-center justify-start gap-3">
                 <img
                   className="size-8 rounded-box "
@@ -33,6 +36,7 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
                 <span>{review.profiles?.username} reviewed</span>
                 <span className="font-semibold">{review.games?.name}</span>
               </div>
+              {/* rating */}
               <div className="rating rating-half rating-sm">
                 {[...Array(20)].map((_, index) => {
                   const rating = (index + 1) / 2;
@@ -50,6 +54,7 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
               </div>
 
               <p>{review.content}</p>
+              {/* CTAs */}
               <div className="card-actions">
                 <div className="flex items-center gap-4 text-sm ">
                   <div className="flex items-center gap-1">

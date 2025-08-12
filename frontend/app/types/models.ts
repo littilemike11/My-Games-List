@@ -74,15 +74,16 @@ export interface Review {
 
 export interface Discussion {
   comments?: string[];
-  date: Date;
+  created_at: Date;
   dislikes: number;
   gameID?: string;
   id?: string;
   likes: number;
   tags?: string[];
-  text: string;
+  content: string;
   title: string;
-  userID?: string;
+  user_id?: string;
+  profiles?: Profile;
 }
 
 export interface Comment {

@@ -1,69 +1,87 @@
 "use client"; // needed for usestate
 import { useState } from "react";
 import { Discussion } from "../types/models";
-
+import { formatDate } from "../utils/functions";
 const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
   discussion,
 }) => {
   const [showComment, setShowComment] = useState(false);
-  const formattedDate = new Date(discussion.date).toLocaleDateString();
   return (
     <>
-      <div className="card ">
-        <div className="card-body">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="card-title text-lg font-semibold">
-              {discussion.title}
-            </h2>
-            <span className="text-sm opacity-50">{formattedDate}</span>
+      <div className="card bg-base-100 w-full border rounded-lg shadow-sm">
+        <div className="card-body space-y-4">
+          {/* Title */}
+          <h2 className="card-title  line-clamp-2 font-semibold">
+            {discussion.title}
+          </h2>
+
+          {/* Author info and date */}
+          <div className="flex items-center justify-between text-sm ">
+            <div className="flex items-center gap-3">
+              <img
+                src="https://img.daisyui.com/images/profile/demo/1@94.webp"
+                alt={`Profile of ${
+                  discussion.profiles?.username || "Deleted User"
+                }`}
+                className="w-8 h-8 rounded-full object-cover"
+                loading="lazy"
+              />
+              <span className="italic">
+                {discussion.profiles?.username || "(deleted)"}
+              </span>
+            </div>
+            <time className="opacity-50">
+              {formatDate(discussion.created_at)}
+            </time>
           </div>
-          <div className="flex gap-3">
-            {discussion.tags?.map((tag, index) => (
-              <div key={index} className="badge badge-outline">
+
+          {/* Content preview */}
+          <p>{discussion.content}</p>
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2">
+            {discussion.tags?.map((tag, idx) => (
+              <span
+                key={idx}
+                className="badge badge-outline cursor-pointer select-none"
+                aria-label={`Tag: ${tag}`}
+              >
                 {tag}
-              </div>
+              </span>
             ))}
           </div>
 
-          <div className="flex items-center justify-start gap-3">
-            <img
-              className="size-8 rounded-box "
-              src="https://img.daisyui.com/images/profile/demo/1@94.webp"
-            />
-            <span>{discussion.userID}</span>
-            {/* <span className="font-semibold">{review.gameID}</span> */}
-          </div>
-          <p>{discussion.text}</p>
-          <div className="card-actions">
-            <div className="flex items-center gap-4 text-sm ">
-              <div className="flex items-center gap-1">
-                <button className="btn btn-ghost btn-square size-8">👍</button>
-                <span>{discussion.likes}</span>
-              </div>
+          {/* Actions */}
+          <div className="card-actions flex items-center gap-6 text-sm">
+            {/* Likes */}
+            <button
+              aria-label="Like"
+              className="btn btn-ghost btn-square w-8 h-8 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-400 rounded"
+              type="button"
+            >
+              👍
+            </button>
+            <span>{discussion.likes}</span>
 
-              <div className="flex items-center gap-1">
-                <button className="btn btn-ghost btn-square size-8">👎</button>
-                <span>{discussion.dislikes}</span>
-              </div>
+            {/* Dislikes */}
+            <button
+              aria-label="Dislike"
+              className="btn btn-ghost btn-square w-8 h-8 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-400 rounded"
+              type="button"
+            >
+              👎
+            </button>
+            <span>{discussion.dislikes}</span>
 
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => setShowComment(!showComment)}
-                  className="btn btn-ghost btn-square size-10"
-                >
-                  💬<span>{discussion.comments?.length}</span>
-                </button>
-
-                {showComment && discussion.comments && (
-                  <div className="flex flex-col">
-                    {discussion.comments.map((comment, index) => (
-                      <p key={index}>{comment}</p>
-                    ))}
-                  </div>
-                )}
-              </div>
-              {/* <button className="btn btn-primary">Listen</button> */}
-            </div>
+            {/* Comments */}
+            <button
+              aria-controls={`comments-${discussion.id}`}
+              className="btn btn-ghost btn-square w-10 h-10 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded flex items-center justify-center gap-1"
+              type="button"
+            >
+              💬
+              <span>{discussion.comments?.length || 0}</span>
+            </button>
           </div>
         </div>
       </div>

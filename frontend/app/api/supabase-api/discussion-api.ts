@@ -1,12 +1,21 @@
 import supabase from "@/supabase-client";
 
 export const getDiscussions = async () => {
-  const { data, error } = await supabase.from("discussions").select("*");
+  const { data, error } = await supabase
+    .from("discussions")
+    .select(
+      "id,created_at,title,content,likes,dislikes,tags,profiles(username,avatar)"
+    );
   if (error) {
     console.log("Error fetching: ", error);
     throw error;
   }
-  return data;
+  const mappedData = data.map((discussion: any) => ({
+    ...discussion,
+    profiles: discussion.profiles,
+  }));
+
+  return mappedData;
 };
 
 export const createDiscussion = async ({
