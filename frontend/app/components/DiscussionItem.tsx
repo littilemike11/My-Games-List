@@ -8,7 +8,7 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
   const [showComment, setShowComment] = useState(false);
   return (
     <>
-      <div className="card bg-base-100 w-full border rounded-lg shadow-sm">
+      <div className="card bg-base-100 w-full rounded-lg shadow-sm">
         <div className="card-body space-y-4">
           {/* Title */}
           <h2 className="card-title  line-clamp-2 font-semibold">

@@ -1,11 +1,9 @@
-import { getDiscussions } from "../api/supabase-api/discussion-api";
-import DiscussionItem from "../components/DiscussionItem";
 export default async function PlayersPage() {
-  const discussions = await getDiscussions();
-  console.log(discussions);
   return (
     <>
-      <h1>Players</h1>
+      <div className="mx-4 sm:mx-[2rem]">
+        <h1 className="text-3xl mb-4">Players</h1>
+      </div>
     </>
   );
 }

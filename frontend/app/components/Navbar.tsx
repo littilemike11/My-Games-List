@@ -58,7 +58,7 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link href={"/player"} className="link link-hover">
+                <Link href={"/players"} className="link link-hover">
                   Players
                 </Link>
               </li>
@@ -88,7 +88,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link href={"/player"} className="link link-hover">
+              <Link href={"/players"} className="link link-hover">
                 Players
               </Link>
             </li>
