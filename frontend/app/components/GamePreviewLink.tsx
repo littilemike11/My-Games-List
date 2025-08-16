@@ -6,7 +6,6 @@ type Props = {
 };
 
 const GamePreviewLink: React.FC<Props> = ({ game }) => {
-  console.log(game);
   return (
     <Link
       className="px-2  hover:scale-105 transition-200 "

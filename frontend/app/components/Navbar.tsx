@@ -127,10 +127,12 @@ const Navbar = () => {
               >
                 <p>Welcome {profile?.username}! </p>
                 <li>
-                  <a className="justify-between">
+                  <Link
+                    href={`/user/${profile?.username}`}
+                    className="link link-hover"
+                  >
                     Profile
-                    <span className="badge">New</span>
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a>Settings</a>

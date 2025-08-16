@@ -3,7 +3,6 @@ import CreateDiscussion from "../components/CreateDiscussion";
 import PostList from "../components/PostList";
 export default async function discussionsPage() {
   const discussions = await getDiscussions();
-  console.log(discussions);
   return (
     <>
       <div className="mx-4 sm:mx-[2rem]">

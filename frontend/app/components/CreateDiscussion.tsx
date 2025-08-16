@@ -1,9 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import {
-  createDiscussion,
-  getDiscussions,
-} from "../api/supabase-api/discussion-api";
+import { createDiscussion } from "../api/supabase-api/discussion-api";
 import AuthModal from "./AuthModal";
 import { useAuth } from "../auth/auth-context";
 const CreateDiscussion = () => {
@@ -33,19 +30,10 @@ const CreateDiscussion = () => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
-  useEffect(() => {
     if (profile) {
       setTitle(`${profile.username}'s Post`);
     }
   }, [profile]);
-
-  const fetchData = async () => {
-    const response = await getDiscussions();
-    console.log(response);
-    return response;
-  };
 
   const openModal = () => {
     if (!session) return;

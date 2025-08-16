@@ -1,8 +1,6 @@
 "use client";
-
 import { useState } from "react";
 import supabase from "@/supabase-client";
-import { createDefaultLists } from "../api/supabase-api/list-api";
 
 export default function AuthModal({
   isOpen,

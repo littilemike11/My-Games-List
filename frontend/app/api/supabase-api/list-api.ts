@@ -12,7 +12,7 @@ export const getLists = async () => {
   const mappedData = data.map((list: any) => ({
     ...list,
     profiles: list.profiles,
-    tags: list.games,
+    tags: list.tags,
   }));
 
   return mappedData;
@@ -40,7 +40,7 @@ export const getListsByUser = async (owner_id: number) => {
 //user created lists
 export const createList = async ({
   title,
-  tags,
+  tags = [],
   type = "custom",
   visibility,
   description,
@@ -68,6 +68,30 @@ export const createList = async ({
   return data;
 };
 
+//add game to list
+export const addGameToList = async (
+  game_id: number,
+  list_id: number,
+  position: number
+) => {
+  const { data, error } = await supabase
+    .from("list_games")
+    .insert({
+      game_id,
+      list_id,
+      position,
+    })
+    .select()
+    .single();
+  if (error) {
+    console.error("Error Updating List", error);
+    throw error;
+  }
+  return data;
+};
+
+// batch add games to list
+
 export const updateList = async (
   user_id: string,
   list_id: number,
@@ -92,12 +116,29 @@ export const updateList = async (
   return data;
 };
 
+// change position of game in list
+//may be expensive
+
 export const deleteList = async (list_id: number, user_id: string) => {
   const { data, error } = await supabase
     .from("lists")
     .delete()
     .eq("id", list_id)
     .eq("user_id", user_id);
+  if (error) {
+    console.error("Error deleting list", error);
+    throw error;
+  }
+  return data;
+};
+
+// remove game from list
+export const removeGameFromList = async (game_id: number, list_id: number) => {
+  const { data, error } = await supabase
+    .from("list_games")
+    .delete()
+    .eq("list_id", list_id)
+    .eq("game_id", game_id);
   if (error) {
     console.error("Error deleting list", error);
     throw error;

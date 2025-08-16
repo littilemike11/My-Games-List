@@ -3,7 +3,6 @@ import PostList from "../components/PostList";
 import { Review } from "../types/models";
 export default async function ReviewsPage() {
   const reviews: Review[] = await getReviews();
-  console.log(reviews);
   return (
     <>
       <div className="mx-4 sm:mx-[2rem]">
