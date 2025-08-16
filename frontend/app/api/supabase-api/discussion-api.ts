@@ -42,6 +42,7 @@ export const createDiscussion = async ({
 //user cant change user id or ownership
 export const updateDiscussion = async (
   id: number,
+  user_id: string,
   updates: {
     title: string;
     content: string;
@@ -52,6 +53,7 @@ export const updateDiscussion = async (
     .from("discussions")
     .update(updates)
     .eq("id", id)
+    .eq("user_id", user_id)
     .select()
     .single();
   if (error) {
@@ -61,11 +63,12 @@ export const updateDiscussion = async (
   return data;
 };
 
-export const deleteDiscussion = async (id: number) => {
+export const deleteDiscussion = async (id: number, user_id: string) => {
   const { data, error } = await supabase
     .from("discussions")
     .delete()
-    .eq("id", id);
+    .eq("id", id)
+    .eq("user_id", user_id);
   if (error) {
     console.error("Error deleting discussion", error);
     throw error;

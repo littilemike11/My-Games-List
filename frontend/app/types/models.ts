@@ -77,7 +77,7 @@ export interface Discussion {
   created_at: Date;
   dislikes: number;
   gameID?: string;
-  id?: string;
+  id?: number;
   likes: number;
   tags?: string[];
   content: string;
@@ -94,14 +94,32 @@ export interface Comment {
   userID: string;
 }
 export interface List {
-  id: string;
-  userID: User["id"];
-  name: string;
+  id: number;
+  created_at?: Date;
+  user_id: string;
+  title: string;
   tags: string[];
+  type: ListType;
   visibility: ListVisibility;
-  ranked: Boolean;
-  description: string;
-  games: Game["slug"][];
+  description?: string;
+  profiles?: Profile;
+  likes: number;
+  dislikes: number;
 }
 
-type ListVisibility = "private" | "public" | "friends";
+export interface List_Games {
+  id: number;
+  created_at?: Date;
+  position: number;
+  game_id: number;
+  list_id: number;
+}
+
+export type ListVisibility = "private" | "public" | "friends";
+export type ListType =
+  | "custom"
+  | "favorites"
+  | "likes"
+  | "played"
+  | "playing"
+  | "wishlist";

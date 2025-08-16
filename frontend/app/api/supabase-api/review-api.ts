@@ -68,6 +68,7 @@ export const createReview = async (review: Review) => {
 // users can only update their own reviews
 export const updateReview = async (
   id: number,
+  user_id: string,
   updates: {
     title?: string;
     content?: string;
@@ -80,6 +81,7 @@ export const updateReview = async (
     .from("reviews")
     .upsert(updates)
     .eq("id", id)
+    .eq("user_id", user_id)
     .select()
     .single();
   if (error) {
@@ -89,8 +91,12 @@ export const updateReview = async (
   return data;
 };
 
-export const deleteReview = async (id: number) => {
-  const { data, error } = await supabase.from("reviews").delete().eq("id", id);
+export const deleteReview = async (id: number, user_id: string) => {
+  const { data, error } = await supabase
+    .from("reviews")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", user_id);
   if (error) {
     console.error("Error deleting review", error);
     throw error;
