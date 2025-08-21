@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import supabase from "@/supabase-client";
 
@@ -26,9 +25,7 @@ export default function AuthModal({
         email,
         password,
         options: {
-          data: {
-            username,
-          },
+          data: { username }, // pass username in user metadata
         },
       });
 
@@ -36,28 +33,11 @@ export default function AuthModal({
         setError(signUpError.message);
         setLoading(false);
         return;
-      } else {
-        //after user is created, insert username into profile
-        const userID = newUser.user?.id;
-        if (userID) {
-          const { error: profileError } = await supabase
-            .from("profiles")
-            .insert([
-              {
-                id: userID,
-                username,
-              },
-            ]);
-
-          if (profileError) {
-            setError(
-              "User created, but failed to set username: " +
-                profileError.message
-            );
-          }
-        }
-        onClose(); // Close modal or redirect to onboarding
       }
+
+      // No need to manually insert into profiles or call createDefaultLists()
+      // The trigger handles both automatically
+      onClose(); // Close modal or redirect to onboarding
     } else {
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
@@ -88,6 +68,7 @@ export default function AuthModal({
 
           {mode === "signup" && (
             <input
+              required
               type="text"
               placeholder="Username"
               className="input input-bordered w-full mb-2"
@@ -97,6 +78,7 @@ export default function AuthModal({
           )}
 
           <input
+            required
             type="email"
             placeholder="Email"
             className="input input-bordered w-full mb-2"
@@ -105,6 +87,7 @@ export default function AuthModal({
           />
 
           <input
+            required
             type="password"
             placeholder="Password"
             className="input input-bordered w-full mb-2"

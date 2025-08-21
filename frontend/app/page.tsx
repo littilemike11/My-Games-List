@@ -1,12 +1,11 @@
 import Carousel from "./components/Carousel";
 import PostList from "./components/PostList";
-import { exampleReviews } from "./mockData/reviews";
-import { exampleDiscussions } from "./mockData/discussions";
+import { getReviews } from "./api/supabase-api/review-api";
+import { getDiscussions } from "./api/supabase-api/discussion-api";
 import getGames from "./api/igdb-api";
 import { parseGamePreview } from "./utils/functions";
-import { GamePreview } from "./types/models";
+import { Discussion, GamePreview, Review } from "./types/models";
 import CreateDiscussion from "./components/CreateDiscussion";
-import { getReviews } from "./api/supabase-api/review-api";
 
 export default async function Home() {
   const queries = [
@@ -16,11 +15,14 @@ export default async function Home() {
 
   let popularGames: GamePreview[] = [];
   let recentGames: GamePreview[] = [];
-
+  let reviews: Review[] = [];
+  let discussions: Discussion[] = [];
   try {
     const responses = await Promise.all(queries.map((q) => getGames(q)));
     popularGames = responses[0].map(parseGamePreview);
     recentGames = responses[1].map(parseGamePreview);
+    reviews = await getReviews();
+    discussions = await getDiscussions();
     // const reviews = await getReviews();
     // console.log(reviews);
   } catch (error) {
@@ -34,8 +36,8 @@ export default async function Home() {
       <CreateDiscussion />
       <Carousel title="Popular" games={popularGames} />
       <Carousel title="Recent" games={recentGames} />
-      <PostList posts={exampleReviews} type="Review" />
-      <PostList posts={exampleDiscussions} type="Discussion" />
+      <PostList posts={reviews} type="Review" />
+      <PostList posts={discussions} type="Discussion" />
     </div>
   );
 }

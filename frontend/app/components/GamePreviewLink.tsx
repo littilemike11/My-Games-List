@@ -3,21 +3,24 @@ import { GamePreview } from "../types/models";
 
 type Props = {
   game: GamePreview;
+  height?: number;
 };
 
-const GamePreviewLink: React.FC<Props> = ({ game }) => {
+const GamePreviewLink: React.FC<Props> = ({ game, height = 56 }) => {
   return (
-    <Link
-      className="px-2 hover:scale-105 transition-200 "
-      title={game.name}
-      href={`/game/${game.slug}`}
-    >
-      <img
-        className="h-full object-cover"
-        src={game.cover}
-        alt={`${game.name} cover`}
-      />
-    </Link>
+    <div className={`overflow-hidden rounded-2xl h-${height}`}>
+      <Link
+        className="block w-full h-full hover:scale-105 transition-transform duration-200"
+        title={game?.name}
+        href={`/game/${game?.slug}`}
+      >
+        <img
+          className="w-full h-full object-cover rounded-2xl"
+          src={game?.cover}
+          alt={`${game?.name} cover`}
+        />
+      </Link>
+    </div>
   );
 };
 
