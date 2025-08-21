@@ -63,7 +63,7 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link href={"/articles"} className="link link-hover">
+                <Link href={"/news"} className="link link-hover">
                   Articles
                 </Link>
               </li>
@@ -93,7 +93,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link href={"/articles"} className="link link-hover">
+              <Link href={"/news"} className="link link-hover">
                 Articles
               </Link>
             </li>
