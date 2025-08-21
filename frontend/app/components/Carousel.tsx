@@ -11,7 +11,9 @@ const Carousel: React.FC<CarouselProps> = ({ title, games }) => {
       <div className="carousel">
         {games.map((game) => (
           <div key={game.id} className="carousel-item h-56">
-            <GamePreviewLink game={game} />
+            <div className="px-2">
+              <GamePreviewLink game={game} />
+            </div>
           </div>
         ))}
       </div>

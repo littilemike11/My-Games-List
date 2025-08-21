@@ -35,10 +35,10 @@ export default async function ListsPage() {
 
       // push game into the list
       users[row.user_id].lists[row.list_id].games.push({
-        game_id: row.game_id,
-        game_slug: row.game_slug,
-        game_name: row.game_name,
-        game_cover: row.game_cover,
+        id: row.game_id,
+        slug: row.game_slug,
+        name: row.game_name,
+        cover: row.game_cover,
       });
     });
 
