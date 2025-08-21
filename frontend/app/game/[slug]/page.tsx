@@ -5,6 +5,7 @@ import Stats from "@/app/components/gamePage/Stats";
 import Info from "@/app/components/gamePage/Info";
 import CTA from "@/app/components/gamePage/CTA";
 import TabSection from "@/app/components/gamePage/TabSection";
+import { upsertGame } from "@/app/api/supabase-api/game-api";
 interface Props {
   params: { slug: string };
 }
@@ -14,7 +15,8 @@ export default async function GamePage({ params }: Props) {
   const response = await getGames(query);
   console.log(response);
   const game: Game = parseGame(response[0]);
-  console.log(game);
+  const newGameID = await upsertGame(game);
+  console.log(newGameID.id);
 
   return (
     <>
@@ -50,7 +52,7 @@ export default async function GamePage({ params }: Props) {
               {/* <p className="text-md text-pretty">{game.storyline}</p> */}
 
               <div className=" py-6">
-                <CTA game={game} />
+                <CTA game={game} gameID={newGameID.id} />
               </div>
               {game.summary && (
                 <p className="text-base sm:text-lg leading-relaxed text-pretty">

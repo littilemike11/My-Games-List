@@ -106,6 +106,21 @@ export interface List {
   likes: number;
   dislikes: number;
 }
+export interface UserGameList {
+  user_id: string;
+  username: string;
+  list_id: number;
+  list_title: string;
+  list_tags: string[] | null;
+  list_type: string;
+  list_description: string | null;
+  list_likes: number;
+  list_dislikes: number;
+  game_id: number;
+  game_slug: string;
+  game_cover: string | null;
+  game_name: string;
+}
 
 export interface List_Games {
   id: number;

@@ -3,7 +3,7 @@ import { ListType, ListVisibility } from "@/app/types/models";
 export const getLists = async () => {
   const { data, error } = await supabase
     .from("lists")
-    .select("title,tags, description")
+    .select("title,tags, description, user_id")
     .neq("visibility", "private"); // get public or friends lists
   if (error) {
     console.log("Error fetching: ", error);
@@ -18,10 +18,10 @@ export const getLists = async () => {
   return mappedData;
 };
 
-export const getListsByUser = async (owner_id: number) => {
+export const getListsByUser = async (owner_id: string) => {
   const { data, error } = await supabase
-    .from("list")
-    .select("title,tags,description")
+    .from("lists")
+    .select("id,title,tags,type,description")
     .eq("user_id", owner_id)
     .neq("visibility", "private");
   if (error) {
@@ -31,10 +31,41 @@ export const getListsByUser = async (owner_id: number) => {
   const mappedData = data.map((list: any) => ({
     ...list,
     profiles: list.profiles,
-    tags: list.games,
+    tags: list.tags,
   }));
 
   return mappedData;
+};
+
+export const getGamesFromLists = async (
+  type?: string,
+  username?: string,
+  game_slug?: string
+) => {
+  let query = supabase
+    .from("user_game_lists")
+    .select(
+      "user_id,username,list_id,list_title,list_tags,list_type,list_description,list_likes,list_dislikes,game_id,game_slug,game_cover,game_name"
+    );
+
+  if (username) {
+    query = query.eq("username", username);
+  }
+  if (type) {
+    query = query.eq("list_type", type);
+  }
+  if (game_slug) {
+    query = query.eq("game_slug", game_slug);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error("Error fetching games: ", error);
+    throw error;
+  }
+
+  return data ?? [];
 };
 
 //user created lists
@@ -69,17 +100,12 @@ export const createList = async ({
 };
 
 //add game to list
-export const addGameToList = async (
-  game_id: number,
-  list_id: number,
-  position: number
-) => {
+export const addGameToList = async (game_id: number, list_id: number) => {
   const { data, error } = await supabase
     .from("list_games")
     .insert({
       game_id,
       list_id,
-      position,
     })
     .select()
     .single();
@@ -89,6 +115,18 @@ export const addGameToList = async (
   }
   return data;
 };
+
+//add game to default list by type
+// export const addGameByType = async (
+//   game_id: number,
+//   type: ListType,
+//   user_id: string
+// ) => {
+//     const {data,error} = await supabase.from("list_games").insert({
+//         game_id,
+//         list_id,
+//     })
+// };
 
 // batch add games to list
 

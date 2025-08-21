@@ -10,7 +10,7 @@ export async function upsertGame(igdbGame: Game) {
   //check if game already exists in supabase
   const { data: existingGame, error: fetchError } = await supabase
     .from("games")
-    .select("*")
+    .select("id")
     .eq("slug", igdbGame.slug)
     .maybeSingle();
 

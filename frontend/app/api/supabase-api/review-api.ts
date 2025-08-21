@@ -22,6 +22,7 @@ export const getReviews = async () => {
   return mappedData;
 };
 
+//  i feel a view may not be needed, try again with id and collect info from other table columns
 export const getReviewsByGame = async (slug: string) => {
   const { data, error } = await supabase
     .from("reviews_with_game_slug")
