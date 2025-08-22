@@ -34,12 +34,14 @@ export default async function ListsPage() {
       }
 
       // push game into the list
-      users[row.user_id].lists[row.list_id].games.push({
-        id: row.game_id,
-        slug: row.game_slug,
-        name: row.game_name,
-        cover: row.game_cover,
-      });
+      if (users[row.user_id].lists[row.list_id].games.length <= 4) {
+        users[row.user_id].lists[row.list_id].games.push({
+          id: row.game_id,
+          slug: row.game_slug,
+          name: row.game_name,
+          cover: row.game_cover,
+        });
+      }
     });
 
     // convert lists object → array
@@ -57,6 +59,7 @@ export default async function ListsPage() {
           <ListItem key={index} gameList={list} />
         ))}
       </div>
+      {/* featured, popular this week, recently liked, crew picks */}
     </>
   );
 }

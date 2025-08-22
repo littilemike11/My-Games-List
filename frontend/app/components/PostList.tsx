@@ -56,7 +56,7 @@ const PostList: React.FC<PostListProps> = ({ posts, type }) => {
               {posts
                 .filter((post): post is Discussion => !("rating" in post))
                 .map((discussion) => (
-                  <div key={discussion.id} className="border">
+                  <div key={discussion.id}>
                     <DiscussionItem discussion={discussion} />
                   </div>
                 ))}

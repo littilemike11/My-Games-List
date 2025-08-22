@@ -26,14 +26,26 @@ const CTA: React.FC<CTAProps> = ({ game, gameID }) => {
       }, {} as Record<string, number>);
   }
 
-  const addGameByType = async (type: string) => {
+  const addGameByType = async (type: ListType) => {
     if (defaultListMap) {
+      let response;
       try {
         let listID = defaultListMap[type];
-        await addGameToList(gameID, listID);
+        response = await addGameToList(gameID, listID);
+        // if you favorite/ liked/playing, then also add to played
+        if (type == "favorites" || type == "likes" || type == "playing") {
+          let playingID = defaultListMap["played"];
+          response = await addGameToList(gameID, playingID);
+        }
+        //if i favorite, i also liked
+        if (type == "favorites") {
+          let favID = defaultListMap["likes"];
+          response = await addGameToList(gameID, favID);
+        }
       } catch (error) {
         console.error("error adding game to list:", error);
       }
+      console.log(response);
     }
   };
 

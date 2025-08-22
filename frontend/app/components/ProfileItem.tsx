@@ -18,7 +18,7 @@ export const ProfileItem: React.FC<{ profile: Profile }> = ({ profile }) => {
           <div className="card-body items-center text-center">
             <h2 className="card-title">
               <Link
-                className="link link-hover"
+                className="italic link link-hover"
                 href={`/user/${profile.username}`}
               >
                 {profile.username}
