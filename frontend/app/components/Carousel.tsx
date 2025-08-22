@@ -8,14 +8,17 @@ const Carousel: React.FC<CarouselProps> = ({ title, games }) => {
   return (
     <>
       <h2 className="text-xl font-medium text-left">{title}</h2>
-      <div className="carousel">
-        {games.map((game) => (
-          <div key={game.id} className="carousel-item h-56">
-            <div className="px-2">
+      <div className="overflow-x-auto w-full py-2">
+        <div className="flex gap-4">
+          {games.map((game) => (
+            <div
+              key={game.id}
+              className="flex-shrink-0 w-40 h-56" // each card has fixed size
+            >
               <GamePreviewLink game={game} />
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </>
   );
