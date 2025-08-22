@@ -78,7 +78,7 @@ const CreateDiscussion = () => {
         open modal
       </button> */}
       <input
-        className="input"
+        className="input border-amber-100"
         type="text"
         placeholder="What's on your mind?"
         onClick={openModal}
