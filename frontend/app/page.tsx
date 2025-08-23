@@ -47,14 +47,12 @@ limit 10;`,
       <h1 className="text-4xl text-pretty text-center font-bold">
         Welcome to <span className="italic">The Save Room</span>
       </h1>
-      <h2 className="text-xl ">
-        Your personal space to log, reflect on, and discover games.
-      </h2>
+      <h2 className="text-xl ">A community hub for gamers by gamers.</h2>
       <div className="my-5 ">
         <CreateDiscussion />
-        <p className=" mt-2 text-gray-400 ">
-          A community hub for gamers by gamers.
-        </p>
+        {/* <p className=" mt-2 text-gray-400 ">
+          Your personal space to log, reflect on, and discover games.
+        </p> */}
       </div>
 
       {/* shows popular lists and members */}

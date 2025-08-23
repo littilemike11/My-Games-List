@@ -1,5 +1,5 @@
 import supabase from "@/supabase-client";
-import { ListType, ListVisibility } from "@/app/types/models";
+import { ListType, ListVisibility, StatusKey } from "@/app/types/models";
 export const getLists = async () => {
   const { data, error } = await supabase
     .from("lists")
@@ -37,22 +37,21 @@ export const getListsByUser = async (owner_id: string) => {
   return mappedData;
 };
 
-export const getGamesFromLists = async (
-  type?: string,
+export const getUserGameLists = async (
+  status?: ListType,
   username?: string,
   game_slug?: string
 ) => {
   let query = supabase
     .from("user_game_lists")
     .select(
-      "user_id,username,list_id,list_title,list_tags,list_type,list_description,list_likes,list_dislikes,game_id,game_slug,game_cover,game_name"
+      "user_id, username, game_cover,game_id,game_name,game_slug, played, playing, wishlist, favorite, custom_lists"
     );
-
   if (username) {
     query = query.eq("username", username);
   }
-  if (type) {
-    query = query.eq("list_type", type);
+  if (status) {
+    query = query.eq(status, true);
   }
   if (game_slug) {
     query = query.eq("game_slug", game_slug);
@@ -65,8 +64,66 @@ export const getGamesFromLists = async (
     throw error;
   }
 
+  return data;
+};
+export const getUserGame = async (
+  status?: ListType,
+  user_id?: string,
+  game_id?: number
+) => {
+  let query = supabase
+    .from("user_games")
+    .select("played, playing,wishlist, favorite");
+  if (user_id) {
+    query = query.eq("user_id", user_id);
+  }
+  if (status) {
+    query = query.eq(status, true);
+  }
+  if (game_id) {
+    query = query.eq("game_id", game_id);
+  }
+
+  const { data, error } = await query.single();
+
+  if (error) {
+    console.error("Error fetching games: ", error);
+    throw error;
+  }
+
   return data ?? [];
 };
+
+// export const getUserGameLists = async (
+//   type?: string,
+//   username?: string,
+//   game_slug?: string
+// ) => {
+//   let query = supabase
+//     .from("user_game_lists")
+//     .select(
+//       "user_id,username,list_id,list_title,list_tags,list_type,list_description,list_likes,list_dislikes,game_id,game_slug,game_cover,game_name"
+//     );
+
+//   if (username) {
+//     query = query.eq("username", username);
+//   }
+//   if (type) {
+//     query = query.eq("list_type", type);
+//   }
+//   if (game_slug) {
+//     query = query.eq("game_slug", game_slug);
+//   }
+
+//   const { data, error } = await query;
+
+//   if (error) {
+//     console.error("Error fetching games: ", error);
+//     throw error;
+//   }
+
+//   return data ?? [];
+// };
 
 //user created lists
 export const createList = async ({
@@ -96,6 +153,34 @@ export const createList = async ({
     console.log("Error Inserting list: ", error);
     throw error;
   }
+  return data;
+};
+
+// upsert user game status
+export const upsertUserGameStatus = async (
+  game_id: number,
+  user_id: string,
+  status: StatusKey,
+  statusValue: boolean
+) => {
+  // Build object with dynamic key
+  const payload = {
+    game_id,
+    user_id,
+    [status]: statusValue, // <-- dynamic column
+  };
+
+  const { data, error } = await supabase
+    .from("user_games")
+    .upsert(payload, { onConflict: "user_id,game_id" }) // Without onConflict, Supabase tries a plain insert, triggering the duplicate key error.
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error updating game status", error);
+    throw error;
+  }
+
   return data;
 };
 
