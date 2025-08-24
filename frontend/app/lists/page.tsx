@@ -1,8 +1,5 @@
-import {
-  getLists,
-  getUserGameLists,
-  getUserGames,
-} from "../api/supabase-api/list-api";
+import { getUserGameLists } from "../api/supabase-api/list-api";
+import CreateList from "../components/CreateList";
 import ListItem from "../components/ListItem";
 import { UserGameList, StatusKey } from "../types/models";
 export default async function ListsPage() {
@@ -83,7 +80,8 @@ export default async function ListsPage() {
 
   return (
     <>
-      <h1>Lists</h1>
+      <h1 className="text-3xl mb-4">Lists</h1>
+      <CreateList />
       <div>
         {userLists.map((list, index) => (
           <ListItem key={index} gameList={list} />

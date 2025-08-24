@@ -66,6 +66,7 @@ export const getUserGameLists = async (
 
   return data;
 };
+// get 1 specific game
 export const getUserGame = async (
   status?: ListType,
   user_id?: string,
@@ -92,6 +93,20 @@ export const getUserGame = async (
   }
 
   return data ?? [];
+};
+
+//get all of a user's games
+export const getUserGames = async (userID: string) => {
+  const { data, error } = await supabase
+    .from("user_games")
+    .select("played,playing,wishlist,favorite")
+    .eq("user_id", userID);
+  if (error) {
+    console.error("Error fetching games: ", error);
+    throw error;
+  }
+
+  return data;
 };
 
 // export const getUserGameLists = async (
