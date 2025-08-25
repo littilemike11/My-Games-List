@@ -7,7 +7,7 @@ import { List, ListType, Profile, UserGameList } from "@/app/types/models";
 import { useAuth } from "@/app/auth/auth-context";
 import {
   getListsByUser,
-  getGamesFromLists,
+  getUserGameLists,
 } from "@/app/api/supabase-api/list-api";
 
 export default function UserPage() {
@@ -18,13 +18,13 @@ export default function UserPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [games, setGames] = useState<UserGameList[]>([]);
   const [listCounts, setListCounts] = useState<Record<string, number>>({});
-  const getCountByType = (data: UserGameList[]) => {
-    const counts: Record<string, number> = {};
-    data.forEach((list) => {
-      counts[list.list_type] = (counts[list.list_type] || 0) + 1;
-    });
-    return counts;
-  };
+  // const getCountByType = (data: UserGameList[]) => {
+  //   const counts: Record<string, number> = {};
+  //   data.forEach((list) => {
+  //     counts[list.list_type] = (counts[list.list_type] || 0) + 1;
+  //   });
+  //   return counts;
+  // };
 
   const isOwnProfile =
     profile && profile.username.toLowerCase() === name?.toLowerCase();
@@ -36,12 +36,12 @@ export default function UserPage() {
           const response = await getPlayerByName(name);
           setCurrentUser(response);
           console.log(response);
-          const response2 = await getGamesFromLists(undefined, name);
+          const response2 = await getUserGameLists(undefined, name);
           console.log(response2);
           setGames(response2);
-          const counts = getCountByType(response2);
-          setListCounts(counts);
-          console.log("list counts", counts);
+          // const counts = getCountByType(response2);
+          // setListCounts(counts);
+          // console.log("list counts", counts);
         }
       } catch (error) {
         console.error(error);
