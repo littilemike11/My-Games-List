@@ -99,7 +99,7 @@ export const getUserGame = async (
 export const getUserGames = async (userID: string) => {
   const { data, error } = await supabase
     .from("user_games")
-    .select("played,playing,wishlist,favorite")
+    .select("games(id,slug,cover,name),played,playing,wishlist,favorite")
     .eq("user_id", userID);
   if (error) {
     console.error("Error fetching games: ", error);
@@ -151,19 +151,23 @@ export const createList = async ({
 }: {
   title: string;
   tags: string[];
-  type: ListType;
+  type?: ListType;
   visibility: ListVisibility;
-  description: string;
+  description?: string;
   user_id: string;
 }) => {
-  const { data, error } = await supabase.from("lists").insert({
-    title,
-    tags,
-    type,
-    visibility,
-    description,
-    user_id,
-  });
+  const { data, error } = await supabase
+    .from("lists")
+    .insert({
+      title,
+      tags,
+      type,
+      visibility,
+      description,
+      user_id,
+    })
+    .select()
+    .single();
   if (error) {
     console.log("Error Inserting list: ", error);
     throw error;
@@ -209,6 +213,25 @@ export const addGameToList = async (game_id: number, list_id: number) => {
     })
     .select()
     .single();
+  if (error) {
+    console.error("Error Updating List", error);
+    throw error;
+  }
+  return data;
+};
+
+export const batchAddGamesToList = async (
+  game_ids: number[],
+  list_id: number
+) => {
+  const insertGames = game_ids.map((id) => ({
+    game_id: id,
+    list_id,
+  }));
+  const { data, error } = await supabase
+    .from("list_games")
+    .insert(insertGames)
+    .select();
   if (error) {
     console.error("Error Updating List", error);
     throw error;

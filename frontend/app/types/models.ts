@@ -49,7 +49,7 @@ export interface Game {
 }
 
 export interface GamePreview {
-  id?: number;
+  id: number;
   cover?: string;
   name: string;
   slug: string;

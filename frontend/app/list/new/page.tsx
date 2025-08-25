@@ -1,41 +1,66 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/auth/auth-context";
-import { createList, getUserGames } from "@/app/api/supabase-api/list-api";
+import {
+  batchAddGamesToList,
+  createList,
+  getUserGames,
+} from "@/app/api/supabase-api/list-api";
+import { GamePreview, ListVisibility, StatusKey } from "@/app/types/models";
+import GamePreviewLink from "@/app/components/GamePreviewLink";
+import Link from "next/link";
 const page = () => {
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const { session, profile, loading } = useAuth();
-  const [games, setGames] = useState<string[]>([]);
+  const [games, setGames] = useState<any[]>([]);
+  const [filteredGames, setFilteredGames] = useState<any[]>([]);
+  const [list, setList] = useState<GamePreview[]>([]);
+
   const [gameInput, setGameInput] = useState("");
 
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [visibility, setVisibility] = useState("public");
+  const [description, setDescription] = useState("");
+  const [visibility, setVisibility] = useState<ListVisibility>("public");
   const userID = session?.user.id;
-  const handleSubmit = async () => {
-    try {
-      if (!title || !content || !session) return;
-      const result = {};
-      //   const result = await createDiscussion({
-      //     user_id: session.user.id,
-      //     title,
-      //     content,
-      //     tags,
-      //   });
 
-      console.log("Created discussion:", result);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); // 🚫 stop page refresh
+    try {
+      console.log(!list);
+      if (!title || !list || !session) {
+        console.log("missing something");
+        return;
+      }
+      if (userID) {
+        const newList = await createList({
+          title,
+          tags,
+          visibility,
+          description,
+          user_id: userID,
+        });
+        console.log("Created list:", newList);
+
+        const game_ids = list.map((game) => game.id);
+        if (newList && game_ids.length > 0) {
+          const insertedGames = await batchAddGamesToList(game_ids, newList.id);
+          console.log("Inserted games:", insertedGames);
+        }
+      }
+
       // maybe close modal or reset form here
     } catch (error) {
       console.error("Error in handleSubmit:", error);
-      alert("Something went wrong. Check console for details.");
+      console.log("Something went wrong. Check console for details.");
     }
   };
-  const cancel = () => {};
 
   const getGames = async () => {
     if (userID) {
       const response = await getUserGames(userID);
+      setGames(response);
+      setFilteredGames(response);
       console.log(response);
     }
   };
@@ -69,11 +94,26 @@ const page = () => {
     setTags([]);
   };
 
-  const addGame = (game: string) => {
-    const trimmed = game.trim();
-    if (trimmed && !games.includes(trimmed)) {
-      setGames([...games, trimmed]);
-      setGameInput("");
+  const searchGame = (game: string) => {
+    const newGame = game.trim();
+    // if (newGame && !list.includes(newGame)) {
+    //   setList([...list, newGame]);
+    //   setGameInput("");
+    // }
+  };
+  const addGameToList = (game: GamePreview) => {
+    setList([...list, game]);
+  };
+
+  const removeGame = (gameID: number) => {
+    if (gameID) setList((prev) => prev.filter((game) => game.id != gameID));
+  };
+
+  const handleFilter = (gameStatus?: StatusKey) => {
+    if (gameStatus) {
+      setFilteredGames(games.filter((game) => game[gameStatus]));
+    } else {
+      setFilteredGames(games);
     }
   };
 
@@ -106,12 +146,14 @@ const page = () => {
               <select
                 required
                 value={visibility}
-                onChange={(e) => setVisibility(e.target.value)}
+                onChange={(e) =>
+                  setVisibility(e.target.value as ListVisibility)
+                }
                 className="select"
               >
                 <option value="public">Public</option>
-                <option value="public">Friends Only</option>
-                <option value="public">Private</option>
+                <option value="friends">Friends Only</option>
+                <option value="private">Private</option>
               </select>
 
               {/* Tag Input */}
@@ -196,15 +238,73 @@ const page = () => {
                 </div>
               )}
             </div>
-            <div className="flex flex-col ">
+            <div className="flex flex-col gap-1 ">
               <label className="label">Description</label>
               <textarea
                 className="textarea w-full h-40"
                 placeholder="What is this list about"
-                onChange={(e) => setContent(e.target.value)}
-                value={content}
-                required
+                onChange={(e) => setDescription(e.target.value)}
+                value={description}
               />
+              {/* game status */}
+              {session && (
+                <div className="flex flex-col gap-2">
+                  <label className="label">Choose from Preexisting lists</label>
+                  <div className="filter gap-2">
+                    <input
+                      className="btn btn-square"
+                      type="reset"
+                      value="×"
+                      onClick={() => handleFilter()}
+                    />
+                    <input
+                      className="btn btn-accent"
+                      type="radio"
+                      name="frameworks"
+                      aria-label="Wishlist"
+                      onClick={() => handleFilter("wishlist")}
+                    />
+                    <input
+                      className="btn btn-accent"
+                      type="radio"
+                      name="frameworks"
+                      aria-label="Favorite"
+                      onClick={() => handleFilter("favorite")}
+                    />
+                    <input
+                      className="btn btn-accent"
+                      type="radio"
+                      name="frameworks"
+                      aria-label="Played"
+                      onClick={() => handleFilter("played")}
+                    />
+                    <input
+                      className="btn btn-accent"
+                      type="radio"
+                      name="frameworks"
+                      aria-label="Playing"
+                      onClick={() => handleFilter("playing")}
+                    />
+                  </div>
+                  {/* current games */}
+                  <div className="bg-base-100  w-full p-2 overflow-auto justify-around  flex gap-2 flex-wrap">
+                    {filteredGames.map((game) => (
+                      <div
+                        className="hover:scale-105 transition-transform duration-200 "
+                        key={game.games.id}
+                        title={game.games?.name}
+                        onClick={() => addGameToList(game.games)}
+                      >
+                        <img
+                          className="w-full h-20 object-cover cursor-pointer"
+                          src={game.games?.cover}
+                          alt={`${game.games?.name} cover`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <label className="label">Games</label>
@@ -213,7 +313,7 @@ const page = () => {
               value={gameInput}
               onChange={(e) => setGameInput(e.target.value)}
               onKeyDown={(e) =>
-                e.key === "Enter" && (e.preventDefault(), addGame(gameInput))
+                e.key === "Enter" && (e.preventDefault(), searchGame(gameInput))
               }
               placeholder="Add Games"
               className="input input-sm group join-item"
@@ -221,21 +321,45 @@ const page = () => {
             <button
               className="btn btn-sm btn-primary join-item"
               type="button"
-              onClick={() => addGame(gameInput)}
+              onClick={() => searchGame(gameInput)}
             >
               Add to List
             </button>
           </div>
           {/* current list */}
-          <div className="bg-base-300 w-full h-32">{games}</div>
+          <div className="bg-base-300 w-full h-full">
+            {list.map((game) => (
+              <div
+                key={game.id}
+                className="flex border justify-between items-center my-2"
+              >
+                <div className="flex">
+                  <img
+                    className=" h-20 object-cover"
+                    src={game?.cover}
+                    alt={`${game?.name} cover`}
+                  />
+                  <h3 className="text-3xl font-bold">{game.name}</h3>
+                </div>
+                <button
+                  onClick={() => removeGame(game.id)}
+                  className="btn btn-ghost btn-xl"
+                >
+                  🗑️
+                </button>
+              </div>
+            ))}
+          </div>
         </fieldset>
         <div className="modal-action flex justify-between w-full">
           <button type="submit" className="btn btn-success">
             Save
           </button>
-          <button type="button" onClick={cancel} className="btn btn-error">
-            Cancel
-          </button>
+          <Link href={`/user/${profile?.username}`}>
+            <button type="button" className="btn btn-error">
+              Cancel
+            </button>
+          </Link>
         </div>
       </form>
     </>
