@@ -18,13 +18,6 @@ export default function UserPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [games, setGames] = useState<UserGameList[]>([]);
   const [listCounts, setListCounts] = useState<Record<string, number>>({});
-  // const getCountByType = (data: UserGameList[]) => {
-  //   const counts: Record<string, number> = {};
-  //   data.forEach((list) => {
-  //     counts[list.list_type] = (counts[list.list_type] || 0) + 1;
-  //   });
-  //   return counts;
-  // };
 
   const isOwnProfile =
     profile && profile.username.toLowerCase() === name?.toLowerCase();
@@ -39,9 +32,6 @@ export default function UserPage() {
           const response2 = await getUserGameLists(undefined, name);
           console.log(response2);
           setGames(response2);
-          // const counts = getCountByType(response2);
-          // setListCounts(counts);
-          // console.log("list counts", counts);
         }
       } catch (error) {
         console.error(error);
@@ -60,7 +50,7 @@ export default function UserPage() {
         <section>
           <div>
             <div className="flex flex-col">
-              <div className="flex justify-between">
+              <div className="flex flex-col sm:flex-row justify-between">
                 <div className="flex items-center gap-4">
                   <div className="avatar">
                     <div className="w-24 rounded-full">
@@ -78,21 +68,21 @@ export default function UserPage() {
                   )}
                 </div>
                 <div>
-                  {/* <div className="stats shadow">
+                  <div className="stats shadow">
                     <div className="stat">
                       <div className="stat-value">
-                        {currentUser.followers?.length}
+                        {/* {currentUser.followers?.length || 0} */} 0
                       </div>
                       <div>followers</div>
                     </div>
 
                     <div className="stat">
                       <div className="stat-value">
-                        {currentUser.following.length}
+                        {/* {currentUser.following.length} */} 0
                       </div>
                       <div>following</div>
                     </div>
-                  </div> */}
+                  </div>
                 </div>
               </div>
             </div>
@@ -121,10 +111,9 @@ export default function UserPage() {
               </div>
               <div>🎮playing</div>
             </div>
-
             <div className="stat">
-              <div className="stat-value">{listCounts["wishlist"]}</div>
-              <div>💭wishlist</div>
+              <div className="stat-value">{listCounts["favorites"]}</div>
+              <div>❤️favorites</div>
             </div>
           </div>
         </section>
@@ -158,50 +147,19 @@ export default function UserPage() {
               {" "}
               <div className="stats shadow">
                 <div className="stat">
-                  <div className="stat-value">{games.length}</div>
-                  <div>📜lists </div>
+                  <div className="stat-value"></div>
+                  <div>📜custom </div>
                 </div>
 
                 <div className="stat">
-                  <div className="stat-value">{listCounts["likes"]}</div>
-                  <div>👍liked</div>
-                </div>
-
-                <div className="stat">
-                  <div className="stat-value">{listCounts["favorites"]}</div>
-                  <div>❤️favorites</div>
+                  <div className="stat-value">{listCounts["wishlist"]}</div>
+                  <div>💭wishlist</div>
                 </div>
               </div>
             </div>
           </div>
         </section>
       </main>
-      <div className="p-4">
-        <h1 className="text-xl font-bold">{currentUser.username}’s Profile</h1>
-
-        {isEditing ? (
-          <div className="mt-4 space-y-2">
-            <input
-              type="text"
-              // defaultValue={currentUser.bio ?? ""}
-              className="border p-2 rounded w-full"
-              onChange={(e) =>
-                setCurrentUser((prev) =>
-                  prev ? { ...prev, bio: e.target.value } : prev
-                )
-              }
-            />
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-              onClick={() => setIsEditing(false)} // here you’d save to Supabase
-            >
-              Save
-            </button>
-          </div>
-        ) : (
-          <p className="mt-2">{currentUser.bio ?? "No bio yet."}</p>
-        )}
-      </div>
     </>
   );
 }
