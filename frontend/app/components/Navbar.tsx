@@ -3,15 +3,40 @@
 import Link from "next/link";
 import AuthModal from "@/app/components/AuthModal";
 import { useAuth } from "../auth/auth-context";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import getGames from "../api/igdb-api";
 import supabase from "@/supabase-client";
+import { GamePreview } from "../types/models";
 const Navbar = () => {
   const [showAuth, setShowAuth] = useState(false);
   const { session, profile, loading } = useAuth();
+  const [searchInput, setSearchInput] = useState("");
+  const [searchResults, setSearchResults] = useState<GamePreview[]>([]);
+  const [isFocused, setIsFocused] = useState(false); // 👈 controls dropdown
 
   const logout = () => {
     supabase.auth.signOut();
   };
+
+  const updateSearch = async () => {
+    const query = `fields id, name, slug, cover.url ; search"${searchInput}"; limit 10;`;
+    const result = await getGames(query);
+    console.log(result);
+    const formattedResult = result.map((game: any) => ({
+      id: game.id,
+      slug: game.slug,
+      cover: game.cover?.url.replace("t_thumb", "t_cover_big") || null,
+      name: game.name,
+    }));
+    setSearchResults(formattedResult);
+  };
+  // Search trigger optimization (debounce)
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      if (searchInput.length > 2) updateSearch();
+    }, 400); // wait 400ms after typing stops
+    return () => clearTimeout(delay);
+  }, [searchInput]);
 
   return (
     <>
@@ -100,11 +125,49 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="navbar-end gap-2">
-          <input
-            type="text"
-            placeholder="Search"
-            className="input input-bordered w-24 md:w-auto"
-          />
+          <div className="w-full lg:w-96 flex justify-end relative group">
+            <input
+              onChange={(e) => setSearchInput(e.target.value)}
+              type="text"
+              placeholder="Search"
+              className="input input-bordered w-full"
+            />
+
+            {/* Dropdown shows only when input is focused */}
+            <div
+              className="absolute bg-amber-50 top-12 z-50 w-full rounded shadow 
+                  opacity-0 invisible group-focus-within:opacity-100 group-focus-within:visible
+                  transition-opacity duration-200"
+            >
+              <ul className="text-gray-700">
+                {searchInput.length < 3 ? (
+                  <li className="p-2 border-b">
+                    Please enter 3 or more characters
+                  </li>
+                ) : searchResults.length > 0 ? (
+                  searchResults.map((game) => (
+                    <li key={game.id} className="hover:bg-amber-100">
+                      <Link href={`/game/${game.slug}`}>
+                        <div className="flex items-center gap-2 p-2">
+                          {game.cover && (
+                            <img
+                              className="h-12 w-8 object-cover rounded"
+                              src={game.cover}
+                              alt={`${game.name} cover`}
+                            />
+                          )}
+                          <p className="font-bold line-clamp-1">{game.name}</p>
+                        </div>
+                      </Link>
+                    </li>
+                  ))
+                ) : (
+                  <li className="p-2">No games found</li>
+                )}
+              </ul>
+            </div>
+          </div>
+
           <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
 
           {session ? (

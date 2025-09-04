@@ -62,6 +62,7 @@ const CTA: React.FC<CTAProps> = ({ game, gameID }) => {
           }
           // setDefaultListMap(getDefaultListMap(response));
         }
+        //  on first visit, there is no response ie array is empty, but thats ok
       } catch (error) {
         console.error(error);
       }
@@ -81,28 +82,28 @@ const CTA: React.FC<CTAProps> = ({ game, gameID }) => {
       label: "Wishlist Now",
       activeLabel: "Wishlisted",
       emoji: "📝",
-      color: "yellow",
+      color: "bg-yellow-200 text-yellow-800",
     },
     {
       key: "playing",
       label: "Not Active",
       activeLabel: "Actively Playing",
       emoji: "🎮",
-      color: "blue",
+      color: "bg-blue-200 text-blue-800",
     },
     {
       key: "played",
       label: "Mark as Played",
       activeLabel: "Played",
       emoji: "✅",
-      color: "green",
+      color: "bg-green-200 text-green-800",
     },
     {
       key: "favorite",
       label: "Add to Favorites",
       activeLabel: "Favorited",
       emoji: "❤️",
-      color: "red",
+      color: "bg-red-200 text-red-800",
     },
   ];
 
@@ -141,12 +142,8 @@ const CTA: React.FC<CTAProps> = ({ game, gameID }) => {
                 return (
                   <li key={status.key}>
                     <a
-                      className={`flex items-center gap-2 px-2 py-1 rounded cursor-pointer transition
-                ${
-                  isActive
-                    ? `bg-${status.color}-200 text-${status.color}-800`
-                    : " text-gray-500 hover:bg-gray-200"
-                }`}
+                      className={`flex items-center gap-2 px-2 py-1 rounded cursor-pointer transition text-gray-500
+                      ${isActive ? `${status.color}` : " hover:bg-gray-200"}`}
                       onClick={() => toggleGameStatus(status.key)}
                     >
                       {status.emoji}{" "}
