@@ -105,8 +105,16 @@ export const getUserGames = async (userID: string) => {
     console.error("Error fetching games: ", error);
     throw error;
   }
+  // Map each row to rename 'games' → 'game'
+  const mappedData = data.map((row: any) => ({
+    played: row.played,
+    playing: row.playing,
+    wishlist: row.wishlist,
+    favorite: row.favorite,
+    game: row.games,
+  }));
 
-  return data;
+  return mappedData;
 };
 
 // export const getUserGameLists = async (

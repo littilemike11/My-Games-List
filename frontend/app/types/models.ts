@@ -120,6 +120,19 @@ export interface UserGameList {
   game_name: string;
 }
 
+export interface GameEntry {
+  played: boolean;
+  playing: boolean;
+  wishlist: boolean;
+  favorite: boolean;
+  game: {
+    id: number;
+    name: string;
+    slug: string;
+    cover?: string;
+  };
+}
+
 export interface List_Games {
   id: number;
   created_at?: Date;
