@@ -1,5 +1,7 @@
 export type Post = Review | Discussion;
 
+export type contentType = "review" | "discussion" | "list" | "comment";
+
 export interface User {
   discussions: Discussion[];
   email: string;
@@ -62,7 +64,7 @@ export interface Review {
   games?: GamePreview;
   profiles?: Profile;
   game_id?: number;
-  id?: number;
+  id: number;
   likes?: number;
   rating: number;
   content: string;
@@ -70,6 +72,7 @@ export interface Review {
   user_id?: string;
   platform: string;
   hours_played: number;
+  comment_count?: number;
 }
 
 export interface Discussion {
@@ -77,21 +80,29 @@ export interface Discussion {
   created_at: Date;
   dislikes: number;
   gameID?: string;
-  id?: number;
+  id: number;
   likes: number;
   tags?: string[];
   content: string;
   title: string;
   user_id?: string;
   profiles?: Profile;
+  comment_count: number;
 }
 
 export interface Comment {
-  id: string;
-  parentID: string;
-  parentType: Review | Discussion;
-  text: string;
-  userID: string;
+  id: number;
+  created_at: Date;
+  parent_id?: number;
+  content_id?: number;
+  content_type?: contentType;
+  body: string;
+  user_id?: string;
+  profile?: Profile;
+  replies?: Comment[];
+  likes: number;
+  dislikes: number;
+  comment_count: number;
 }
 export interface List {
   id: number;
@@ -105,6 +116,7 @@ export interface List {
   profiles?: Profile;
   likes: number;
   dislikes: number;
+  comment_count: number;
 }
 export interface UserGameList {
   custom_lists: any;

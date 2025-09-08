@@ -1,10 +1,14 @@
 import { Review } from "../types/models";
 import GamePreviewLink from "./GamePreviewLink";
 import { formatDate } from "../utils/functions";
+import CommentItem from "./CommentItem";
+import Reactions from "./Reactions";
+import CreateComment from "./CreateComment";
 const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
   review,
   showCover = true,
 }) => {
+  console.log(review);
   const ratings = [];
   for (let i = 1; i <= 20; i++) {
     ratings.push(i / 2);
@@ -52,33 +56,7 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
                   );
                 })}
               </div>
-
-              <p>{review.content}</p>
-              {/* CTAs */}
-              <div className="card-actions">
-                <div className="flex items-center gap-4 text-sm ">
-                  <div className="flex items-center gap-1">
-                    <button className="btn btn-ghost btn-square size-8">
-                      👍
-                    </button>
-                    <span>{review.likes}</span>
-                  </div>
-
-                  <div className="flex items-center gap-1">
-                    <button className="btn btn-ghost btn-square size-8">
-                      👎
-                    </button>
-                    <span>{review.dislikes}</span>
-                  </div>
-
-                  <div className="flex items-center gap-1">
-                    <button className="btn btn-ghost btn-square size-8">
-                      💬
-                    </button>
-                    <span>{review.comments?.length} comments</span>
-                  </div>
-                </div>
-              </div>
+              <p className="font-medium">{review.content}</p>
             </div>
 
             <div className="flex flex-row md:flex-col flex-shrink-0 md:text-right text-sm w-fit gap-2 opacity-50">
@@ -87,6 +65,17 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
               <p>🕗 {review.hours_played}hrs</p>
             </div>
           </div>
+          {/* CTAs */}
+          <div className=" card-actions items-center">
+            <Reactions
+              likeCount={review.likes ?? 0}
+              dislikeCount={review.dislikes ?? 0}
+              commentCount={review.comment_count ?? 0}
+            />
+            <CreateComment parentType={"review"} parentID={review.id} />
+          </div>
+          {/* <CreateComment parentType={"review"} parentID={review.id} />{" "} */}
+          <CommentItem contentType="review" contentID={review.id} />
         </div>
       </div>
     </>

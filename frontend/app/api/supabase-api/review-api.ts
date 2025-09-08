@@ -4,7 +4,7 @@ export const getReviews = async () => {
   const { data, error } = await supabase
     .from("reviews")
     .select(
-      "id,created_at,title,content,rating,likes,dislikes,platform,hours_played, profiles(username,avatar),games(name,cover,slug)"
+      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profiles(username,avatar),games(name,cover,slug)"
     );
   if (error) {
     console.log("Error fetching: ", error);
@@ -48,15 +48,23 @@ export const getReviewsByGame = async (slug: string) => {
   return mappedData;
 };
 
-export const createReview = async (review: Review) => {
+export const createReview = async (
+  title: String,
+  content: string,
+  rating: number,
+  game_id: number,
+  user_id: string,
+  platform: string,
+  hours_played: number
+) => {
   const { data, error } = await supabase.from("reviews").insert({
-    title: review.title,
-    content: review.content,
-    rating: review.rating,
-    game_id: review.game_id,
-    user_id: review.user_id,
-    platform: review.platform,
-    hours_played: review.hours_played,
+    title,
+    content,
+    rating,
+    game_id,
+    user_id,
+    platform,
+    hours_played,
   });
   if (error) {
     console.log("Error Inserting: ", error);
