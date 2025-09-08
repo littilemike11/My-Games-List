@@ -28,7 +28,7 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
       if (!newGame) throw new Error("Failed to upsert game");
 
       //  Then: Create review with correct gameID
-      const newReview: Review = {
+      const newReview = {
         user_id: session.user.id,
         game_id: newGame.id, // use the ID from Supabase, not from IGDB
         title: title,
@@ -40,7 +40,15 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
       console.log("Review to submit:", newReview);
       console.log("Game in DB:", newGame);
 
-      const result = await createReview(newReview);
+      const result = await createReview(
+        title,
+        summary,
+        rating,
+        newGame.id,
+        session.user.id,
+        platform,
+        hoursPlayed
+      );
 
       console.log("Created review:", result);
       console.log("Game added (or existed):", newGame);
