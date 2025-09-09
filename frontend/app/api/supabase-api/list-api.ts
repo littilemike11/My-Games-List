@@ -23,11 +23,9 @@ export const getListsByUser = async (ownerName: string) => {
   const { data, error } = await supabase
     .from("user_custom_lists")
     .select(
-      "username, list_title, list_tags, list_description,list_likes, list_dislikes, game_slug, game_cover, game_name, custom_lists"
+      "username, list_title, list_tags, list_description,list_likes, list_dislikes,list_comment_count, game_slug, game_cover, game_name"
     )
-    .ilike("username", ownerName)
-    // .neq("visibility", "private")
-    .not("custom_lists", "is", null);
+    .ilike("username", ownerName);
   if (error) {
     console.log("Error fetching: ", error);
     throw error;

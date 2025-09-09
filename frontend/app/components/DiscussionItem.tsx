@@ -14,7 +14,7 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
           {/* Title */}
           <Link
             className="link link-hover"
-            href={`/user/${discussion.profile.username}/discussion/${discussion.id}`}
+            href={`/user/${discussion.profile?.username}/discussion/${discussion.id}`}
           >
             <h2 className="card-title  line-clamp-2 font-semibold">
               {discussion.title}
@@ -34,7 +34,7 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
               />
               <Link
                 className="link link-hover"
-                href={`/user/${discussion.profile.username}`}
+                href={`/user/${discussion.profile?.username}`}
               >
                 <span className="italic">
                   {discussion.profile?.username || "(deleted)"}

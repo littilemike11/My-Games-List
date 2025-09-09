@@ -13,12 +13,13 @@ export default async function ListsPage({ params }: ListsPageProps) {
   const username = params.name; // 👈 comes from /user/[name]/Lists
   // const lists = await getLists();
   const lists = await getUserGameLists();
-  // const response = await getListsByUser(username);
-  // console.log("comstum list", response);
-  // console.log(lists);
+  const response = await getListsByUser(username);
+  console.log("comstum list", response);
+  console.log(lists);
   // console.log(games);
   const userLists = groupByUser(lists);
   console.log(userLists);
+
   function groupByUser(data: UserGameList[]) {
     const users: Record<string, any> = {};
 
