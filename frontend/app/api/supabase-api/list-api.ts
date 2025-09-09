@@ -23,7 +23,7 @@ export const getListsByUser = async (ownerName: string) => {
   const { data, error } = await supabase
     .from("user_custom_lists")
     .select(
-      "username, list_title, list_tags, list_description,list_likes, list_dislikes,list_comment_count, game_slug, game_cover, game_name"
+      "username,list_id, list_title, list_tags, list_description,list_likes, list_dislikes,list_comment_count,game_id, game_slug, game_cover, game_name"
     )
     .ilike("username", ownerName);
   if (error) {
@@ -63,6 +63,22 @@ export const getUserGameLists = async (
 
   return data;
 };
+
+export const getListByID = async (listID: number) => {
+  const { data, error } = await supabase
+    .from("user_custom_lists")
+    .select(
+      "username,list_id, list_title, list_tags, list_description,list_likes, list_dislikes,list_comment_count,game_id, game_slug, game_cover, game_name"
+    )
+    .eq("list_id", listID);
+  if (error) {
+    console.log("Error fetching: ", error);
+    throw error;
+  }
+
+  return data;
+};
+
 // get 1 specific game
 export const getUserGame = async (
   status?: ListType,

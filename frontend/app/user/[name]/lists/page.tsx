@@ -4,7 +4,7 @@ import {
 } from "@/app/api/supabase-api/list-api";
 import CreateList from "@/app/components/CreateList";
 import ListItem from "@/app/components/ListItem";
-import { UserGameList, StatusKey } from "@/app/types/models";
+import { UserGameList, StatusKey, CustomList } from "@/app/types/models";
 interface ListsPageProps {
   params: { name: string };
 }
@@ -16,75 +16,48 @@ export default async function ListsPage({ params }: ListsPageProps) {
   const response = await getListsByUser(username);
   console.log("comstum list", response);
   console.log(lists);
-  // console.log(games);
-  const userLists = groupByUser(lists);
-  console.log(userLists);
+  const custom_lists = mapGames(response);
+  console.log(custom_lists);
 
-  function groupByUser(data: UserGameList[]) {
-    const users: Record<string, any> = {};
+  function mapGames(data: CustomList[]) {
+    const userMap: Record<string, any> = {};
 
     data.forEach((row) => {
-      // ensure user bucket
-      if (!users[row.user_id]) {
-        users[row.user_id] = {
-          user_id: row.user_id,
+      if (!userMap[row.username]) {
+        userMap[row.username] = {
           username: row.username,
           lists: {},
         };
       }
 
-      const userLists = users[row.user_id].lists;
+      const userLists = userMap[row.username].lists;
 
-      // 1️⃣ Handle system statuses as “lists”
-      (["played", "playing", "wishlist", "favorite"] as StatusKey[]).forEach(
-        (status) => {
-          if (row[status]) {
-            if (!userLists[status]) {
-              userLists[status] = {
-                list_id: status,
-                list_title: status.charAt(0).toUpperCase() + status.slice(1),
-                list_type: status,
-                games: [],
-              };
-            }
-            if (userLists[status].games.length < 5) {
-              userLists[status].games.push({
-                id: row.game_id,
-                slug: row.game_slug,
-                name: row.game_name,
-                cover: row.game_cover,
-              });
-            }
-          }
-        }
-      );
+      if (!userLists[row.list_id]) {
+        userLists[row.list_id] = {
+          list_id: row.list_id,
+          list_title: row.list_title,
+          comment_count: row.list_comment_count,
+          tag: row.list_tags,
+          description: row.list_description,
+          likes: row.list_likes,
+          dislikes: row.list_dislikes,
+          games: [],
+        };
+      }
 
-      // 2️⃣ Handle custom lists
-      if (row.custom_lists[0]) {
-        row.custom_lists.forEach((listTitle: string) => {
-          if (!userLists[listTitle]) {
-            userLists[listTitle] = {
-              list_id: listTitle,
-              list_title: listTitle,
-              list_type: "custom",
-              games: [],
-            };
-          }
-          if (userLists[listTitle].games.length < 5) {
-            userLists[listTitle].games.push({
-              id: row.game_id,
-              slug: row.game_slug,
-              name: row.game_name,
-              cover: row.game_cover,
-            });
-          }
+      if (userLists[row.list_id].games.length < 5) {
+        userLists[row.list_id].games.push({
+          id: row.game_id,
+          slug: row.game_slug,
+          name: row.game_name,
+          cover: row.game_cover,
         });
       }
     });
 
-    // convert lists object → array
-    return Object.values(users).map((user: any) => ({
-      ...user,
+    // turn lists objects into arrays
+    return Object.values(userMap).map((user: any) => ({
+      username: user.username,
       lists: Object.values(user.lists),
     }));
   }
@@ -92,11 +65,15 @@ export default async function ListsPage({ params }: ListsPageProps) {
   return (
     <>
       <h1 className="text-3xl mb-4">Lists</h1>
-      <CreateList />
+      {/* <CreateList /> */}
       <div>
-        {userLists.map((list, index) => (
-          <ListItem key={index} gameList={list} />
-        ))}
+        {custom_lists.length > 0 ? (
+          custom_lists.map((list, index) => (
+            <ListItem key={index} gameList={list} />
+          ))
+        ) : (
+          <p>{username} has not posted any lists yet</p>
+        )}
       </div>
       {/* featured, popular this week, recently liked, crew picks */}
     </>

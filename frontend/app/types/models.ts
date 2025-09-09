@@ -131,6 +131,20 @@ export interface UserGameList {
   game_cover: string | null;
   game_name: string;
 }
+export interface CustomList {
+  game_id: number;
+  game_slug: string;
+  game_name: string;
+  game_cover: string;
+  list_id: number;
+  list_title: string;
+  list_tags: string[];
+  list_description: string;
+  list_likes: number;
+  list_dislikes: number;
+  list_comment_count: number;
+  username: string;
+}
 
 export interface GameEntry {
   played: boolean;

@@ -291,14 +291,14 @@ const page = () => {
                     {filteredGames.map((game) => (
                       <div
                         className="hover:scale-105 transition-transform duration-200 "
-                        key={game.games.id}
-                        title={game.games?.name}
-                        onClick={() => addGameToList(game.games)}
+                        key={game.game.id}
+                        title={game.game?.name}
+                        onClick={() => addGameToList(game.game)}
                       >
                         <img
                           className="w-full h-20 object-cover cursor-pointer"
-                          src={game.games?.cover}
-                          alt={`${game.games?.name} cover`}
+                          src={game.game?.cover}
+                          alt={`${game.game?.name} cover`}
                         />
                       </div>
                     ))}
