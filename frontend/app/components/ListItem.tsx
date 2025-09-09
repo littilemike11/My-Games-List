@@ -11,7 +11,13 @@ const ListItem: React.FC<{
       <div>
         {gameList.lists.map((list: any) => (
           <div key={list.list_id} className="flex-col  gap-2">
-            <h3>{list.list_title}</h3>
+            <Link
+              className="link link-hover"
+              href={`/user/${gameList.username}/list/${list.list_id}`}
+            >
+              <h3>{list.list_title}</h3>
+            </Link>
+
             <div className="flex border w-96 relative h-36 group overflow-hidden">
               {list.games.map((game: GamePreview) => (
                 <div

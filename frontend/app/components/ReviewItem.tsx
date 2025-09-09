@@ -4,6 +4,7 @@ import { formatDate } from "../utils/functions";
 import CommentItem from "./CommentItem";
 import Reactions from "./Reactions";
 import CreateComment from "./CreateComment";
+import Link from "next/link";
 const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
   review,
   showCover = true,
@@ -20,15 +21,21 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
         {/* game cover img Optional */}
         {showCover && (
           <figure className="flex-shrink-0 w-28 sm:w-44 h-32 sm:h-56">
-            <GamePreviewLink game={review.games!} />
+            <GamePreviewLink game={review.game!} />
           </figure>
         )}
 
         <div className="card-body">
           {/* title */}
-          <h2 className="card-title text-lg line-clamp-2 text-pretty font-semibold">
-            {review.title}
-          </h2>
+          <Link
+            className="link link-hover"
+            href={`/user/${review.profile?.username}/review/${review.id}`}
+          >
+            <h2 className="card-title text-lg line-clamp-2 text-pretty font-semibold">
+              {review.title}
+            </h2>
+          </Link>
+
           <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-start gap-2 ">
             <div className="flex flex-col gap-2 ">
               {/* user info */}
@@ -37,8 +44,15 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
                   className="size-8 rounded-box "
                   src="https://img.daisyui.com/images/profile/demo/1@94.webp"
                 />
-                <span>{review.profiles?.username} reviewed</span>
-                <span className="font-semibold">{review.games?.name}</span>
+                <Link
+                  className="link link-hover"
+                  href={`/user/${review.profile?.username}`}
+                >
+                  {review.profile?.username}
+                </Link>
+
+                <span> reviewed</span>
+                <span className="font-semibold">{review.game?.name}</span>
               </div>
               {/* rating */}
               <div className="rating rating-half rating-sm">
@@ -74,8 +88,7 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
             />
             <CreateComment parentType={"review"} parentID={review.id} />
           </div>
-          {/* <CreateComment parentType={"review"} parentID={review.id} />{" "} */}
-          <CommentItem contentType="review" contentID={review.id} />
+          <CommentItem parentType="review" parentID={review.id} />
         </div>
       </div>
     </>

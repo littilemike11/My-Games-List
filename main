@@ -1,0 +1,53 @@
+M<div className="w-full lg:w-auto flex justify-end relative group">
+            <input
+              ref={inputRef}
+              onChange={(e) => setSearchInput(e.target.value)}
+              type="text"
+              placeholder="Search"
+              className="input input-bordered w-full"
+            />
+
+            {/* Dropdown shows only when input is focused */}
+            <div
+              className="absolute bg-amber-50 top-12 z-10 w-full rounded shadow 
+                  opacity-0 invisible group-focus-within:opacity-100 group-focus-within:visible
+                  transition-opacity duration-200"
+            >
+              <ul className="text-gray-700">
+                {searchInput.length < 3 ? (
+                  <li className="p-2 border-b">
+                    Please enter 3 or more characters
+                  </li>
+                ) : searchResults.length > 0 ? (
+                  searchResults.map((game) => (
+                    <li key={game.id} className="hover:bg-amber-100">
+                      <Link
+                        onClick={() => {
+                          inputRef.current?.blur(); // 👈 this removes focus → dropdown closes
+                        }}
+                        href={`/game/${game.slug}`}
+                      >
+                        <div className="flex items-center gap-2 p-2">
+                          {game.cover && (
+                            <img
+                              className="h-12 w-8 object-cover rounded"
+                              src={game.cover}
+                              alt={`${game.name} cover`}
+                            />
+                          )}
+                          <p className="font-bold line-clamp-1">{game.name}</p>
+                        </div>
+                      </Link>
+                    </li>
+                  ))
+                ) : (
+                  <li className="p-2">No games found</li>
+                )}
+              </ul>
+            </div>
+          </div>erge branch 'main' of https://github.com/littilemike11/My-Games-List into 9-users-page
+# Please enter a commit message to explain why this merge is necessary,
+# especially if it merges an updated upstream into a topic branch.
+#
+# Lines starting with '#' will be ignored, and an empty message aborts
+# the commit.

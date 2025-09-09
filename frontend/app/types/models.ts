@@ -61,8 +61,8 @@ export interface Review {
   comments?: string[];
   created_at?: Date;
   dislikes?: number;
-  games?: GamePreview;
-  profiles?: Profile;
+  game: GamePreview;
+  profile: Profile;
   game_id?: number;
   id: number;
   likes?: number;
@@ -86,7 +86,7 @@ export interface Discussion {
   content: string;
   title: string;
   user_id?: string;
-  profiles?: Profile;
+  profile: Profile;
   comment_count: number;
 }
 
@@ -130,6 +130,33 @@ export interface UserGameList {
   game_slug: string;
   game_cover: string | null;
   game_name: string;
+}
+export interface CustomList {
+  game_id: number;
+  game_slug: string;
+  game_name: string;
+  game_cover: string;
+  list_id: number;
+  list_title: string;
+  list_tags: string[];
+  list_description: string;
+  list_likes: number;
+  list_dislikes: number;
+  list_comment_count: number;
+  username: string;
+}
+
+export interface GameEntry {
+  played: boolean;
+  playing: boolean;
+  wishlist: boolean;
+  favorite: boolean;
+  game: {
+    id: number;
+    name: string;
+    slug: string;
+    cover?: string;
+  };
 }
 
 export interface List_Games {

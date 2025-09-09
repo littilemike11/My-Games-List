@@ -18,23 +18,20 @@ export const getLists = async () => {
   return mappedData;
 };
 
-export const getListsByUser = async (owner_id: string) => {
+// may make a new join table for custom lists with user, game and list info
+export const getListsByUser = async (ownerName: string) => {
   const { data, error } = await supabase
-    .from("lists")
-    .select("id,title,tags,type,description")
-    .eq("user_id", owner_id)
-    .neq("visibility", "private");
+    .from("user_custom_lists")
+    .select(
+      "username,list_id, list_title, list_tags, list_description,list_likes, list_dislikes,list_comment_count,game_id, game_slug, game_cover, game_name"
+    )
+    .ilike("username", ownerName);
   if (error) {
     console.log("Error fetching: ", error);
     throw error;
   }
-  const mappedData = data.map((list: any) => ({
-    ...list,
-    profiles: list.profiles,
-    tags: list.tags,
-  }));
 
-  return mappedData;
+  return data;
 };
 
 export const getUserGameLists = async (
@@ -66,6 +63,22 @@ export const getUserGameLists = async (
 
   return data;
 };
+
+export const getListByID = async (listID: number) => {
+  const { data, error } = await supabase
+    .from("user_custom_lists")
+    .select(
+      "username,list_id, list_title, list_tags, list_description,list_likes, list_dislikes,list_comment_count,game_id, game_slug, game_cover, game_name"
+    )
+    .eq("list_id", listID);
+  if (error) {
+    console.log("Error fetching: ", error);
+    throw error;
+  }
+
+  return data;
+};
+
 // get 1 specific game
 export const getUserGame = async (
   status?: ListType,
@@ -105,8 +118,16 @@ export const getUserGames = async (userID: string) => {
     console.error("Error fetching games: ", error);
     throw error;
   }
+  // Map each row to rename 'games' → 'game'
+  const mappedData = data.map((row: any) => ({
+    played: row.played,
+    playing: row.playing,
+    wishlist: row.wishlist,
+    favorite: row.favorite,
+    game: row.games,
+  }));
 
-  return data;
+  return mappedData;
 };
 
 // export const getUserGameLists = async (
