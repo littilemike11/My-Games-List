@@ -18,23 +18,22 @@ export const getLists = async () => {
   return mappedData;
 };
 
-export const getListsByUser = async (owner_id: string) => {
+// may make a new join table for custom lists with user, game and list info
+export const getListsByUser = async (ownerName: string) => {
   const { data, error } = await supabase
-    .from("lists")
-    .select("id,title,tags,type,description")
-    .eq("user_id", owner_id)
-    .neq("visibility", "private");
+    .from("user_custom_lists")
+    .select(
+      "username, list_title, list_tags, list_description,list_likes, list_dislikes, game_slug, game_cover, game_name, custom_lists"
+    )
+    .ilike("username", ownerName)
+    // .neq("visibility", "private")
+    .not("custom_lists", "is", null);
   if (error) {
     console.log("Error fetching: ", error);
     throw error;
   }
-  const mappedData = data.map((list: any) => ({
-    ...list,
-    profiles: list.profiles,
-    tags: list.tags,
-  }));
 
-  return mappedData;
+  return data;
 };
 
 export const getUserGameLists = async (

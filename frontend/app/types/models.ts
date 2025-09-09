@@ -61,8 +61,8 @@ export interface Review {
   comments?: string[];
   created_at?: Date;
   dislikes?: number;
-  games?: GamePreview;
-  profiles?: Profile;
+  game: GamePreview;
+  profile: Profile;
   game_id?: number;
   id: number;
   likes?: number;
@@ -86,7 +86,7 @@ export interface Discussion {
   content: string;
   title: string;
   user_id?: string;
-  profiles?: Profile;
+  profile: Profile;
   comment_count: number;
 }
 

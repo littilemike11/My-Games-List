@@ -1,5 +1,5 @@
 "use client";
-import { contentType, Comment } from "../types/models";
+import { Comment, contentType } from "../types/models";
 import {
   getCommentsFromPost,
   createComment,
@@ -10,9 +10,9 @@ import { useAuth } from "../auth/auth-context";
 import Reactions from "./Reactions";
 import CreateComment from "./CreateComment";
 const CommentItem: React.FC<{
-  contentType: contentType;
-  contentID: number;
-}> = ({ contentType, contentID }) => {
+  parentType: contentType;
+  parentID: number;
+}> = ({ parentType, parentID }) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [topComment, setTopComment] = useState<Comment>();
   const [newComment, setNewComment] = useState("");
@@ -22,10 +22,10 @@ const CommentItem: React.FC<{
   // Fetch top-level comments with shallow replies
   const fetchComments = async () => {
     try {
-      // const response = await getCommentsFromPost(contentType, contentID);
+      // const response = await getCommentsFromPost(parentType, parentID);
       // console.log(response);
       // setComments(response);
-      const response = await getTopComment(contentType, contentID);
+      const response = await getTopComment(parentType, parentID);
       console.log(response);
       setTopComment(response);
     } catch (error) {
@@ -80,50 +80,6 @@ const CommentItem: React.FC<{
           {/* <CreateComment parentType="comment" parentID={topComment.id} /> */}
         </div>
       )}
-
-      {/* Comments List */}
-      <div className="space-y-4">
-        {comments.map((c) => (
-          <div key={c.id} className="border p-4 rounded-md">
-            <p className="font-medium">{c.body}</p>
-            <small className="text-gray-500">
-              Likes: {c.likes} | Dislikes: {c.dislikes}
-            </small>
-
-            {/* Reply Input */}
-            <div className="ml-4 mt-2 flex flex-col space-y-2">
-              <textarea
-                className="textarea textarea-sm textarea-bordered w-full"
-                placeholder="Reply..."
-                value={replyBody[c.id] || ""}
-                onChange={(e) =>
-                  setReplyBody((prev) => ({ ...prev, [c.id]: e.target.value }))
-                }
-              />
-              <button
-                className="btn btn-secondary btn-sm self-end"
-                onClick={() => addReply(c.id)}
-              >
-                Reply
-              </button>
-            </div>
-
-            {/* Replies */}
-            {c.replies && c.replies?.length > 0 && (
-              <div className="ml-6 mt-4 space-y-2">
-                {c.replies.map((r) => (
-                  <div key={r.id} className="border-l pl-2">
-                    <p>{r.body}</p>
-                    <small className="text-gray-500">
-                      Likes: {r.likes} | Dislikes: {r.dislikes}
-                    </small>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
     </div>
   );
 };

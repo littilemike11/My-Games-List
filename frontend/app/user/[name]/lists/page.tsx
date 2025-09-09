@@ -1,11 +1,21 @@
-import { getUserGameLists } from "@/app/api/supabase-api/list-api";
+import {
+  getListsByUser,
+  getUserGameLists,
+} from "@/app/api/supabase-api/list-api";
 import CreateList from "@/app/components/CreateList";
 import ListItem from "@/app/components/ListItem";
 import { UserGameList, StatusKey } from "@/app/types/models";
-export default async function ListsPage() {
+interface ListsPageProps {
+  params: { name: string };
+}
+
+export default async function ListsPage({ params }: ListsPageProps) {
+  const username = params.name; // 👈 comes from /user/[name]/Lists
   // const lists = await getLists();
   const lists = await getUserGameLists();
-  console.log(lists);
+  // const response = await getListsByUser(username);
+  // console.log("comstum list", response);
+  // console.log(lists);
   // console.log(games);
   const userLists = groupByUser(lists);
   console.log(userLists);

@@ -17,7 +17,6 @@ export default function UserLayout({
 }) {
   const { name } = useParams<{ name: string }>();
   const pathname = usePathname();
-
   const { session, profile } = useAuth();
   const isOwnProfile =
     session &&

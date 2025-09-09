@@ -4,7 +4,7 @@ export const getDiscussions = async () => {
   const { data, error } = await supabase
     .from("discussions")
     .select(
-      "id,created_at,title,content,likes,dislikes,tags,profiles(username,avatar)"
+      "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(username,avatar)"
     );
   if (error) {
     console.log("Error fetching: ", error);
@@ -12,10 +12,49 @@ export const getDiscussions = async () => {
   }
   const mappedData = data.map((discussion: any) => ({
     ...discussion,
-    profiles: discussion.profiles,
+    profile: discussion.profile,
   }));
 
   return mappedData;
+};
+
+export const getDiscussionsByUser = async (id: string) => {
+  const { data, error } = await supabase
+    .from("discussions")
+    .select(
+      "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(username,avatar)"
+    )
+    .eq("user_id", id);
+  if (error) {
+    console.log("Error fetching: ", error);
+    throw error;
+  }
+  const mappedData = data.map((discussion: any) => ({
+    ...discussion,
+    profile: discussion.profile,
+  }));
+
+  return mappedData;
+};
+
+export const getDiscussionByID = async (discussionID: number) => {
+  const { data, error } = await supabase
+    .from("discussions")
+    .select(
+      "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(username,avatar)"
+    )
+    .eq("id", discussionID)
+    .single();
+  if (error) {
+    console.log("Error fetching: ", error);
+    throw error;
+  }
+  return data
+    ? {
+        ...data,
+        profile: Array.isArray(data.profile) ? data.profile[0] : data.profile,
+      }
+    : undefined;
 };
 
 export const createDiscussion = async ({

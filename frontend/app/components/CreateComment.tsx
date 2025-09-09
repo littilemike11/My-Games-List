@@ -73,7 +73,7 @@ const CreateComment: React.FC<{
       ) : (
         <button
           onClick={() => setIsCommenting(true)}
-          className="btn btn-ghost self-start"
+          className="btn btn-primary self-start"
         >
           {parentType === "comment" ? "Reply" : "Add a comment"}
         </button>

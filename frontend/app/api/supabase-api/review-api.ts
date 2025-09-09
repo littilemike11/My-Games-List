@@ -1,10 +1,9 @@
 import supabase from "@/supabase-client";
-import { Review } from "@/app/types/models";
 export const getReviews = async () => {
   const { data, error } = await supabase
     .from("reviews")
     .select(
-      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profiles(username,avatar),games(name,cover,slug)"
+      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(username,avatar),game:games(id,name,cover,slug)"
     );
   if (error) {
     console.log("Error fetching: ", error);
@@ -15,8 +14,8 @@ export const getReviews = async () => {
   // works w/o this but typescript no like
   const mappedData = data.map((review: any) => ({
     ...review,
-    profiles: review.profiles,
-    games: review.games,
+    profile: review.profile,
+    game: review.game,
   }));
 
   return mappedData;
@@ -26,7 +25,9 @@ export const getReviews = async () => {
 export const getReviewsByGame = async (slug: string) => {
   const { data, error } = await supabase
     .from("reviews_with_game_slug")
-    .select("*")
+    .select(
+      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(username,avatar),game:games(id,name,cover,slug)"
+    )
     .eq("game_slug", slug);
 
   if (error) {
@@ -36,13 +37,56 @@ export const getReviewsByGame = async (slug: string) => {
   const mappedData = data.map((review: any) => ({
     ...review,
 
-    profiles: review.profiles,
-    games: {
-      game_id: review.game_id,
+    profile: review.profiles,
+    game: {
       cover: review.game_cover,
       slug: review.game_slug,
       name: review.game_name,
     },
+  }));
+
+  return mappedData;
+};
+
+export const getReviewByID = async (id: number) => {
+  const { data, error } = await supabase
+    .from("reviews")
+    .select(
+      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(username,avatar),game:games(id,name,cover,slug)"
+    )
+    .eq("id", id)
+    .single();
+  if (error) {
+    console.log("Error fetching: ", error);
+    throw error;
+  }
+  // Map arrays to single objects for profiles and games
+  //idk typescript error expect array not object, but supabase return it as an object
+  // works w/o this but typescript no like
+  return data
+    ? {
+        ...data,
+        profile: Array.isArray(data.profile) ? data.profile[0] : data.profile,
+        game: Array.isArray(data.game) ? data.game[0] : data.game,
+      }
+    : undefined;
+};
+export const getReviewsByUser = async (id: string) => {
+  const { data, error } = await supabase
+    .from("reviews")
+    .select(
+      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(username,avatar),game:games(id,name,cover,slug)"
+    )
+    .eq("user_id", id);
+  if (error) {
+    console.log("Error fetching: ", error);
+    throw error;
+  }
+  const mappedData = data.map((review: any) => ({
+    ...review,
+
+    profile: review.profile,
+    game: review.game,
   }));
 
   return mappedData;
