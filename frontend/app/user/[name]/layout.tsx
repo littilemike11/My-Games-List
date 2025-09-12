@@ -39,6 +39,17 @@ export default function UserLayout({
             <button className="btn btn-outline btn-sm">✏️ Edit Profile</button>
           )}
         </div>
+        <div className="stats shadow">
+          <div className="stat">
+            <div className="stat-value">0</div>
+            <div className="stat-title">Followers</div>
+          </div>
+
+          <div className="stat">
+            <div className="stat-value">0</div>
+            <div className="stat-title">Following</div>
+          </div>
+        </div>
       </div>
 
       {/* Top-level tabs */}
