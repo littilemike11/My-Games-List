@@ -21,6 +21,7 @@ export interface User {
   avatar: string;
 }
 export interface Profile {
+  id: string;
   username: String;
   avatar: String;
   bio?: String;
