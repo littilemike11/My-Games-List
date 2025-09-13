@@ -1,7 +1,11 @@
 "use client";
 import Link from "next/link";
+import { getPlayerByName } from "@/app/api/supabase-api/profile-api";
 import { useParams, usePathname } from "next/navigation";
 import { useAuth } from "@/app/auth/auth-context";
+import FollowButton from "@/app/components/FollowButton";
+import { useEffect, useState } from "react";
+import { Profile } from "@/app/types/models";
 
 const profileTabs = [
   { key: "games", label: "Games" },
@@ -18,6 +22,20 @@ export default function UserLayout({
   const { name } = useParams<{ name: string }>();
   const pathname = usePathname();
   const { session, profile } = useAuth();
+  const [userProfile, setUserProfile] = useState<Profile>();
+
+  const fetchUser = async () => {
+    try {
+      const user = await getPlayerByName(name);
+      console.log(user);
+      setUserProfile(user);
+    } catch (error) {
+      console.error("error getting user:", error);
+    }
+  };
+  useEffect(() => {
+    fetchUser();
+  }, []);
   const isOwnProfile =
     session &&
     profile?.username.toLocaleLowerCase() == name.toLocaleLowerCase();
@@ -35,8 +53,10 @@ export default function UserLayout({
             <h1 className="text-3xl font-bold">{name}</h1>
             <p className="text-sm text-base-content/70">User bio goes here.</p>
           </div>
-          {isOwnProfile && (
+          {isOwnProfile ? (
             <button className="btn btn-outline btn-sm">✏️ Edit Profile</button>
+          ) : (
+            userProfile && <FollowButton playerID={userProfile.id} />
           )}
         </div>
         <div className="stats shadow">
