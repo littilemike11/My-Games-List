@@ -61,3 +61,22 @@ export function formatDate(date: Date) {
   });
   return formattedDate;
 }
+
+export function getLevel(xp: number) {
+  return Math.floor(Math.cbrt(xp / 3));
+}
+
+export function getLevelProgress(xp: number) {
+  //ex)50
+  const currLevel = Math.floor(Math.cbrt(xp / 3)); //2
+  const nextLevel = currLevel + 1; //3
+  const currLvlThreshold = Math.pow(currLevel, 3) * 3; //24
+  const nextLvlThreshold = Math.pow(nextLevel, 3) * 3; //81
+  const xpPast = xp - currLvlThreshold;
+  const xpNeeded = nextLvlThreshold - currLvlThreshold;
+  return (xpPast / xpNeeded) * 100;
+  //26 xp past prev level
+  //need 31 xp
+  //find percent complete
+  //diff btwn curr and next lvl= 57
+}
