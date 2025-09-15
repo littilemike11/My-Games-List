@@ -6,6 +6,7 @@ import { useAuth } from "@/app/auth/auth-context";
 import FollowButton from "@/app/components/FollowButton";
 import { useEffect, useState } from "react";
 import { Profile } from "@/app/types/models";
+import { getLevel, getLevelProgress } from "@/app/utils/functions";
 
 const profileTabs = [
   { key: "games", label: "Games" },
@@ -44,11 +45,33 @@ export default function UserLayout({
       {/* Profile header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-6">
         <div className="flex items-center gap-4">
-          <div className="avatar">
-            <div className="w-28 rounded-full ring ring-primary ring-offset-2">
-              <img src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp" />
-            </div>
-          </div>
+          {userProfile && (
+            <figure className="flex flex-col items-center">
+              <div
+                className="radial-progress text-accent"
+                style={
+                  {
+                    "--value": getLevelProgress(userProfile.total_xp), // % toward next level
+                    "--size": "7rem",
+                    "--thickness": "8px",
+                  } as React.CSSProperties
+                }
+              >
+                <div className="avatar avatar-placeholder">
+                  <span className="badge badge-primary absolute right-0">
+                    Lvl {getLevel(userProfile.total_xp)}
+                  </span>
+                  <div className="bg-neutral text-neutral-content w-24 rounded-full">
+                    <span className="text-3xl">{name[0].toUpperCase()}</span>
+                  </div>
+                </div>
+              </div>
+              <figcaption className="text-sm opacity-70">
+                XP: {userProfile.total_xp}
+              </figcaption>{" "}
+            </figure>
+          )}
+
           <div>
             <h1 className="text-3xl font-bold">{name}</h1>
             <p className="text-sm text-base-content/70">User bio goes here.</p>

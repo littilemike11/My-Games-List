@@ -4,7 +4,7 @@ import supabase from "@/supabase-client";
 export const getPlayers = async () => {
   const { data, error } = await supabase
     .from("profiles")
-    .select("id,created_at,username,avatar");
+    .select("id,created_at,username,avatar, total_xp");
   if (error) {
     console.log("Error fetching: ", error);
     throw error;
@@ -16,7 +16,7 @@ export const getPlayers = async () => {
 export const getPlayerByName = async (username: string) => {
   const { data, error } = await supabase
     .from("profiles")
-    .select("id,created_at,username,avatar,bio")
+    .select("id,created_at,username,avatar,bio,total_xp")
     .ilike("username", username)
     .single();
   if (error) {

@@ -1,6 +1,7 @@
 import { Profile, UserGameList } from "../types/models";
 import Link from "next/link";
 import FollowButton from "./FollowButton";
+import { getLevel, getLevelProgress } from "../utils/functions";
 import ListItem from "./ListItem";
 export const ProfileItem: React.FC<{
   profile: Profile;
@@ -10,12 +11,26 @@ export const ProfileItem: React.FC<{
     <>
       <div>
         <div className="card bg-base-100 w-96 shadow-sm">
-          <figure>
-            <div className="avatar avatar-placeholder">
-              <div className="bg-neutral text-neutral-content w-24 rounded-full">
-                <span className="text-3xl">
-                  {profile.username[0].toUpperCase()}
+          <figure className="flex flex-col">
+            <div
+              className="radial-progress text-accent"
+              style={
+                {
+                  "--value": getLevelProgress(profile.total_xp), // % toward next level
+                  "--size": "7rem",
+                  "--thickness": "8px",
+                } as React.CSSProperties
+              }
+            >
+              <div className="avatar avatar-placeholder">
+                <span className="badge badge-primary absolute right-0">
+                  Lvl {getLevel(profile.total_xp)}
                 </span>
+                <div className="bg-neutral text-neutral-content w-24 rounded-full">
+                  <span className="text-3xl">
+                    {profile.username[0].toUpperCase()}
+                  </span>
+                </div>
               </div>
             </div>
           </figure>

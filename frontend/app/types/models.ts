@@ -21,6 +21,7 @@ export interface User {
   avatar: string;
 }
 export interface Profile {
+  total_xp: number;
   id: string;
   username: String;
   avatar: String;
