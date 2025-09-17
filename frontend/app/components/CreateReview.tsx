@@ -6,6 +6,7 @@ import RatingInput from "./RatingInput";
 import { useAuth } from "../auth/auth-context";
 import { createReview } from "../api/supabase-api/review-api";
 import { upsertGame } from "../api/supabase-api/game-api";
+import TagSection from "./TagSection";
 type ReviewProps = {
   game: Game;
 };
@@ -146,6 +147,7 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
               />
               <label>Rating</label>
               <RatingInput value={rating} onChange={setRating} />
+              <TagSection />
             </fieldset>
             <div className="modal-action flex justify-between w-full">
               <button type="submit" className="btn btn-success">

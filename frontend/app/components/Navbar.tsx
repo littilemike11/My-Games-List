@@ -127,6 +127,7 @@ const Navbar = () => {
         <div className="navbar-end gap-2">
           <div className="w-full lg:w-96 flex justify-end relative group">
             <input
+              value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               type="text"
               placeholder="Search"
@@ -148,7 +149,11 @@ const Navbar = () => {
                   searchResults.map((game) => (
                     <li key={game.id} className="hover:bg-amber-100">
                       <Link href={`/game/${game.slug}`}>
-                        <div className="flex items-center gap-2 p-2">
+                        <button
+                          onClick={() => setSearchInput("")}
+                          type="button"
+                          className="flex w-full cursor-pointer items-center gap-2 p-2"
+                        >
                           {game.cover && (
                             <img
                               className="h-12 w-8 object-cover rounded"
@@ -157,7 +162,7 @@ const Navbar = () => {
                             />
                           )}
                           <p className="font-bold line-clamp-1">{game.name}</p>
-                        </div>
+                        </button>
                       </Link>
                     </li>
                   ))

@@ -120,6 +120,17 @@ export interface List {
   dislikes: number;
   comment_count: number;
 }
+
+export interface Tag {
+  id: number;
+  name: string;
+  description?: string;
+  type: tagType;
+  owner_id?: string;
+}
+
+export type tagType = "community" | "official" | "restricted";
+export type tagableContent = "review" | "dicussion" | "list";
 export interface UserGameList {
   custom_lists: any;
   user_id: string;

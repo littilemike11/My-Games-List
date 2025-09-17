@@ -9,6 +9,8 @@ import {
 import { GamePreview, ListVisibility, StatusKey } from "@/app/types/models";
 import GamePreviewLink from "@/app/components/GamePreviewLink";
 import Link from "next/link";
+import TagSection from "@/app/components/TagSection";
+import GameSearch from "@/app/components/GameSearch";
 const page = () => {
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
@@ -158,85 +160,7 @@ const page = () => {
 
               {/* Tag Input */}
 
-              <label className="label">Tags</label>
-              <div className="join mb-4 mt-2">
-                <input
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyDown={(e) =>
-                    e.key === "Enter" && (e.preventDefault(), addTag(tagInput))
-                  }
-                  placeholder="Create a custom tag"
-                  className="input input-sm group join-item"
-                />
-                <button
-                  className="btn btn-sm join-item"
-                  type="button"
-                  onClick={() => addTag(tagInput)}
-                >
-                  Add
-                </button>
-              </div>
-
-              {/* Grouped Tag Buttons */}
-
-              {Object.entries(groupedTags).map(([group, tagsInGroup]) => (
-                <div key={group} className="mb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold uppercase text-secondary">
-                      {group}
-                    </span>
-                    <div className="flex-1 border-t border-base-300"></div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    {tagsInGroup.map((tag) => (
-                      <button
-                        key={tag}
-                        type="button"
-                        className={`badge badge-outline  ${
-                          tags.includes(tag)
-                            ? "badge-accent"
-                            : "hover:bg-base-300 hover:cursor-pointer"
-                        }`}
-                        onClick={() => addTag(tag)}
-                      >
-                        {tag}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-
-              {/* Display selected tags */}
-              {tags.length > 0 && (
-                <div>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="badge badge-outline badge-lg flex items-center gap-2"
-                      >
-                        {tag}
-                        <button
-                          type="button"
-                          className="text-error font-bold cursor-pointer"
-                          onClick={() => removeTag(tag)}
-                        >
-                          ×
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                  <button
-                    onClick={clearTags}
-                    type="button"
-                    className="btn btn-ghost btn-sm mt-2"
-                  >
-                    clear
-                  </button>
-                </div>
-              )}
+              <TagSection />
             </div>
             <div className="flex flex-col gap-1 ">
               <label className="label">Description</label>
@@ -308,6 +232,7 @@ const page = () => {
             </div>
           </div>
           <label className="label">Games</label>
+          <GameSearch onClickFunction={addGameToList} argumentType={"game"} />
           <div className="join mb-4 mt-2">
             <input
               value={gameInput}
