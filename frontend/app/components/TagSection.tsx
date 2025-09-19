@@ -1,16 +1,30 @@
 "use client";
 import { useState } from "react";
 import GameSearch from "./GameSearch";
-
+import { genres, genreNames } from "../mockData/genreTags";
+import { themes, themeNames } from "../mockData/themeTags";
 const TagSection: React.FC<{ canSearchGame?: boolean }> = ({
   canSearchGame = false,
 }) => {
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const [expandedGroups, setExpandedGroups] = useState<{
+    [key: string]: boolean;
+  }>({});
+
+  const toggleExpand = (group: string) => {
+    setExpandedGroups((prev) => ({
+      ...prev,
+      [group]: !prev[group],
+    }));
+  };
+
+  const LIMIT = 4; // max tags to show initially
+
   const groupedTags = {
     "Popular Tags": ["Hot takes", "Hidden gems", "Controversial"],
-    Genres: ["Action", "Puzzle", "Strategy", "Story"],
-    Themes: ["Sci-fi", "Fantasy", "Horror"],
+    Genres: genreNames,
+    Themes: themeNames,
   };
 
   const addTag = (tag: string) => {
@@ -57,27 +71,45 @@ const TagSection: React.FC<{ canSearchGame?: boolean }> = ({
 
       {/* Grouped Tag Buttons */}
 
-      {Object.entries(groupedTags).map(([group, tagsInGroup]) => (
-        <div key={group} className="mb-3">
-          <h4 className="text-sm font-semibold text-secondary mb-1">{group}</h4>
-          <div className="flex flex-wrap gap-2">
-            {tagsInGroup.map((tag) => (
+      {Object.entries(groupedTags).map(([group, tagsInGroup]) => {
+        const expanded = expandedGroups[group] || false;
+        const visibleTags = expanded
+          ? tagsInGroup
+          : tagsInGroup.slice(0, LIMIT);
+
+        return (
+          <div key={group} className="mb-3">
+            <h4 className="text-sm font-semibold text-secondary mb-1">
+              {group}
+            </h4>
+            <div className="flex flex-wrap gap-2">
+              {visibleTags.map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  className={`badge badge-outline ${
+                    tags.includes(tag)
+                      ? "badge-accent"
+                      : "hover:bg-base-300 hover:cursor-pointer"
+                  }`}
+                  onClick={() => addTag(tag)}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+            {tagsInGroup.length > LIMIT && (
               <button
-                key={tag}
                 type="button"
-                className={`badge badge-outline  ${
-                  tags.includes(tag)
-                    ? "badge-accent"
-                    : "hover:bg-base-300 hover:cursor-pointer"
-                }`}
-                onClick={() => addTag(tag)}
+                className=" btn btn-ghost btn-sm mt-2"
+                onClick={() => toggleExpand(group)}
               >
-                {tag}
+                {expanded ? "Hide" : "See More ..."}
               </button>
-            ))}
+            )}
           </div>
-        </div>
-      ))}
+        );
+      })}
 
       {/* Display selected tags */}
       {tags.length > 0 && (

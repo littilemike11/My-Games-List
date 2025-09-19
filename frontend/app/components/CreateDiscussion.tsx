@@ -5,7 +5,6 @@ import AuthModal from "./AuthModal";
 import { useAuth } from "../auth/auth-context";
 import TagSection from "./TagSection";
 const CreateDiscussion = () => {
-  const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const { session, profile, loading } = useAuth();
 
@@ -48,29 +47,6 @@ const CreateDiscussion = () => {
       "my_modal_4"
     ) as HTMLDialogElement | null;
     modal?.close();
-  };
-
-  const groupedTags = {
-    "Popular Tags": ["Hot takes", "Hidden gems", "Controversial"],
-    Genres: ["Action", "Puzzle", "Strategy", "Story"],
-    Themes: ["Sci-fi", "Fantasy", "Horror"],
-  };
-
-  const addTag = (tag: string) => {
-    console.log(tag);
-    const trimmed = tag.trim();
-    if (trimmed && !tags.includes(trimmed)) {
-      setTags([...tags, trimmed]);
-      setTagInput("");
-    }
-  };
-
-  const removeTag = (tagToRemove: string) => {
-    setTags(tags.filter((tag) => tag !== tagToRemove));
-  };
-
-  const clearTags = () => {
-    setTags([]);
   };
 
   return (
