@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import DrawerLayout from "./components/DrawerLayout";
 import { AuthProvider } from "./auth/auth-context";
 
 const geistSans = Geist({
@@ -32,7 +33,9 @@ export default function RootLayout({
       >
         <AuthProvider>
           <Navbar />
-          <main className="flex-grow">{children}</main>
+          <DrawerLayout>
+            <main className="flex-grow">{children}</main>
+          </DrawerLayout>
           <Footer />
         </AuthProvider>
       </body>
