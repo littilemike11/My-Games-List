@@ -4,6 +4,7 @@ import Link from "next/link";
 import AuthModal from "@/app/components/AuthModal";
 import { useAuth } from "../auth/auth-context";
 import { useEffect, useRef, useState } from "react";
+import { FaChevronDown } from "react-icons/fa6";
 import getGames from "../api/igdb-api";
 import supabase from "@/supabase-client";
 import { GamePreview } from "../types/models";
@@ -63,9 +64,41 @@ const Navbar = () => {
           </label>
         </div>
         <div className="navbar-start">
-          <Link href={"/"} className="btn  btn-ghost text-xl">
+          {/* <Link href={"/"} className="btn  btn-ghost text-xl">
             The Save Room
-          </Link>{" "}
+          </Link>{" "} */}
+          <div className="join">
+            {/* Primary button for the first status (wishlist in this example) */}
+            <Link href={"/"} className="btn btn-ghost text-xl join-item">
+              The Save Room
+            </Link>{" "}
+            {/* Dropdown for all statuses */}
+            <button className="dropdown dropdown-end join-item">
+              <div
+                // title="Add to other gameStatus"
+                tabIndex={0}
+                role="button"
+                className="btn pl-0 btn-lg btn-ghost rounded-r-full"
+              >
+                <FaChevronDown />
+              </div>
+
+              <ul
+                tabIndex={0}
+                className="dropdown-content menu rounded-box z-10 w-52 p-2 shadow-sm"
+              >
+                <li>
+                  <button className="btn">Home</button>
+                </li>
+                <li>
+                  <button className="btn">Popular</button>
+                </li>
+                <li>
+                  <button className="btn">Latest</button>
+                </li>
+              </ul>
+            </button>
+          </div>
           {/* <div className="dropdown">
                 <div
                   tabIndex={0}

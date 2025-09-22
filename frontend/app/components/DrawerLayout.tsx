@@ -35,7 +35,7 @@ export default function DrawerLayout({
             </ul>
 
             {/* Content Filters */}
-            <div className="border-y-2 border-base-300">
+            {/* <div className="border-y-2 border-base-300">
               <div className="collapse collapse-plus border-base-300">
                 <input type="checkbox" />
                 <div className="collapse-title font-medium text-lg">
@@ -56,7 +56,7 @@ export default function DrawerLayout({
                   )}
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Recently Visited */}
             <div className="border-y-2 border-base-300">
