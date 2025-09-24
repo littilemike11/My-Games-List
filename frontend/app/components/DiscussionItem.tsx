@@ -68,6 +68,8 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
               likeCount={discussion.likes}
               dislikeCount={discussion.dislikes}
               commentCount={discussion.comment_count}
+              parent_type="discussion"
+              parent_id={discussion.id}
             />
             {/* <CreateComment parentType="discussion" parentID={discussion.id} /> */}
           </div>

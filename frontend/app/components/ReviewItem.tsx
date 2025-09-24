@@ -85,6 +85,8 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
               likeCount={review.likes ?? 0}
               dislikeCount={review.dislikes ?? 0}
               commentCount={review.comment_count ?? 0}
+              parent_type="review"
+              parent_id={review.id}
             />
             {/* <CreateComment parentType={"review"} parentID={review.id} /> */}
           </div>

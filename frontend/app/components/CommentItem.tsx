@@ -72,6 +72,8 @@ const CommentItem: React.FC<{
                   likeCount={topComment.likes}
                   dislikeCount={topComment.dislikes}
                   commentCount={topComment.comment_count}
+                  parent_type="comment"
+                  parent_id={topComment.id}
                 />
                 <CreateComment parentType="comment" parentID={topComment.id} />
               </div>
