@@ -84,7 +84,7 @@ export interface Discussion {
   gameID?: string;
   id: number;
   likes: number;
-  tags?: string[];
+  tags?: Tag[];
   content: string;
   title: string;
   user_id?: string;
@@ -130,7 +130,7 @@ export interface Tag {
 }
 
 export type tagType = "community" | "official" | "restricted";
-export type tagableContent = "review" | "dicussion" | "list";
+export type tagableContent = "review" | "discussion" | "list";
 export interface UserGameList {
   custom_lists: any;
   user_id: string;

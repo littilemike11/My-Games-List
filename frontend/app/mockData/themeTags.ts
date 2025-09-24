@@ -1,4 +1,5 @@
 // Object: name → slug
+// Object: name → slug
 export const themes: Record<string, string> = {
   Action: "action",
   Business: "business",
@@ -24,6 +25,31 @@ export const themes: Record<string, string> = {
   "4X (explore, expand, exploit, and exterminate)":
     "4x-explore-expand-exploit-and-exterminate",
 };
+
+// export const themes: Record<string, number> = {
+//   Action: 67,
+//   Business: 76,
+//   Comedy: 75,
+//   Drama: 56,
+//   Educational: 59,
+//   Erotic: 65,
+//   Fantasy: 68,
+//   Historical: 73,
+//   Horror: 70,
+//   Kids: 60,
+//   Mystery: 66,
+//   "Non-fiction": 57,
+//   "Open world": 61,
+//   Party: 63,
+//   Romance: 77,
+//   Sandbox: 58,
+//   "Science fiction": 69,
+//   Stealth: 74,
+//   Survival: 72,
+//   Thriller: 71,
+//   Warfare: 62,
+//   "4X (explore, expand, exploit, and exterminate)": 64,
+// };
 
 // Array of names
 export const themeNames: string[] = [

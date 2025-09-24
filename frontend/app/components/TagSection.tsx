@@ -3,11 +3,14 @@ import { useState } from "react";
 import GameSearch from "./GameSearch";
 import { genres, genreNames } from "../mockData/genreTags";
 import { themes, themeNames } from "../mockData/themeTags";
-const TagSection: React.FC<{ canSearchGame?: boolean }> = ({
-  canSearchGame = false,
-}) => {
+const TagSection: React.FC<{
+  canSearchGame?: boolean;
+  recommendedTags?: string[];
+  tags: string[];
+  setTags: Function;
+}> = ({ canSearchGame = false, recommendedTags = [], tags, setTags }) => {
   const [tagInput, setTagInput] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
+  // const [tags, setTags] = useState<string[]>(recommendedTags);
   const [expandedGroups, setExpandedGroups] = useState<{
     [key: string]: boolean;
   }>({});
@@ -21,12 +24,16 @@ const TagSection: React.FC<{ canSearchGame?: boolean }> = ({
 
   const LIMIT = 4; // max tags to show initially
 
-  const groupedTags = {
-    "Popular Tags": ["Hot takes", "Hidden gems", "Controversial"],
-    Genres: genreNames,
-    Themes: themeNames,
-  };
-
+  const groupedTags =
+    recommendedTags.length >= 0
+      ? {
+          Recommended: recommendedTags,
+        }
+      : {
+          "Popular Tags": ["Hot takes", "Hidden gems", "Controversial"],
+          Genres: genreNames,
+          Themes: themeNames,
+        };
   const addTag = (tag: string) => {
     console.log(tag);
     const trimmed = tag.trim();
@@ -83,7 +90,7 @@ const TagSection: React.FC<{ canSearchGame?: boolean }> = ({
               {group}
             </h4>
             <div className="flex flex-wrap gap-2">
-              {visibleTags.map((tag) => (
+              {visibleTags.map((tag: string) => (
                 <button
                   key={tag}
                   type="button"

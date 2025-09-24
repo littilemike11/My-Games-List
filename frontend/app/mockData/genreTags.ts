@@ -1,4 +1,30 @@
 // Object: name → slug
+// export const genres: Record<string, number> = {
+//   Adventure: 50,
+//   Arcade: 52,
+//   "Card & Board Game": 54,
+//   Fighting: 34,
+//   "Hack and slash/Beat 'em up": 47,
+//   Indie: 51,
+//   MOBA: 55,
+//   Music: 36,
+//   Pinball: 49,
+//   Platform: 37,
+//   "Point-and-click": 33,
+//   Puzzle: 38,
+//   "Quiz/Trivia": 48,
+//   Racing: 39,
+//   "Real Time Strategy (RTS)": 40,
+//   "Role-playing (RPG)": 41,
+//   Shooter: 35,
+//   Simulator: 42,
+//   Sport: 43,
+//   Strategy: 44,
+//   Tactical: 46,
+//   "Turn-based strategy (TBS)": 45,
+//   "Visual Novel": 53,
+// };
+// Object: name → slug
 export const genres: Record<string, string> = {
   Adventure: "adventure",
   Arcade: "arcade",

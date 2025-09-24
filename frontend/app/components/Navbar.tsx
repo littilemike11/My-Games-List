@@ -88,13 +88,13 @@ const Navbar = () => {
                 className="dropdown-content menu rounded-box z-10 w-52 p-2 shadow-sm"
               >
                 <li>
-                  <button className="btn">Home</button>
+                  <div className="btn">Home</div>
                 </li>
                 <li>
-                  <button className="btn">Popular</button>
+                  <div className="btn">Popular</div>
                 </li>
                 <li>
-                  <button className="btn">Latest</button>
+                  <div className="btn">Latest</div>
                 </li>
               </ul>
             </button>

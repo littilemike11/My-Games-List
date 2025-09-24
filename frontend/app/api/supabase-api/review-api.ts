@@ -1,4 +1,5 @@
 import supabase from "@/supabase-client";
+import { getTagsByName } from "./tag-api";
 export const getReviews = async () => {
   const { data, error } = await supabase
     .from("reviews")
@@ -93,28 +94,52 @@ export const getReviewsByUser = async (id: string) => {
 };
 
 export const createReview = async (
-  title: String,
+  title: string,
   content: string,
   rating: number,
   game_id: number,
   user_id: string,
   platform: string,
-  hours_played: number
+  hours_played: number,
+  tags: string[] // array of names or slugs
 ) => {
-  const { data, error } = await supabase.from("reviews").insert({
-    title,
-    content,
-    rating,
-    game_id,
-    user_id,
-    platform,
-    hours_played,
-  });
-  if (error) {
-    console.log("Error Inserting: ", error);
-    throw error;
-  }
-  return data;
+  // Step 1: Insert review
+  const { data: review, error: reviewError } = await supabase
+    .from("reviews")
+    .insert({
+      title,
+      content,
+      rating,
+      game_id,
+      user_id,
+      platform,
+      hours_played,
+    })
+    .select()
+    .single(); // return just one row
+
+  if (reviewError) throw reviewError;
+
+  // Step 2: get tag ids
+
+  const tagRows = await getTagsByName(tags);
+
+  // if (tagError) throw tagError;
+
+  // Step 3: Insert join records
+  const tagLinks = tagRows.map((tag) => ({
+    parent_type: "review",
+    parent_id: review.id,
+    tag_id: tag.id,
+  }));
+
+  const { error: linkError } = await supabase
+    .from("tag_links")
+    .insert(tagLinks);
+
+  if (linkError) throw linkError;
+
+  return { ...review, tags: tagRows };
 };
 
 // users cannot update user or game id

@@ -1,11 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
 import { createDiscussion } from "../api/supabase-api/discussion-api";
+import { useParams } from "next/navigation";
 import AuthModal from "./AuthModal";
 import { useAuth } from "../auth/auth-context";
 import TagSection from "./TagSection";
-const CreateDiscussion = () => {
-  const [tags, setTags] = useState<string[]>([]);
+const CreateDiscussion: React.FC<{ ctaType?: "input" | "button" }> = ({
+  ctaType = "input",
+}) => {
+  const { slug } = useParams<{ slug: string }>();
+  const recommendedTags: string[] = [slug];
+  const [tags, setTags] = useState<string[]>(recommendedTags ?? []);
   const { session, profile, loading } = useAuth();
 
   const [title, setTitle] = useState("");
@@ -29,12 +34,6 @@ const CreateDiscussion = () => {
     }
   };
 
-  useEffect(() => {
-    if (profile) {
-      setTitle(`${profile.username}'s Post`);
-    }
-  }, [profile]);
-
   const openModal = () => {
     if (!session) return;
     const modal = document.getElementById(
@@ -55,12 +54,19 @@ const CreateDiscussion = () => {
       {/* <button className="btn" onClick={openModal}>
         open modal
       </button> */}
-      <input
-        className="input border-amber-100"
-        type="text"
-        placeholder="What's on your mind?"
-        onClick={openModal}
-      />
+      {ctaType == "input" ? (
+        <input
+          className="input border-amber-100"
+          type="text"
+          placeholder="What's on your mind?"
+          onClick={openModal}
+        />
+      ) : (
+        <button type="button" onClick={openModal} className="btn btn-primary">
+          Start a Discussion
+        </button>
+      )}
+
       <dialog id="my_modal_4" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           <form onSubmit={handleSubmit}>
@@ -77,8 +83,9 @@ const CreateDiscussion = () => {
                 value={title}
                 required
                 autoFocus
+                placeholder="What's this post about?"
               />
-
+              <label className="label">Content</label>
               <textarea
                 className="textarea"
                 placeholder="What's on your mind?"
@@ -86,7 +93,12 @@ const CreateDiscussion = () => {
                 value={content}
                 required
               />
-              <TagSection canSearchGame={true} />
+              <TagSection
+                canSearchGame={true}
+                recommendedTags={recommendedTags}
+                tags={tags}
+                setTags={setTags}
+              />
             </fieldset>
             <div className="modal-action flex justify-between w-full">
               <button type="submit" className="btn btn-success">

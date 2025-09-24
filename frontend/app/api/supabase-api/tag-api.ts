@@ -20,6 +20,19 @@ export const searchTags = async (name: string, restricted = false) => {
   return data;
 };
 
+export const getTagsByName = async (tags: string[]) => {
+  const { data, error } = await supabase
+    .from("tags")
+    .select("id,name")
+    .in("name", tags);
+
+  if (error) {
+    console.error("Error fetching games: ", error);
+    throw error;
+  }
+
+  return data;
+};
 // user creater communtiy tag
 export const createTag = async (
   owner_id: string,
@@ -59,14 +72,15 @@ export const updateTagDescription = async (
 };
 
 //tags cannot be deleted by users only admins
-export const getPostsByTag = async (
-  name: string,
+export const getPostsByTags = async (
+  tagIds: number[],
   parent_type: tagableContent
 ) => {
   const { data, error } = await supabase
     .from("tag_links")
     .select("parent_id")
-    .eq("parent_type", parent_type);
+    .eq("parent_type", parent_type)
+    .in("tag_id", tagIds);
   if (error) {
     console.error("Error fetching posts: ", error);
     throw error;
