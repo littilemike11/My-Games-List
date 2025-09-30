@@ -1,4 +1,5 @@
 import supabase from "@/supabase-client";
+import { getPostsByTags, getTagsByName } from "./tag-api";
 
 export const getDiscussions = async () => {
   const { data, error } = await supabase
@@ -13,6 +14,56 @@ export const getDiscussions = async () => {
   const mappedData = data.map((discussion: any) => ({
     ...discussion,
     profile: discussion.profile,
+  }));
+
+  return mappedData;
+};
+
+export const getDiscussionsByTag = async (tag: string) => {
+  const { data, error } = await supabase
+    .from("discussions")
+    .select(
+      "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(username,avatar)"
+    )
+    .contains("tags", [tag]);
+  if (error) {
+    console.log("Error fetching: ", error);
+    throw error;
+  }
+  const mappedData = data.map((discussion: any) => ({
+    ...discussion,
+    profile: discussion.profile,
+  }));
+
+  return mappedData;
+};
+
+export const getDiscussionsByTags = async (tags: string[]) => {
+  //get tag ids
+  const tagRows = await getTagsByName(tags);
+  console.log("tags", tagRows);
+  let tagIds = tagRows.map((tag) => tag.id);
+
+  //get discussions from tag ids
+  const discussionsIds = (await getPostsByTags(tagIds, "discussion")).map(
+    (id) => id.parent_id
+  );
+  console.log("discussion ids", discussionsIds);
+  // get dicussion info
+  const { data, error } = await supabase
+    .from("discussions")
+    .select(
+      "id,created_at,title,content,likes,dislikes,comment_count,profile:profiles(username,avatar)"
+    )
+    .in("id", discussionsIds);
+  if (error) {
+    console.log("Error fetching: ", error);
+    throw error;
+  }
+  const mappedData = data.map((discussion: any) => ({
+    ...discussion,
+    profile: discussion.profile,
+    // tags: tagRows,
   }));
 
   return mappedData;
@@ -68,14 +119,30 @@ export const createDiscussion = async ({
   content: string;
   tags: string[];
 }) => {
-  const { data, error } = await supabase
+  const { data: discussion, error } = await supabase
     .from("discussions")
-    .insert([{ user_id, title, content, tags }]);
+    .insert([{ user_id, title, content, tags }])
+    .select()
+    .single();
   if (error) {
     console.log("Error Inserting: ", error);
     throw error;
   }
-  return data;
+  // get tag ids
+  const tagRows = await getTagsByName(tags);
+  const tagLinks = tagRows.map((tag) => ({
+    parent_type: "discussion",
+    parent_id: discussion.id,
+    tag_id: tag.id,
+  }));
+
+  const { error: linkError } = await supabase
+    .from("tag_links")
+    .insert(tagLinks);
+
+  if (linkError) throw linkError;
+
+  return { ...discussion, tags: tagRows };
 };
 
 //user cant change user id or ownership

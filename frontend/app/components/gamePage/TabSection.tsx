@@ -5,19 +5,23 @@ import { useEffect, useState } from "react";
 import GamePreviewLink from "../GamePreviewLink";
 import CreateReview from "../CreateReview";
 import ReviewItem from "../ReviewItem";
+import CreateDiscussion from "../CreateDiscussion";
+import {
+  getDiscussionsByTag,
+  getDiscussionsByTags,
+} from "@/app/api/supabase-api/discussion-api";
+import DiscussionItem from "../DiscussionItem";
 type TabProps = {
   game: Game;
   screenshots: string[];
   similarGames: GamePreview[];
   franchise: GamePreview[];
-  discussions: Discussion[];
 };
 const TabSection: React.FC<TabProps> = ({
   game,
   screenshots,
   similarGames,
   franchise,
-  discussions,
 }) => {
   const tabs = [
     "Reviews",
@@ -28,21 +32,31 @@ const TabSection: React.FC<TabProps> = ({
   ];
   const [activeTab, setActiveTab] = useState("Reviews");
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [discussions, setDiscussions] = useState<Discussion[]>([]);
   const fetchReviews = async () => {
     const response = await getReviewsByGame(game.slug);
     console.log("id", game.slug);
     console.log(response);
     setReviews(response);
   };
+  const fetchDiscussions = async () => {
+    // const response = await getDiscussionsByTag(game.slug);
+    // console.log("dicussions", response);
+    // setDiscussions(response);
+    const response = await getDiscussionsByTags([game.slug]);
+    console.log("discussions", response);
+    setDiscussions(response);
+  };
   useEffect(() => {
     fetchReviews();
+    fetchDiscussions();
   }, []);
   // const reviews: Review[] = await getReviewsByGame();
   const renderTabContent = () => {
     switch (activeTab) {
       case "Reviews":
         return reviews?.length ? (
-          <div className="grid grid-cols-1 gap-4">
+          <div className="flex flex-col gap-4">
             {reviews.map((review) => (
               <ReviewItem showCover={false} key={review.id} review={review} />
             ))}
@@ -55,18 +69,16 @@ const TabSection: React.FC<TabProps> = ({
         );
       case "Discussions":
         return discussions?.length ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {screenshots.map((url, index) => (
-              <img
-                key={index}
-                src={url}
-                alt={`screenshot-${index}`}
-                className="rounded-xl shadow-md w-full object-cover"
-              />
+          <div className="flex flex-col gap-4">
+            {discussions.map((discussion) => (
+              <DiscussionItem discussion={discussion} key={discussion.id} />
             ))}
           </div>
         ) : (
-          <p>Be the first to start a Discussion</p>
+          <div className="flex flex-col gap-4">
+            <p>Be the first to start a Discussion</p>
+            <CreateDiscussion ctaType="button" />
+          </div>
         );
       case "Screenshots":
         return screenshots.length ? (
