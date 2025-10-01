@@ -28,6 +28,12 @@ export interface Profile {
   bio?: String;
 }
 
+export interface ProfilePreview {
+  id: string;
+  username: string;
+  avatar: string;
+}
+
 export interface Game {
   cover?: string;
   developers: string[];
@@ -64,7 +70,7 @@ export interface Review {
   created_at?: Date;
   dislikes?: number;
   game: GamePreview;
-  profile: Profile;
+  profile: ProfilePreview;
   game_id?: number;
   id: number;
   likes?: number;
@@ -111,8 +117,8 @@ export interface List {
   created_at?: Date;
   user_id: string;
   title: string;
-  tags: string[];
-  type: ListType;
+  tags?: string[];
+  type?: ListType;
   visibility: ListVisibility;
   description?: string;
   profiles?: Profile;

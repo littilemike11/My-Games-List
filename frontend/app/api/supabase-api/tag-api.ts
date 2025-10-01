@@ -2,11 +2,16 @@ import { tagableContent } from "@/app/types/models";
 import supabase from "@/supabase-client";
 
 // search tags
-export const searchTags = async (name: string, restricted = false) => {
+export const searchTags = async (
+  name: string,
+  restricted: boolean = false,
+  limit: number = 5
+) => {
   let query = supabase
     .from("tags")
     .select("id,name,description,type, owner_id")
-    .eq("name", name);
+    .ilike("name", `%${name}%`) // search substring
+    .limit(limit);
 
   if (!restricted) {
     query = query.neq("type", "restricted");
@@ -17,7 +22,7 @@ export const searchTags = async (name: string, restricted = false) => {
     throw error;
   }
 
-  return data;
+  return data ?? [];
 };
 
 export const getTagsByName = async (tags: string[]) => {

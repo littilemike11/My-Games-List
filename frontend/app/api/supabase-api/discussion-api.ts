@@ -19,6 +19,26 @@ export const getDiscussions = async () => {
   return mappedData;
 };
 
+export const searchDiscussions = async (query: string, limit: number = 5) => {
+  const { data, error } = await supabase
+    .from("discussions")
+    .select(
+      "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(username,avatar)"
+    )
+    .ilike("title", `%${query}%`)
+    .limit(limit);
+  if (error) {
+    console.log("Error fetching: ", error);
+    throw error;
+  }
+  const mappedData = data.map((discussion: any) => ({
+    ...discussion,
+    profile: discussion.profile,
+  }));
+
+  return mappedData;
+};
+
 export const getDiscussionsByTag = async (tag: string) => {
   const { data, error } = await supabase
     .from("discussions")
