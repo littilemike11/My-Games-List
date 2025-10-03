@@ -12,6 +12,20 @@ export const getPlayers = async () => {
   return data;
 };
 
+//search users
+export const searchPlayers = async (query: string, limit: number = 5) => {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id,created_at,username,avatar,bio,total_xp")
+    .ilike("username", `%${query}%`)
+    .limit(limit);
+  if (error) {
+    console.error("Error getting user", error);
+    throw error;
+  }
+  return data ?? [];
+};
+
 // get a single user
 export const getPlayerByName = async (username: string) => {
   const { data, error } = await supabase

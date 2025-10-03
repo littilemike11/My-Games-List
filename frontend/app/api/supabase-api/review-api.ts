@@ -22,6 +22,33 @@ export const getReviews = async () => {
   return mappedData;
 };
 
+export const searchReviews = async (name: string, limit: number = 5) => {
+  const { data, error } = await supabase
+    .from("reviews_with_game_slug")
+    .select(
+      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(username,avatar), game_cover, game_slug, game_name"
+    )
+    .ilike("title", `%${name}%`) // search substring match
+    .limit(limit);
+
+  if (error) {
+    console.error("Error fetching reviews:", error);
+    throw error;
+  }
+
+  const mappedData = data.map((review: any) => ({
+    ...review,
+    profile: review.profile,
+    game: {
+      cover: review.game_cover,
+      slug: review.game_slug,
+      name: review.game_name,
+    },
+  }));
+
+  return mappedData;
+};
+
 //  i feel a view may not be needed, try again with id and collect info from other table columns
 export const getReviewsByGame = async (slug: string) => {
   const { data, error } = await supabase
