@@ -31,34 +31,47 @@ const GameResultsPage = () => {
   }, [query]);
   return (
     <>
-      <main className="p-4">
+      <main className="p-6 max-w-4xl mx-auto">
         {/* This could be a component that fetches & combines results */}
-        <div className="space-y-6">
-          <section>
-            <h1 className="text-2xl font-bold">
-              Games matching "{query}" ({games.length})
-            </h1>
+
+        <section>
+          <div className="space-y-6">
+            {/* Title */}
+            <div className="border-b pb-4">
+              <h1 className="text-3xl font-bold mb-2">
+                Games matching <span className="text-primary">"{query}"</span>
+              </h1>
+              <p className="text-sm text-gray-500">
+                {games.length} result{games.length !== 1 && "s"} found
+              </p>
+            </div>
 
             {/* Map your results here */}
             {/* <p>Games matching </p> */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {games.map((game) => (
-                <div className="" key={game.id}>
-                  <GamePreviewLink
-                    game={{
-                      id: game.id,
-                      slug: game.slug,
-                      cover:
-                        game.cover?.url.replace("t_thumb", "t_cover_big") ||
-                        null,
-                      name: game.name,
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          </section>
-        </div>
+            {games.length > 0 ? (
+              <div className="grid grid-cols-2 place-items-center md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {games.map((game) => (
+                  <div className="" key={game.id}>
+                    <GamePreviewLink
+                      game={{
+                        id: game.id,
+                        slug: game.slug,
+                        cover:
+                          game.cover?.url.replace("t_thumb", "t_cover_big") ||
+                          null,
+                        name: game.name,
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-error text-center mt-10 text-lg">
+                No Games found
+              </p>
+            )}
+          </div>
+        </section>
       </main>
     </>
   );

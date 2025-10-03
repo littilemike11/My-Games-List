@@ -16,10 +16,10 @@ const categories = [
   "all",
   "games",
   "players",
-  "tags",
   "discussions",
-  "lists",
   "reviews",
+  "lists",
+  "tags",
 ];
 const STORAGE_KEY = "recentSearches";
 
@@ -183,10 +183,10 @@ const Search = () => {
           <option value="all">All</option>
           <option value="games">Games</option>
           <option value="players">Players</option>
-          <option value="tags">Tags</option>
           <option value="discussions">Discussions</option>
-          <option value="lists">Lists</option>
           <option value="reviews">Reviews</option>
+          <option value="lists">Lists</option>
+          <option value="tags">Tags</option>
         </select>
 
         <button

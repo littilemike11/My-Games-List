@@ -28,7 +28,7 @@ export const searchReviews = async (name: string, limit: number = 5) => {
     .select(
       "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(username,avatar), game_cover, game_slug, game_name"
     )
-    .ilike("game_slug", `%${name}%`) // search substring match
+    .ilike("title", `%${name}%`) // search substring match
     .limit(limit);
 
   if (error) {
