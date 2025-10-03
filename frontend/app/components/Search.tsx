@@ -133,7 +133,7 @@ const Search = () => {
                       <div className="flex items-center">
                         <button
                           onClick={() => {
-                            console.log("clicked");
+                            setSearchInput(search);
                             handleSearch(search);
                           }}
                           className="flex w-full h-full p-1 cursor-pointer items-center space-x-2"

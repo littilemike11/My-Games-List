@@ -13,7 +13,11 @@ const GamePreviewLink: React.FC<Props> = ({
   isRound = true,
 }) => {
   return (
-    <div className={`overflow-hidden ${isRound && "rounded-2xl "} h-${height}`}>
+    <div
+      className={`overflow-hidden ${
+        isRound && "rounded-2xl "
+      } h-${height} w-40`}
+    >
       <Link
         className="block w-full h-full hover:scale-105 transition-transform duration-200"
         title={game?.name}
