@@ -4,9 +4,11 @@ import Reactions from "./Reactions";
 import CreateComment from "./CreateComment";
 import CommentItem from "./CommentItem";
 import Link from "next/link";
+import TagItem from "./TagItem";
 const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
   discussion,
 }) => {
+  console.log(discussion.tags);
   return (
     <>
       <div className="card bg-base-100 w-full rounded-lg shadow-sm">
@@ -51,14 +53,8 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
 
           {/* Tags */}
           <div className="flex flex-wrap gap-2">
-            {discussion.tags?.map((tag, idx) => (
-              <span
-                key={idx}
-                className="badge badge-outline cursor-pointer select-none"
-                aria-label={`Tag: ${tag}`}
-              >
-                {tag}
-              </span>
+            {discussion.tags?.map((tag) => (
+              <TagItem key={tag.id} tag={tag} />
             ))}
           </div>
 

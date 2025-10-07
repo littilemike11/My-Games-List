@@ -1,5 +1,10 @@
 import supabase from "@/supabase-client";
-import { getPostsByTags, getTagsByName } from "./tag-api";
+import {
+  getPostsByTags,
+  getPostTags,
+  getTagsByName,
+  upsertTags,
+} from "./tag-api";
 
 export const getDiscussions = async () => {
   const { data, error } = await supabase
@@ -11,10 +16,13 @@ export const getDiscussions = async () => {
     console.log("Error fetching: ", error);
     throw error;
   }
-  const mappedData = data.map((discussion: any) => ({
-    ...discussion,
-    profile: discussion.profile,
-  }));
+  const mappedData = await Promise.all(
+    data.map(async (discussion: any) => ({
+      ...discussion,
+      profile: discussion.profile,
+      tags: await getPostTags("discussion", discussion.id),
+    }))
+  );
 
   return mappedData;
 };
@@ -31,10 +39,13 @@ export const searchDiscussions = async (query: string, limit: number = 5) => {
     console.log("Error fetching: ", error);
     throw error;
   }
-  const mappedData = data.map((discussion: any) => ({
-    ...discussion,
-    profile: discussion.profile,
-  }));
+  const mappedData = await Promise.all(
+    data.map(async (discussion: any) => ({
+      ...discussion,
+      profile: discussion.profile,
+      tags: await getPostTags("discussion", discussion.id),
+    }))
+  );
 
   return mappedData;
 };
@@ -50,10 +61,13 @@ export const getDiscussionsByTag = async (tag: string) => {
     console.log("Error fetching: ", error);
     throw error;
   }
-  const mappedData = data.map((discussion: any) => ({
-    ...discussion,
-    profile: discussion.profile,
-  }));
+  const mappedData = await Promise.all(
+    data.map(async (discussion: any) => ({
+      ...discussion,
+      profile: discussion.profile,
+      tags: await getPostTags("discussion", discussion.id),
+    }))
+  );
 
   return mappedData;
 };
@@ -80,11 +94,13 @@ export const getDiscussionsByTags = async (tags: string[]) => {
     console.log("Error fetching: ", error);
     throw error;
   }
-  const mappedData = data.map((discussion: any) => ({
-    ...discussion,
-    profile: discussion.profile,
-    // tags: tagRows,
-  }));
+  const mappedData = await Promise.all(
+    data.map(async (discussion: any) => ({
+      ...discussion,
+      profile: discussion.profile,
+      tags: await getPostTags("discussion", discussion.id),
+    }))
+  );
 
   return mappedData;
 };
@@ -93,17 +109,23 @@ export const getDiscussionsByUser = async (id: string) => {
   const { data, error } = await supabase
     .from("discussions")
     .select(
-      "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(username,avatar)"
+      "id, created_at, title, content, likes, dislikes, comment_count, tags, profile:profiles(username, avatar)"
     )
     .eq("user_id", id);
+
   if (error) {
     console.log("Error fetching: ", error);
     throw error;
   }
-  const mappedData = data.map((discussion: any) => ({
-    ...discussion,
-    profile: discussion.profile,
-  }));
+
+  // Wait for all async tag fetches to resolve
+  const mappedData = await Promise.all(
+    data.map(async (discussion: any) => ({
+      ...discussion,
+      profile: discussion.profile,
+      tags: await getPostTags("discussion", discussion.id),
+    }))
+  );
 
   return mappedData;
 };
@@ -124,6 +146,7 @@ export const getDiscussionByID = async (discussionID: number) => {
     ? {
         ...data,
         profile: Array.isArray(data.profile) ? data.profile[0] : data.profile,
+        tags: await getPostTags("discussion", discussionID),
       }
     : undefined;
 };
@@ -139,6 +162,7 @@ export const createDiscussion = async ({
   content: string;
   tags: string[];
 }) => {
+  // insert discussion
   const { data: discussion, error } = await supabase
     .from("discussions")
     .insert([{ user_id, title, content, tags }])
@@ -148,8 +172,10 @@ export const createDiscussion = async ({
     console.log("Error Inserting: ", error);
     throw error;
   }
+
+  // upsert tags
+  const tagRows = await upsertTags(tags);
   // get tag ids
-  const tagRows = await getTagsByName(tags);
   const tagLinks = tagRows.map((tag) => ({
     parent_type: "discussion",
     parent_id: discussion.id,

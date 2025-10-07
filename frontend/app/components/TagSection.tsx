@@ -1,8 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GameSearch from "./GameSearch";
 import { genres, genreNames } from "../mockData/genreTags";
 import { themes, themeNames } from "../mockData/themeTags";
+import restrictedTags from "../mockData/restrictedTags";
+import { Tag } from "../types/models";
+import { searchTags } from "../api/supabase-api/tag-api";
 const TagSection: React.FC<{
   canSearchGame?: boolean;
   recommendedTags?: string[];
@@ -10,6 +13,8 @@ const TagSection: React.FC<{
   setTags: Function;
 }> = ({ canSearchGame = false, recommendedTags = [], tags, setTags }) => {
   const [tagInput, setTagInput] = useState("");
+  const [searchResults, setSearchResults] = useState<Tag[]>([]);
+
   // const [tags, setTags] = useState<string[]>(recommendedTags);
   const [expandedGroups, setExpandedGroups] = useState<{
     [key: string]: boolean;
@@ -25,12 +30,13 @@ const TagSection: React.FC<{
   const LIMIT = 4; // max tags to show initially
 
   const groupedTags =
-    recommendedTags.length >= 0
+    recommendedTags.length > 0
       ? {
           Recommended: recommendedTags,
         }
       : {
           "Popular Tags": ["Hot takes", "Hidden gems", "Controversial"],
+          "Give Back": ["player-feedback", "bug-report"],
           Genres: genreNames,
           Themes: themeNames,
         };
@@ -39,8 +45,9 @@ const TagSection: React.FC<{
     const trimmed = tag.trim();
     if (trimmed && !tags.includes(trimmed)) {
       setTags([...tags, trimmed]);
-      setTagInput("");
     }
+    setTagInput("");
+    setSearchResults([]);
   };
 
   const removeTag = (tagToRemove: string) => {
@@ -50,6 +57,23 @@ const TagSection: React.FC<{
   const clearTags = () => {
     setTags([]);
   };
+
+  const updateSearch = async () => {
+    try {
+      const response = await searchTags(tagInput);
+      console.log("tags search", response);
+      setSearchResults(response);
+      console.log(searchResults);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      if (tagInput.length > 0) updateSearch();
+    }, 400); // wait 400ms after typing stops
+    return () => clearTimeout(delay);
+  }, [tagInput]);
   return (
     <>
       {/* Tag Input */}
@@ -57,22 +81,66 @@ const TagSection: React.FC<{
       {canSearchGame && (
         <GameSearch onClickFunction={addTag} argumentType={"string"} />
       )}
-      <div className="join mb-4 mt-2">
-        <input
-          value={tagInput}
-          onChange={(e) => setTagInput(e.target.value)}
-          onKeyDown={(e) =>
-            e.key === "Enter" && (e.preventDefault(), addTag(tagInput))
-          }
-          placeholder="Create a custom tag"
-          className="input input-sm group join-item"
-        />
+      <div className="join mb-4 mt-2  ">
+        <div className="group relative w-full">
+          <input
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={(e) =>
+              e.key === "Enter" && (e.preventDefault(), addTag(tagInput))
+            }
+            type="search"
+            placeholder="Add a tag"
+            className="input join-item w-full"
+          />
+          <div
+            className="absolute bg-amber-50 top-12 z-50 w-full rounded shadow 
+                  opacity-0 invisible group-focus-within:opacity-100 group-focus-within:visible
+                  transition-opacity duration-200"
+          >
+            <ul className="text-gray-700">
+              {searchResults.length > 0 ? (
+                searchResults.map((tag) => (
+                  <li key={tag.id} className="hover:bg-amber-100">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        addTag(tag.name);
+                      }}
+                      className="flex w-full h-full p-1 cursor-pointer items-center space-x-2"
+                    >
+                      <svg
+                        className="h-[1em] opacity-50"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                      >
+                        <g
+                          strokeLinejoin="round"
+                          strokeLinecap="round"
+                          strokeWidth="2.5"
+                          fill="none"
+                          stroke="currentColor"
+                        >
+                          <circle cx="11" cy="11" r="8"></circle>
+                          <path d="m21 21-4.3-4.3"></path>
+                        </g>
+                      </svg>
+                      <span>{tag.name}</span>
+                    </button>
+                  </li>
+                ))
+              ) : (
+                <li className="p-2">No tags found</li>
+              )}
+            </ul>
+          </div>
+        </div>
         <button
-          className="btn btn-sm join-item"
+          className="btn join-item"
           type="button"
           onClick={() => addTag(tagInput)}
         >
-          Add
+          {searchResults.length > 0 ? "add" : "create"}
         </button>
       </div>
 

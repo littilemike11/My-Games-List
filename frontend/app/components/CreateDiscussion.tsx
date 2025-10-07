@@ -1,4 +1,5 @@
 "use client";
+import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { createDiscussion } from "../api/supabase-api/discussion-api";
 import { useParams } from "next/navigation";
@@ -8,9 +9,27 @@ import TagSection from "./TagSection";
 const CreateDiscussion: React.FC<{ ctaType?: "input" | "button" }> = ({
   ctaType = "input",
 }) => {
-  const { slug } = useParams<{ slug: string }>();
-  const recommendedTags: string[] = [slug];
-  const [tags, setTags] = useState<string[]>(recommendedTags ?? []);
+  const pathname = usePathname();
+  console.log(pathname);
+  // Extract current category from pathname
+  const currentSource =
+    ["game", "tag"].find((route) => pathname.includes(`/${route}`)) || "all";
+
+  console.log("current source", currentSource);
+  let recommendedTags: string[] = [];
+
+  // get recommended tags based on route
+  if (currentSource === "game") {
+    const { slug } = useParams<{ slug: string }>();
+    recommendedTags.push(slug);
+  }
+  if (currentSource == "tag") {
+    const { tag } = useParams<{ tag: string }>();
+    recommendedTags.push(tag);
+  }
+
+  // const recommendedTags: string[] = slug ? [slug] : [];
+  const [tags, setTags] = useState<string[]>(recommendedTags);
   const { session, profile, loading } = useAuth();
 
   const [title, setTitle] = useState("");
@@ -94,7 +113,7 @@ const CreateDiscussion: React.FC<{ ctaType?: "input" | "button" }> = ({
                 required
               />
               <TagSection
-                canSearchGame={true}
+                // canSearchGame={true}
                 recommendedTags={recommendedTags}
                 tags={tags}
                 setTags={setTags}

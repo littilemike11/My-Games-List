@@ -17,13 +17,14 @@ const TagItem: React.FC<{ tag: Tag }> = ({ tag }) => {
 
   return (
     <>
-      <Link href={`tags/${tag.name}`}>
-        <div className="tooltip tooltip-right " data-tip={tag.description}>
-          <button type="button" className={`capitalize badge ${badgeStyle}`}>
-            {tag.name}
-          </button>
-        </div>
-      </Link>
+      <div className="tooltip tooltip-right " data-tip={tag?.description}>
+        <Link
+          className={`capitalize cursor-pointer h-fit badge ${badgeStyle}`}
+          href={`/tag/${tag.name}`}
+        >
+          {tag.name}
+        </Link>
+      </div>
     </>
   );
 };

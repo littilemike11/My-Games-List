@@ -25,6 +25,20 @@ export const searchTags = async (
   return data ?? [];
 };
 
+export const getTag = async (tagName: string) => {
+  const { data, error } = await supabase
+    .from("tags")
+    .select("id,name,description,type")
+    .eq("name", tagName)
+    .single();
+  if (error) {
+    console.error("Error fetching games: ", error);
+    throw error;
+  }
+
+  return data;
+};
+
 export const getTagsByName = async (tags: string[]) => {
   const { data, error } = await supabase
     .from("tags")
@@ -38,6 +52,7 @@ export const getTagsByName = async (tags: string[]) => {
 
   return data;
 };
+
 // user creater communtiy tag
 export const createTag = async (
   owner_id: string,
@@ -51,6 +66,26 @@ export const createTag = async (
     .single();
   if (error) {
     console.error("Error fetching games: ", error);
+    throw error;
+  }
+
+  return data;
+};
+
+export const upsertTags = async (tags: string[]) => {
+  // prepare rows
+  const rows = tags.map((name) => ({
+    name,
+    type: "community",
+  }));
+
+  const { data, error } = await supabase
+    .from("tags")
+    .upsert(rows, { onConflict: "name" }) // dedupe on name
+    .select("id, name, type, description");
+
+  if (error) {
+    console.error("Error upserting tags: ", error);
     throw error;
   }
 
@@ -76,6 +111,24 @@ export const updateTagDescription = async (
   return data;
 };
 
+//get all tags from a post
+export const getPostTags = async (
+  parent_type: tagableContent,
+  parent_id: number
+) => {
+  const { data, error } = await supabase
+    .from("tag_links")
+    .select("tag:tags(id,name,description,type)")
+    .eq("parent_type", parent_type)
+    .eq("parent_id", parent_id);
+  if (error) {
+    console.error("Error fetching games: ", error);
+    throw error;
+  }
+  // flatten
+  return data.map((row) => row.tag);
+};
+
 //tags cannot be deleted by users only admins
 export const getPostsByTags = async (
   tagIds: number[],
@@ -86,6 +139,18 @@ export const getPostsByTags = async (
     .select("parent_id")
     .eq("parent_type", parent_type)
     .in("tag_id", tagIds);
+  if (error) {
+    console.error("Error fetching posts: ", error);
+    throw error;
+  }
+  return data;
+};
+
+export const getPostsByTag = async (tagId: number) => {
+  const { data, error } = await supabase
+    .from("posts_by_tag")
+    .select("*")
+    .eq("tag_id", tagId);
   if (error) {
     console.error("Error fetching posts: ", error);
     throw error;
