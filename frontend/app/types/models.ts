@@ -1,4 +1,4 @@
-export type Post = Review | Discussion;
+export type Post = Review | Discussion | List;
 
 export type contentType = "review" | "discussion" | "list" | "comment";
 
@@ -81,6 +81,7 @@ export interface Review {
   platform: string;
   hours_played: number;
   comment_count?: number;
+  tags?: Tag[];
 }
 
 export interface Discussion {
@@ -94,7 +95,7 @@ export interface Discussion {
   content: string;
   title: string;
   user_id?: string;
-  profile: Profile;
+  profile: ProfilePreview;
   comment_count: number;
 }
 
