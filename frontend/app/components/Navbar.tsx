@@ -41,8 +41,8 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="navbar bg-base-300 fixed z-50 shadow-sm h-16">
-        <div className="flex-none lg:hidden">
+      <div className="navbar bg-base-300 fixed z-50 shadow-sm h-16 ">
+        <div className="flex-none xl:hidden">
           <label
             htmlFor="my-drawer-2"
             aria-label="open sidebar"

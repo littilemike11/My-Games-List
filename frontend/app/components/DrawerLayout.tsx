@@ -6,10 +6,9 @@ export default function DrawerLayout({
 }) {
   return (
     <>
-      {/* <Navbar /> */}
-      <div className="drawer lg:drawer-open">
+      <div className="drawer xl:drawer-open">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content pt-16 flex flex-col ">
+        <div className="drawer-content pt-16 ">
           {/* Page content here */}
           {/* <label
             htmlFor="my-drawer-2"
@@ -20,12 +19,13 @@ export default function DrawerLayout({
           {children}
         </div>
         {/* drawer side */}
-        <div className="drawer-side pt-16">
+        <div className="drawer-side pt-16 ">
           <label
             htmlFor="my-drawer-2"
             aria-label="close sidebar"
             className="drawer-overlay"
           ></label>
+
           <nav className="menu bg-base-200 text-base-content min-h-full w-80 p-4 space-y-4">
             {/* Main nav */}
             <ul className="font-medium space-y-2">
