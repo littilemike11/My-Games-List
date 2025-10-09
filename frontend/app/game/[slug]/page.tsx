@@ -79,7 +79,6 @@ export default async function GamePage({ params }: Props) {
           screenshots={game.screenshots}
           franchise={game.franchise ?? []}
           similarGames={game.similarGames}
-          discussions={game.discussions ?? []}
         />
       </div>
     </>

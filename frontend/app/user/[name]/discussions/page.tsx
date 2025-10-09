@@ -13,7 +13,6 @@ export default async function DiscussionsPage({
   const userID = await getPlayerByName(username);
   // if you want to fetch by userId instead of username, you’ll need a lookup here
   const discussions: Discussion[] = await getDiscussionsByUser(userID.id);
-
   return (
     <div className="mx-4 sm:mx-[2rem]">
       <h2 className="text-2xl mb-4">

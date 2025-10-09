@@ -16,7 +16,7 @@ const quotes: quote[] = [
 // “It’s dangerous to go alone, take this!” – The Legend of Zelda
 // “Praise the sun!” – Dark Souls
 30. “Stop right there, criminal scum!” – The Elder Scrolls IV: Oblivion
-
+“Exploration is the essence of the human spirit.” — Pikmin
 31. “Hey! Look! Listen! – The Legend of Zelda: Ocarina of Time
 35. “A man chooses; a slave obeys.” – Bioshock
 36. “Snake? Snake? SNAKE!” – Metal Gear Solid

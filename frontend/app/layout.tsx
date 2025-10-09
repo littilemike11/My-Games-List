@@ -34,9 +34,11 @@ export default function RootLayout({
         <AuthProvider>
           <Navbar />
           <DrawerLayout>
-            <main className="flex-grow">{children}</main>
+            <div className="mx-auto max-w-6xl overflow-x-hidden">
+              {children}
+            </div>
+            <Footer />
           </DrawerLayout>
-          <Footer />
         </AuthProvider>
       </body>
     </html>

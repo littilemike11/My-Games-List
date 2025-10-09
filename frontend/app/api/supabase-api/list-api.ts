@@ -18,6 +18,23 @@ export const getLists = async () => {
   return mappedData;
 };
 
+export const searchLists = async (query: string, limit: number = 5) => {
+  const { data, error } = await supabase
+    .from("lists")
+    .select(
+      "title,tags, description, user_id, visibility, id, likes, comment_count, dislikes"
+    )
+    .neq("visibility", "private")
+    .ilike("title", `%${query}%`)
+    .limit(limit); // get public or friends
+  if (error) {
+    console.log("Error fetching: ", error);
+    throw error;
+  }
+
+  return data;
+};
+
 // may make a new join table for custom lists with user, game and list info
 export const getListsByUser = async (ownerName: string) => {
   const { data, error } = await supabase
@@ -98,7 +115,7 @@ export const getUserGame = async (
     query = query.eq("game_id", game_id);
   }
 
-  const { data, error } = await query.single();
+  const { data, error } = await query.maybeSingle();
 
   if (error) {
     console.error("Error fetching games: ", error);

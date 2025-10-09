@@ -1,4 +1,4 @@
-export type Post = Review | Discussion;
+export type Post = Review | Discussion | List;
 
 export type contentType = "review" | "discussion" | "list" | "comment";
 
@@ -26,6 +26,12 @@ export interface Profile {
   username: String;
   avatar: String;
   bio?: String;
+}
+
+export interface ProfilePreview {
+  id: string;
+  username: string;
+  avatar: string;
 }
 
 export interface Game {
@@ -64,7 +70,7 @@ export interface Review {
   created_at?: Date;
   dislikes?: number;
   game: GamePreview;
-  profile: Profile;
+  profile: ProfilePreview;
   game_id?: number;
   id: number;
   likes?: number;
@@ -75,6 +81,7 @@ export interface Review {
   platform: string;
   hours_played: number;
   comment_count?: number;
+  tags?: Tag[];
 }
 
 export interface Discussion {
@@ -84,11 +91,11 @@ export interface Discussion {
   gameID?: string;
   id: number;
   likes: number;
-  tags?: string[];
+  tags?: Tag[];
   content: string;
   title: string;
   user_id?: string;
-  profile: Profile;
+  profile: ProfilePreview;
   comment_count: number;
 }
 
@@ -111,8 +118,8 @@ export interface List {
   created_at?: Date;
   user_id: string;
   title: string;
-  tags: string[];
-  type: ListType;
+  tags?: string[];
+  type?: ListType;
   visibility: ListVisibility;
   description?: string;
   profiles?: Profile;
@@ -120,6 +127,17 @@ export interface List {
   dislikes: number;
   comment_count: number;
 }
+
+export interface Tag {
+  id: number;
+  name: string;
+  description?: string;
+  type: tagType;
+  owner_id?: string;
+}
+
+export type tagType = "community" | "official" | "restricted";
+export type tagableContent = "review" | "discussion" | "list";
 export interface UserGameList {
   custom_lists: any;
   user_id: string;

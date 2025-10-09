@@ -5,6 +5,7 @@ import CommentItem from "./CommentItem";
 import Reactions from "./Reactions";
 import CreateComment from "./CreateComment";
 import Link from "next/link";
+import TagItem from "./TagItem";
 const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
   review,
   showCover = true,
@@ -78,6 +79,12 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
               <p>{review.platform}</p>
               <p>🕗 {review.hours_played}hrs</p>
             </div>
+          </div>
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2">
+            {review.tags?.map((tag) => (
+              <TagItem key={tag.id} tag={tag} />
+            ))}
           </div>
           {/* CTAs */}
           <div className=" card-actions items-center">

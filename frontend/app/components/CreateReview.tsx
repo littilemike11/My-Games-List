@@ -6,6 +6,9 @@ import RatingInput from "./RatingInput";
 import { useAuth } from "../auth/auth-context";
 import { createReview } from "../api/supabase-api/review-api";
 import { upsertGame } from "../api/supabase-api/game-api";
+import TagSection from "./TagSection";
+import { genres } from "../mockData/genreTags";
+import { themes } from "../mockData/themeTags";
 type ReviewProps = {
   game: Game;
 };
@@ -18,6 +21,12 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
   const [hoursPlayed, setHoursPlayed] = useState(0);
   const [summary, setSummary] = useState("");
   const [rating, setRating] = useState(0);
+  const recommendedTags = [game.slug]
+    .concat(game.genres.map((g) => genres[g]))
+    .concat(game.themes.map((t) => themes[t]));
+
+  console.log(recommendedTags);
+  const [tags, setTags] = useState<string[]>(recommendedTags ?? []);
 
   const handleSubmit = async () => {
     try {
@@ -36,6 +45,7 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
         hours_played: hoursPlayed,
         content: summary,
         rating: rating,
+        tags: tags,
       };
       console.log("Review to submit:", newReview);
       console.log("Game in DB:", newGame);
@@ -47,7 +57,8 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
         newGame.id,
         session.user.id,
         platform,
-        hoursPlayed
+        hoursPlayed,
+        tags
       );
 
       console.log("Created review:", result);
@@ -87,6 +98,14 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
       setTitle(`${profile?.username}'s Review of ${game.name}`);
     }
   }, [profile]);
+
+  // useEffect(() => {
+  //   const fetchTags = async () => {
+  //     const response = await getTagByName(recommendedTags);
+  //     console.log("tags", response);
+  //   };
+  //   fetchTags();
+  // }, []);
 
   return (
     <>
@@ -146,6 +165,11 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
               />
               <label>Rating</label>
               <RatingInput value={rating} onChange={setRating} />
+              <TagSection
+                recommendedTags={recommendedTags}
+                tags={tags}
+                setTags={setTags}
+              />
             </fieldset>
             <div className="modal-action flex justify-between w-full">
               <button type="submit" className="btn btn-success">
