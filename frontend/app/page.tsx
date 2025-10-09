@@ -11,7 +11,7 @@ export default async function Home() {
   const todayTimestamp = Math.floor(Date.now() / 1000);
 
   const queries = [
-    "fields cover.url, name, slug;where version_parent=null & rating > 90 ;sort rating_count desc; limit 10;",
+    "fields cover.url, name, slug;where version_parent=null & rating > 85 ;sort rating_count desc; limit 10;",
     `
 fields cover.url, name, slug;
 where first_release_date < ${todayTimestamp} & version_parent = null & rating > 85;
@@ -19,7 +19,7 @@ sort first_release_date desc;
 limit 10;`,
     `
 fields cover.url, name, slug;
-where first_release_date > ${todayTimestamp} & version_parent = null & hypes>75;
+where first_release_date > ${todayTimestamp} & version_parent = null & hypes>50;
 sort first_release_date asc;
 limit 10;`,
   ];
