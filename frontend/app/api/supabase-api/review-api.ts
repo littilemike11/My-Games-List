@@ -28,9 +28,10 @@ export const getReviewByID = async (reviewID: number) => {
   const { data, error } = await supabase
     .from("reviews")
     .select(
-      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(username,avatar),game:games(id,name,cover,slug)"
+      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(id,username,avatar),game:games(id,name,cover,slug)"
     )
-    .eq("id", reviewID);
+    .eq("id", reviewID)
+    .maybeSingle();
   if (error) {
     console.log("Error fetching: ", error);
     throw error;
@@ -38,14 +39,16 @@ export const getReviewByID = async (reviewID: number) => {
   // Map arrays to single objects for profiles and games
   //idk typescript error expect array not object, but supabase return it as an object
   // works w/o this but typescript no like
-  const mappedData = await Promise.all(
-    data.map(async (review: any) => ({
-      ...review,
-      profile: review.profile,
-      game: review.game,
-      tags: await getPostTags("review", reviewID),
-    }))
-  );
+  // Add tags and return one merged object
+  if (!data) return null;
+  const tags = await getPostTags("review", reviewID);
+
+  const mappedData = {
+    ...data,
+    profile: data.profile?.[0] ?? data.profile,
+    game: data.game?.[0] ?? data.game,
+    tags: tags[0] ?? tags,
+  };
 
   return mappedData;
 };

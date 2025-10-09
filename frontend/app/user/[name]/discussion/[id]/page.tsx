@@ -7,7 +7,7 @@ import { Discussion } from "@/app/types/models";
 import CommentSection from "@/app/components/CommentSection";
 const DiscussionPage = () => {
   const { name, id } = useParams<{ name: string; id: string }>();
-  const [discussion, setDiscussion] = useState<Discussion>();
+  const [discussion, setDiscussion] = useState<Discussion | null>();
 
   const fetchDiscussion = async (id: number) => {
     try {
@@ -24,10 +24,15 @@ const DiscussionPage = () => {
 
   return (
     <>
-      {discussion && <DiscussionItem discussion={discussion} />}
-
-      {/* comments of Discussion */}
-      <CommentSection parentType={"discussion"} parentID={+id} />
+      {discussion ? (
+        <div>
+          <DiscussionItem discussion={discussion} />
+          {/* comments of disscussion */}
+          <CommentSection parentType={"discussion"} parentID={+id} />
+        </div>
+      ) : (
+        <p>discussion doesn't exist</p>
+      )}
     </>
   );
 };
