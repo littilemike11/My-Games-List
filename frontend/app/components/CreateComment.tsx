@@ -8,7 +8,8 @@ import { useAuth } from "../auth/auth-context";
 const CreateComment: React.FC<{
   parentType: contentType;
   parentID: number;
-}> = ({ parentType, parentID }) => {
+  onComment: Function;
+}> = ({ parentType, parentID, onComment }) => {
   const [isCommenting, setIsCommenting] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -19,7 +20,12 @@ const CreateComment: React.FC<{
     if (!newComment.trim() || !userID) return;
     setIsSubmitting(true);
     try {
-      await createComment(newComment, userID, parentType, parentID);
+      if (parentType === "comment") {
+        await createComment(newComment, userID, parentType, parentID, parentID);
+      } else {
+        await createComment(newComment, userID, parentType, parentID);
+      }
+      onComment(); // get new comments
       setNewComment("");
       setIsCommenting(false);
     } catch (error) {

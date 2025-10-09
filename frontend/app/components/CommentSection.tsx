@@ -32,15 +32,23 @@ export default function CommentSection({
       <div className="divider"></div>
       {/* Comments List */}
       <ul className=" space-y-4 ">
-        {comments.length > 0 ? (
+        <CreateComment
+          parentType={parentType}
+          parentID={parentID}
+          onComment={fetchComments}
+        />
+
+        {comments.length > 0 &&
           comments.map((c) => (
-            <li key={c.id} className="  p-4 ">
-              <CommentItem contentType={parentType} contentID={parentID} />
+            <li key={c.id} className="p-4 ">
+              <CommentItem onComment={fetchComments} comment={c} />
             </li>
-          ))
-        ) : (
-          <CreateComment parentType={parentType} parentID={parentID} />
-        )}
+          ))}
+        <CreateComment
+          parentType={parentType}
+          parentID={parentID}
+          onComment={fetchComments}
+        />
       </ul>
 
       {/* potential related / recommended content */}

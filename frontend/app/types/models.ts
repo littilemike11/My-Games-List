@@ -106,8 +106,7 @@ export interface Comment {
   content_id?: number;
   content_type?: contentType;
   body: string;
-  user_id?: string;
-  profile?: Profile;
+  profile: ProfilePreview;
   replies?: Comment[];
   likes: number;
   dislikes: number;

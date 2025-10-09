@@ -7,7 +7,7 @@ import { Review } from "@/app/types/models";
 import CommentSection from "@/app/components/CommentSection";
 const ReviewPage = () => {
   const { name, id } = useParams<{ name: string; id: string }>();
-  const [review, setReview] = useState<Review>();
+  const [review, setReview] = useState<Review | null>();
 
   const fetchReview = async (id: number) => {
     try {
@@ -24,10 +24,15 @@ const ReviewPage = () => {
 
   return (
     <>
-      {review && <ReviewItem review={review} />}
-
-      {/* comments of review */}
-      <CommentSection parentType={"review"} parentID={+id} />
+      {review ? (
+        <div>
+          <ReviewItem review={review} />
+          {/* comments of review */}
+          <CommentSection parentType={"review"} parentID={+id} />
+        </div>
+      ) : (
+        <p>Review doesn't exist</p>
+      )}
     </>
   );
 };

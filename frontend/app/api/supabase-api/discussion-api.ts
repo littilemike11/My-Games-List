@@ -134,7 +134,7 @@ export const getDiscussionByID = async (discussionID: number) => {
   const { data, error } = await supabase
     .from("discussions")
     .select(
-      "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(username,avatar)"
+      "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(id,username,avatar)"
     )
     .eq("id", discussionID)
     .single();
@@ -142,13 +142,15 @@ export const getDiscussionByID = async (discussionID: number) => {
     console.log("Error fetching: ", error);
     throw error;
   }
-  return data
-    ? {
-        ...data,
-        profile: Array.isArray(data.profile) ? data.profile[0] : data.profile,
-        tags: await getPostTags("discussion", discussionID),
-      }
-    : undefined;
+  if (!data) return null;
+  const tags = await getPostTags("review", discussionID);
+
+  const mappedData = {
+    ...data,
+    profile: data.profile?.[0] ?? data.profile,
+    tags: tags[0] ?? tags,
+  };
+  return mappedData;
 };
 
 export const createDiscussion = async ({

@@ -2,24 +2,59 @@ import { contentType } from "@/app/types/models";
 import supabase from "@/supabase-client";
 
 export const getCommentsFromPost = async (
-  content_type: contentType,
+  content_type: string,
   content_id: number
 ) => {
   const { data, error } = await supabase
     .from("comments")
     .select(
-      `id, body, user_id, created_at, likes, dislikes,comment_count, parent_id`
+      `
+    id,
+    body,
+    created_at,
+    likes,
+    dislikes,
+    comment_count,
+    parent_id,
+    profile:user_id (
+      id,
+      username,
+      avatar
+    ),
+    replies:comments(id,
+      body,
+      user_id,
+      created_at,
+      likes,
+      dislikes,
+      comment_count,
+      parent_id,
+      profile:user_id (
+        id,
+        username,
+        avatar
+      ) 
+    )
+  `
     )
     .eq("content_type", content_type)
     .eq("content_id", content_id)
     .is("parent_id", null)
-    .order("created_at", { ascending: true });
+    .order("created_at", { ascending: false });
+
   if (error) {
-    console.log("error getting comments", error);
+    console.error("error getting comments", error);
     throw error;
   }
-  return data;
+
+  const mappedData = data.map((comment: any) => ({
+    ...comment,
+    profile: comment.profile,
+  }));
+
+  return mappedData;
 };
+
 // get top comment if exists
 export const getTopComment = async (
   content_type: contentType,
