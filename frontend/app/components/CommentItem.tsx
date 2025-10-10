@@ -7,7 +7,7 @@ const CommentItem: React.FC<{
 }> = ({ comment, onComment }) => {
   return (
     <div className="space-y-6">
-      <div className="bg-base-200  p-2 rounded-2xl shadow-md ">
+      <div className="bg-base-200 p-4 rounded-2xl shadow-md ">
         <div className="flex gap-4">
           <figure>
             <div className="avatar avatar-placeholder">
@@ -42,12 +42,15 @@ const CommentItem: React.FC<{
             </div>
           </div>
         </div>
-        {comment.replies &&
-          comment.replies.map((reply) => (
-            <div className="ml-10" key={reply.id}>
-              <CommentItem onComment={onComment} comment={reply} />
-            </div>
-          ))}
+        {comment.replies && (
+          <ul className="space-y-4 ml-10 ">
+            {comment.replies.map((reply) => (
+              <li className="border-l-2 border-gray-500" key={reply.id}>
+                <CommentItem onComment={onComment} comment={reply} />
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
