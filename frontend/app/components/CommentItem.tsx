@@ -5,6 +5,13 @@ const CommentItem: React.FC<{
   comment: Comment;
   onComment: Function;
 }> = ({ comment, onComment }) => {
+  // for scale would probably need to fetch each replies individually based on which comment, the user is interested in
+  const sortedReplies = comment.replies
+    ? [...comment.replies].sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      )
+    : [];
   return (
     <div className="space-y-6">
       <div className="bg-base-200 p-4 rounded-2xl shadow-md ">
@@ -44,7 +51,7 @@ const CommentItem: React.FC<{
         </div>
         {comment.replies && (
           <ul className="space-y-4 ml-10 ">
-            {comment.replies.map((reply) => (
+            {sortedReplies.map((reply) => (
               <li className="border-l-2 border-gray-500" key={reply.id}>
                 <CommentItem onComment={onComment} comment={reply} />
               </li>
