@@ -143,7 +143,7 @@ export const getDiscussionByID = async (discussionID: number) => {
     throw error;
   }
   if (!data) return null;
-  const tags = await getPostTags("review", discussionID);
+  const tags = await getPostTags("discussion", discussionID);
 
   const mappedData = {
     ...data,

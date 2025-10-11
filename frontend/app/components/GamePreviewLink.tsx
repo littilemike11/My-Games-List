@@ -14,9 +14,7 @@ const GamePreviewLink: React.FC<Props> = ({
 }) => {
   return (
     <div
-      className={`overflow-hidden ${
-        isRound && "rounded-2xl "
-      } h-${height} w-40`}
+      className={`overflow-hidden ${isRound && "rounded-2xl "} h-${height} `}
     >
       <Link
         className="block w-full h-full hover:scale-105 transition-transform duration-200"

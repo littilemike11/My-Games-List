@@ -1,54 +1,126 @@
 import supabase from "@/supabase-client";
-import { ListType, ListVisibility, StatusKey } from "@/app/types/models";
+import {
+  List,
+  ListType,
+  ListVisibility,
+  StatusKey,
+  Tag,
+} from "@/app/types/models";
+import { getPostTags, upsertTags } from "./tag-api";
 export const getLists = async () => {
-  const { data, error } = await supabase
+  const { data: lists, error } = await supabase
     .from("lists")
-    .select("title,tags, description, user_id")
-    .neq("visibility", "private"); // get public or friends lists
+    .select(
+      `
+      id,
+      created_at,
+      title,
+      description,
+      likes,
+      dislikes,
+      comment_count,
+      profile:profiles(id, username, avatar),
+      games:list_games(
+        game:games(id, slug, name, cover)
+      )
+    `
+    )
+    .eq("visibility", "public")
+    .limit(5, { referencedTable: "list_games" })
+    .order("created_at", { referencedTable: "list_games", ascending: false });
+
   if (error) {
     console.log("Error fetching: ", error);
     throw error;
   }
-  const mappedData = data.map((list: any) => ({
-    ...list,
-    profiles: list.profiles,
-    tags: list.tags,
-  }));
-
+  const mappedData = await Promise.all(
+    lists.map(async (list: any) => ({
+      ...list,
+      profile: list.profile,
+      tags: await getPostTags("list", list.id),
+      games: (list.games ?? []).map((g: any) => g.game), // flatten list_games -> games
+    }))
+  );
   return mappedData;
 };
 
 export const searchLists = async (query: string, limit: number = 5) => {
-  const { data, error } = await supabase
+  const { data: lists, error } = await supabase
     .from("lists")
     .select(
-      "title,tags, description, user_id, visibility, id, likes, comment_count, dislikes"
+      `
+      id,
+      created_at,
+      title,
+      description,
+      likes,
+      dislikes,
+      comment_count,
+      profile:profiles(id, username, avatar),
+      games:list_games(
+        game:games(id, slug, name, cover)
+      )
+    `
     )
     .neq("visibility", "private")
     .ilike("title", `%${query}%`)
-    .limit(limit); // get public or friends
+    .eq("visibility", "public")
+    .limit(5, { referencedTable: "list_games" })
+    .order("created_at", { referencedTable: "list_games", ascending: false })
+    .limit(limit);
+
   if (error) {
     console.log("Error fetching: ", error);
     throw error;
   }
-
-  return data;
+  const mappedData = await Promise.all(
+    lists.map(async (list: any) => ({
+      ...list,
+      profile: list.profile,
+      tags: await getPostTags("list", list.id),
+      games: (list.games ?? []).map((g: any) => g.game), // flatten list_games -> games
+    }))
+  );
+  return mappedData;
 };
 
 // may make a new join table for custom lists with user, game and list info
-export const getListsByUser = async (ownerName: string) => {
-  const { data, error } = await supabase
-    .from("user_custom_lists")
+export const getListsByUser = async (ownerID: string) => {
+  const { data: lists, error } = await supabase
+    .from("lists")
     .select(
-      "username,list_id, list_title, list_tags, list_description,list_likes, list_dislikes,list_comment_count,game_id, game_slug, game_cover, game_name"
+      `
+      id,
+      created_at,
+      title,
+      description,
+      likes,
+      dislikes,
+      comment_count,
+      profile:profiles(id, username, avatar),
+      games:list_games(
+        game:games(id, slug, name, cover)
+      )
+    `
     )
-    .ilike("username", ownerName);
+    .eq("user_id", ownerID)
+    .eq("visibility", "public")
+    .limit(5, { referencedTable: "list_games" })
+    .order("created_at", { referencedTable: "list_games", ascending: false });
+
   if (error) {
     console.log("Error fetching: ", error);
     throw error;
   }
-
-  return data;
+  const mappedData = await Promise.all(
+    lists.map(async (list: any) => ({
+      ...list,
+      profile: list.profile,
+      tags: await getPostTags("list", list.id),
+      games: (list.games ?? []).map((g: any) => g.game), // flatten list_games -> games
+    }))
+  );
+  return mappedData;
 };
 
 export const getUserGameLists = async (
@@ -81,19 +153,51 @@ export const getUserGameLists = async (
   return data;
 };
 
-export const getListByID = async (listID: number) => {
-  const { data, error } = await supabase
-    .from("user_custom_lists")
+export const getListByID = async (
+  listID: number,
+  isPreview: boolean = false
+) => {
+  const query = supabase
+    .from("lists")
     .select(
-      "username,list_id, list_title, list_tags, list_description,list_likes, list_dislikes,list_comment_count,game_id, game_slug, game_cover, game_name"
+      `
+      id,
+      created_at,
+      title,
+      description,
+      likes,
+      dislikes,
+      comment_count,
+      profile:profiles(id, username, avatar),
+      games:list_games(
+        game:games(id, slug, name, cover)
+      )
+    `
     )
-    .eq("list_id", listID);
-  if (error) {
-    console.log("Error fetching: ", error);
-    throw error;
+    .eq("id", listID)
+    .eq("visibility", "public")
+    .order("created_at", { referencedTable: "list_games", ascending: false });
+  if (isPreview) {
+    query.limit(5, { referencedTable: "list_games" });
   }
 
-  return data;
+  const { data, error } = await query.single();
+
+  if (error) {
+    console.error("Error fetching list :", error);
+    return null;
+  }
+
+  if (!data) return null;
+  const tags = await getPostTags("list", listID);
+
+  const mappedData: List = {
+    ...data,
+    profile: Array.isArray(data.profile) ? data.profile[0] : data.profile,
+    tags: (Array.isArray(tags) ? tags.flat() : []) as Tag[],
+    games: (data.games ?? []).map((g: any) => g.game), // flatten list_games -> games
+  };
+  return mappedData;
 };
 
 // get 1 specific game
@@ -122,7 +226,7 @@ export const getUserGame = async (
     throw error;
   }
 
-  return data ?? [];
+  return data;
 };
 
 //get all of a user's games
@@ -194,7 +298,7 @@ export const createList = async ({
   description?: string;
   user_id: string;
 }) => {
-  const { data, error } = await supabase
+  const { data: list, error } = await supabase
     .from("lists")
     .insert({
       title,
@@ -210,7 +314,22 @@ export const createList = async ({
     console.log("Error Inserting list: ", error);
     throw error;
   }
-  return data;
+  // upsert tags
+  const tagRows = await upsertTags(tags);
+  // get tag ids
+  const tagLinks = tagRows.map((tag) => ({
+    parent_type: "list",
+    parent_id: list.id,
+    tag_id: tag.id,
+  }));
+
+  const { error: linkError } = await supabase
+    .from("tag_links")
+    .insert(tagLinks);
+
+  if (linkError) throw linkError;
+
+  return { ...list, tags: tagRows };
 };
 
 // upsert user game status

@@ -39,6 +39,18 @@ export const getPlayerByName = async (username: string) => {
   }
   return data;
 };
+export const getPlayerIdByName = async (username: string) => {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id")
+    .ilike("username", username)
+    .maybeSingle();
+  if (error) {
+    console.error("Error getting user", error);
+    throw error;
+  }
+  return data;
+};
 
 // update profile
 //can maybe change username
