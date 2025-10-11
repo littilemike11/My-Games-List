@@ -22,6 +22,7 @@ import ReviewItem from "../components/ReviewItem";
 import { searchLists } from "../api/supabase-api/list-api";
 import { ProfileItem } from "../components/ProfileItem";
 import DiscussionItem from "../components/DiscussionItem";
+import ListItem from "../components/ListItem";
 const Page = () => {
   const searchParams = useSearchParams();
   const query = searchParams
@@ -177,7 +178,7 @@ const Page = () => {
                 <ul className="list space-y-2">
                   {lists.map((l) => (
                     <li className="list-item" key={l.id}>
-                      {l.title}
+                      <ListItem list={l} />
                     </li>
                   ))}
                 </ul>

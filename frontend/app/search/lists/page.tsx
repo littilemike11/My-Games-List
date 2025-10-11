@@ -3,6 +3,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { searchLists } from "@/app/api/supabase-api/list-api";
 import { List } from "@/app/types/models";
+import ListItem from "@/app/components/ListItem";
 const ListResultsPage = () => {
   const searchParams = useSearchParams();
   const [lists, setlists] = useState<List[]>([]);
@@ -44,14 +45,7 @@ const ListResultsPage = () => {
         {lists.length > 0 ? (
           <div className="flex flex-col gap-4">
             {lists.map((list) => (
-              <div className="card bg-base-100 shadow-md hover:shadow-lg transition rounded-xl p-4">
-                <div className="flex items-center justify-between mb-2">
-                  {list.title}
-                </div>
-                <p className="text-sm line-clamp-3">
-                  {list.description || "No description available."}
-                </p>
-              </div>
+              <ListItem key={list.id} list={list} />
             ))}
           </div>
         ) : (

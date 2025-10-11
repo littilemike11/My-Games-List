@@ -12,7 +12,6 @@ import Link from "next/link";
 import TagSection from "@/app/components/TagSection";
 import GameSearch from "@/app/components/GameSearch";
 const page = () => {
-  const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const { session, profile, loading } = useAuth();
   const [games, setGames] = useState<any[]>([]);
@@ -74,28 +73,6 @@ const page = () => {
     }
   }, [profile]);
 
-  const groupedTags = {
-    "Popular Tags": ["Hot takes", "Hidden gems", "Controversial"],
-    Genres: ["Action", "Puzzle", "Strategy", "Story"],
-    Themes: ["Sci-fi", "Fantasy", "Horror"],
-  };
-
-  const addTag = (tag: string) => {
-    const trimmed = tag.trim();
-    if (trimmed && !tags.includes(trimmed)) {
-      setTags([...tags, trimmed]);
-      setTagInput("");
-    }
-  };
-
-  const removeTag = (tagToRemove: string) => {
-    setTags(tags.filter((tag) => tag !== tagToRemove));
-  };
-
-  const clearTags = () => {
-    setTags([]);
-  };
-
   const searchGame = (game: string) => {
     const newGame = game.trim();
     // if (newGame && !list.includes(newGame)) {
@@ -131,7 +108,7 @@ const page = () => {
           <legend className="fieldset-legend font-bold text-lg">
             New List
           </legend>
-          <div className="grid grid-cols-1 sm:grid-cols-2 ">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
             <div className="flex flex-col gap-2">
               <label className="label">List Title</label>
 
@@ -160,7 +137,7 @@ const page = () => {
 
               {/* Tag Input */}
 
-              <TagSection />
+              <TagSection tags={tags} setTags={setTags} />
             </div>
             <div className="flex flex-col gap-1 ">
               <label className="label">Description</label>
@@ -173,7 +150,9 @@ const page = () => {
               {/* game status */}
               {session && (
                 <div className="flex flex-col gap-2">
-                  <label className="label">Choose from Preexisting lists</label>
+                  <label className="label">
+                    Choose from Preexisting Catalog
+                  </label>
                   <div className="filter gap-2">
                     <input
                       className="btn btn-square"

@@ -115,13 +115,13 @@ export interface Comment {
 export interface List {
   id: number;
   created_at?: Date;
-  user_id: string;
   title: string;
-  tags?: string[];
+  tags?: Tag[];
   type?: ListType;
-  visibility: ListVisibility;
+  visibility?: ListVisibility;
   description?: string;
-  profiles?: Profile;
+  games: GamePreview[];
+  profile: ProfilePreview;
   likes: number;
   dislikes: number;
   comment_count: number;
@@ -176,14 +176,6 @@ export interface GameEntry {
     slug: string;
     cover?: string;
   };
-}
-
-export interface List_Games {
-  id: number;
-  created_at?: Date;
-  position: number;
-  game_id: number;
-  list_id: number;
 }
 
 export type ListVisibility = "private" | "public" | "friends";
