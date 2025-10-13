@@ -81,8 +81,10 @@ export const upsertTags = async (tags: string[]) => {
 
   const { data, error } = await supabase
     .from("tags")
-    .upsert(rows, { onConflict: "name" }) // dedupe on name
-    .select("id, name, type, description");
+    .upsert(rows, {
+      onConflict: "name",
+    })
+    .select("id, name, type");
 
   if (error) {
     console.error("Error upserting tags: ", error);

@@ -18,8 +18,6 @@ const page = () => {
   const [filteredGames, setFilteredGames] = useState<any[]>([]);
   const [list, setList] = useState<GamePreview[]>([]);
 
-  const [gameInput, setGameInput] = useState("");
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [visibility, setVisibility] = useState<ListVisibility>("public");
@@ -28,7 +26,6 @@ const page = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // 🚫 stop page refresh
     try {
-      console.log(!list);
       if (!title || !list || !session) {
         console.log("missing something");
         return;
@@ -43,13 +40,12 @@ const page = () => {
         });
         console.log("Created list:", newList);
 
-        const game_ids = list.map((game) => game.id);
-        if (newList && game_ids.length > 0) {
-          const insertedGames = await batchAddGamesToList(game_ids, newList.id);
+        if (newList && list.length > 0) {
+          const insertedGames = await batchAddGamesToList(list, newList.id);
           console.log("Inserted games:", insertedGames);
         }
       }
-
+      refreshList();
       // maybe close modal or reset form here
     } catch (error) {
       console.error("Error in handleSubmit:", error);
@@ -57,6 +53,13 @@ const page = () => {
     }
   };
 
+  const refreshList = () => {
+    setDescription("");
+    setTitle("");
+    setVisibility("public");
+    setTags([]);
+    setList([]);
+  };
   const getGames = async () => {
     if (userID) {
       const response = await getUserGames(userID);
@@ -68,18 +71,10 @@ const page = () => {
 
   useEffect(() => {
     if (profile) {
-      setTitle(`${profile.username}'s List`);
       getGames();
     }
   }, [profile]);
 
-  const searchGame = (game: string) => {
-    const newGame = game.trim();
-    // if (newGame && !list.includes(newGame)) {
-    //   setList([...list, newGame]);
-    //   setGameInput("");
-    // }
-  };
   const addGameToList = (game: GamePreview) => {
     setList([...list, game]);
   };
@@ -212,24 +207,7 @@ const page = () => {
           </div>
           <label className="label">Games</label>
           <GameSearch onClickFunction={addGameToList} argumentType={"game"} />
-          <div className="join mb-4 mt-2">
-            <input
-              value={gameInput}
-              onChange={(e) => setGameInput(e.target.value)}
-              onKeyDown={(e) =>
-                e.key === "Enter" && (e.preventDefault(), searchGame(gameInput))
-              }
-              placeholder="Add Games"
-              className="input input-sm group join-item"
-            />
-            <button
-              className="btn btn-sm btn-primary join-item"
-              type="button"
-              onClick={() => searchGame(gameInput)}
-            >
-              Add to List
-            </button>
-          </div>
+
           {/* current list */}
           <div className="bg-base-300 w-full h-full">
             {list.map((game) => (

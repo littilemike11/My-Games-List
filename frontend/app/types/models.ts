@@ -34,7 +34,7 @@ export interface ProfilePreview {
   avatar: string;
 }
 
-export interface Game {
+export interface Game extends GamePreview {
   cover?: string;
   developers: string[];
   discussions?: Discussion[];
