@@ -1,7 +1,7 @@
 import supabase from "@/supabase-client";
-import { Game } from "@/app/types/models";
+import { Game, GamePreview } from "@/app/types/models";
 
-export async function upsertGame(igdbGame: Game) {
+export async function upsertGame(igdbGame: Game | GamePreview) {
   if (!igdbGame || !igdbGame.slug || !igdbGame.id) {
     console.log(igdbGame);
     console.warn("Invalid IGDB game object.");
@@ -25,14 +25,16 @@ export async function upsertGame(igdbGame: Game) {
   //insert igdb game into supabase
   const { data: newGame, error: insertError } = await supabase
     .from("games")
-    .insert({
-      name: igdbGame.name,
-      slug: igdbGame.slug,
-      igdb_id: igdbGame.id,
-      cover: igdbGame.cover,
-      rating: igdbGame.rating,
-      rating_count: igdbGame.ratingCount,
-    })
+    .insert([
+      {
+        name: igdbGame.name,
+        slug: igdbGame.slug,
+        igdb_id: igdbGame.id,
+        cover: igdbGame.cover,
+        rating: "rating" in igdbGame ? igdbGame.rating ?? 0 : 0,
+        rating_count: "ratingCount" in igdbGame ? igdbGame.ratingCount ?? 0 : 0,
+      },
+    ])
     .select()
     .single();
 

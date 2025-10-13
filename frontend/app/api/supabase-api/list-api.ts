@@ -1,5 +1,6 @@
 import supabase from "@/supabase-client";
 import {
+  GamePreview,
   List,
   ListType,
   ListVisibility,
@@ -7,6 +8,7 @@ import {
   Tag,
 } from "@/app/types/models";
 import { getPostTags, upsertTags } from "./tag-api";
+import { upsertGame } from "./game-api";
 export const getLists = async () => {
   const { data: lists, error } = await supabase
     .from("lists")
@@ -302,7 +304,6 @@ export const createList = async ({
     .from("lists")
     .insert({
       title,
-      tags,
       type,
       visibility,
       description,
@@ -315,6 +316,8 @@ export const createList = async ({
     throw error;
   }
   // upsert tags
+  console.log(tags);
+
   const tagRows = await upsertTags(tags);
   // get tag ids
   const tagLinks = tagRows.map((tag) => ({
@@ -378,17 +381,27 @@ export const addGameToList = async (game_id: number, list_id: number) => {
 };
 
 export const batchAddGamesToList = async (
-  game_ids: number[],
+  games: GamePreview[],
   list_id: number
 ) => {
-  const insertGames = game_ids.map((id) => ({
-    game_id: id,
+  const upsertedGames = await Promise.all(games.map((g) => upsertGame(g)));
+  const validGames = upsertedGames.filter((g): g is { id: number } => !!g?.id);
+
+  if (!validGames.length) {
+    console.warn("No valid games to insert into list.");
+    return [];
+  }
+
+  // Prepare list-game relationships
+  const listGameEntries = validGames.map((g) => ({
+    game_id: g.id,
     list_id,
   }));
   const { data, error } = await supabase
     .from("list_games")
-    .insert(insertGames)
+    .insert(listGameEntries)
     .select();
+
   if (error) {
     console.error("Error Updating List", error);
     throw error;
