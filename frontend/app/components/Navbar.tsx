@@ -3,41 +3,14 @@
 import Link from "next/link";
 import AuthModal from "@/app/components/AuthModal";
 import { useAuth } from "../auth/auth-context";
-import { useEffect, useRef, useState } from "react";
-import { FaChevronDown } from "react-icons/fa6";
-import getGames from "../api/igdb-api";
+import { useState } from "react";
 import supabase from "@/supabase-client";
-import { GamePreview } from "../types/models";
 const Navbar = () => {
   const [showAuth, setShowAuth] = useState(false);
   const { session, profile, loading } = useAuth();
-  const [searchInput, setSearchInput] = useState("");
-  const [searchResults, setSearchResults] = useState<GamePreview[]>([]);
-  const [isFocused, setIsFocused] = useState(false); // 👈 controls dropdown
-
   const logout = () => {
     supabase.auth.signOut();
   };
-
-  const updateSearch = async () => {
-    const query = `fields id, name, slug, cover.url ; search"${searchInput}"; limit 10;`;
-    const result = await getGames(query);
-    console.log(result);
-    const formattedResult = result.map((game: any) => ({
-      id: game.id,
-      slug: game.slug,
-      cover: game.cover?.url.replace("t_thumb", "t_cover_big") || null,
-      name: game.name,
-    }));
-    setSearchResults(formattedResult);
-  };
-  // Search trigger optimization (debounce)
-  useEffect(() => {
-    const delay = setTimeout(() => {
-      if (searchInput.length > 2) updateSearch();
-    }, 400); // wait 400ms after typing stops
-    return () => clearTimeout(delay);
-  }, [searchInput]);
 
   return (
     <>
@@ -64,41 +37,10 @@ const Navbar = () => {
           </label>
         </div>
         <div className="navbar-start">
-          {/* <Link href={"/"} className="btn  btn-ghost text-xl">
+          {/* Primary button for the first status (wishlist in this example) */}
+          <Link href={"/"} className="btn btn-ghost text-xl join-item">
             The Save Room
-          </Link>{" "} */}
-          <div className="join">
-            {/* Primary button for the first status (wishlist in this example) */}
-            <Link href={"/"} className="btn btn-ghost text-xl join-item">
-              The Save Room
-            </Link>{" "}
-            {/* Dropdown for all statuses */}
-            <button className="dropdown dropdown-end join-item">
-              <div
-                // title="Add to other gameStatus"
-                tabIndex={0}
-                role="button"
-                className="btn pl-0 btn-lg btn-ghost rounded-r-full"
-              >
-                <FaChevronDown />
-              </div>
-
-              <ul
-                tabIndex={0}
-                className="dropdown-content menu rounded-box z-10 w-52 p-2 shadow-sm"
-              >
-                <li>
-                  <div className="btn">Home</div>
-                </li>
-                <li>
-                  <div className="btn">Popular</div>
-                </li>
-                <li>
-                  <div className="btn">Latest</div>
-                </li>
-              </ul>
-            </button>
-          </div>
+          </Link>{" "}
           {/* <div className="dropdown">
                 <div
                   tabIndex={0}
@@ -123,54 +65,60 @@ const Navbar = () => {
                 </div>
               </div> */}
         </div>
-        <div className="navbar-center hidden lg:flex">
-          <div className="w-full lg:w-96 flex justify-end relative group">
-            <input
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              type="text"
-              placeholder="Search"
-              className="input input-bordered w-full"
-            />
-
-            {/* Dropdown shows only when input is focused */}
-            <div
-              className="absolute bg-amber-50 top-12 z-50 w-full rounded shadow 
-                  opacity-0 invisible group-focus-within:opacity-100 group-focus-within:visible
-                  transition-opacity duration-200"
-            >
-              <ul className="text-gray-700">
-                {searchInput.length < 3 ? (
-                  <li className="p-2 border-b">
-                    Please enter 3 or more characters
-                  </li>
-                ) : searchResults.length > 0 ? (
-                  searchResults.map((game) => (
-                    <li key={game.id} className="hover:bg-amber-100">
-                      <Link href={`/game/${game.slug}`}>
-                        <button
-                          onClick={() => setSearchInput("")}
-                          type="button"
-                          className="flex w-full cursor-pointer items-center gap-2 p-2"
-                        >
-                          {game.cover && (
-                            <img
-                              className="h-12 w-8 object-cover rounded"
-                              src={game.cover}
-                              alt={`${game.name} cover`}
-                            />
-                          )}
-                          <p className="font-bold line-clamp-1">{game.name}</p>
-                        </button>
-                      </Link>
-                    </li>
-                  ))
-                ) : (
-                  <li className="p-2">No games found</li>
-                )}
-              </ul>
-            </div>
-          </div>
+        <div className="navbar-center hidden">
+          <ul className="menu menu-horizontal px-1">
+            <li>
+              <Link className="text-xs" href={"/search"}>
+                <svg
+                  className="h-[1em] opacity-50"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    strokeWidth="2.5"
+                    fill="none"
+                    stroke="currentColor"
+                  >
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.3-4.3"></path>
+                  </g>
+                </svg>
+                <span className="hidden xl:flex">Search</span>
+              </Link>
+            </li>
+            <li>
+              <Link className="text-xs" href={"/games"}>
+                🎮 <span className="hidden xl:flex">Games</span>
+              </Link>
+            </li>
+            <li>
+              <Link className="text-xs" href={"/reviews"}>
+                ⭐ <span className="hidden xl:flex">Reviews</span>
+              </Link>
+            </li>
+            <li>
+              <Link className="text-xs" href={"/discussions"}>
+                💬 <span className="hidden xl:flex">Discussions</span>
+              </Link>
+            </li>
+            <li>
+              <Link className="text-xs" href={"/lists"}>
+                📜 <span className="hidden xl:flex">lists</span>
+              </Link>
+            </li>
+            <li>
+              <Link className="text-xs" href={"/players"}>
+                👥 <span className="hidden xl:flex">Players</span>
+              </Link>
+            </li>
+            <li>
+              <Link className="text-xs" href={"/news"}>
+                📰 <span className="hidden xl:flex">News</span>
+              </Link>
+            </li>
+          </ul>
         </div>
         <div className="navbar-end gap-2">
           <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />

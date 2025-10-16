@@ -9,7 +9,25 @@ import {
 } from "@/app/types/models";
 import { getPostTags, upsertTags } from "./tag-api";
 import { upsertGame } from "./game-api";
-export const getLists = async () => {
+export const getLists = async (
+  limit: number = 5,
+  sortBy: "likes" | "comments" | "date" = "likes",
+  orderBy: "asc" | "desc" = "desc"
+) => {
+  let column = "";
+  switch (sortBy) {
+    case "likes":
+      column = "likes";
+      break;
+    case "comments":
+      column = "comment_count";
+      break;
+    case "date":
+      column = "created_at";
+      break;
+    default:
+      column = "likes";
+  }
   const { data: lists, error } = await supabase
     .from("lists")
     .select(
@@ -29,7 +47,9 @@ export const getLists = async () => {
     )
     .eq("visibility", "public")
     .limit(5, { referencedTable: "list_games" })
-    .order("created_at", { referencedTable: "list_games", ascending: false });
+    .order("created_at", { referencedTable: "list_games", ascending: false })
+    .limit(limit)
+    .order(column, { ascending: orderBy === "asc" });
 
   if (error) {
     console.log("Error fetching: ", error);

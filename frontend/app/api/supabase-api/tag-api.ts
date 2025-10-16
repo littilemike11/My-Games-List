@@ -2,6 +2,28 @@ import { tagableContent } from "@/app/types/models";
 import supabase from "@/supabase-client";
 
 // search tags
+
+//get most followed tags
+export const getTags = async (limit: number = 5) => {
+  const { data, error } = await supabase
+    .from("tags")
+    .select("id,name,type, description")
+    // .order("follows", { ascending: false })
+    .limit(limit);
+  if (error) {
+    console.error("Error fetching games: ", error);
+    throw error;
+  }
+  return data;
+};
+
+//get most used tag link
+// export const getTagsLinks = async (limit: number = 5) => {
+//   //select highest count of tags
+//   const {data,error}= await supabase.from("tag_links").select("
+//     tag:tags(id)")
+// };
+
 export const searchTags = async (
   name: string,
   restricted: boolean = false,

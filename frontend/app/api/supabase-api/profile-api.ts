@@ -1,10 +1,12 @@
 import supabase from "@/supabase-client";
 
 //get all users
-export const getPlayers = async () => {
+export const getPlayers = async (limit: number = 5) => {
   const { data, error } = await supabase
     .from("profiles")
-    .select("id,created_at,username,avatar, total_xp");
+    .select("id,created_at,username,avatar, total_xp")
+    .order("total_xp", { ascending: false })
+    .limit(limit);
   if (error) {
     console.log("Error fetching: ", error);
     throw error;
