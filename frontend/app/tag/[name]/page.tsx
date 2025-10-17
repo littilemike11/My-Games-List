@@ -1,8 +1,9 @@
 import { getTag } from "@/app/api/supabase-api/tag-api";
 import { Tag } from "@/app/types/models";
-import { getPostsByTag } from "@/app/api/supabase-api/tag-api";
+import { getPostsByTag } from "@/app/api/supabase-api/post-api";
 import ReviewItem from "@/app/components/ReviewItem";
 import DiscussionItem from "@/app/components/DiscussionItem";
+import ListItem from "@/app/components/ListItem";
 
 interface Props {
   params: { name: string };
@@ -86,23 +87,25 @@ export default async function TagPage({ params }: Props) {
             } else if (post.parent_type === "list") {
               return (
                 <div key={index}>
-                  {/* <ListItem
-            list={{
-              title: post.title,
-              description: post.content,
-              created_at: post.created_at,
-              likes: post.likes,
-              dislikes: post.dislikes,
-              comment_count: post.comment_count,
-              visibility: post.visibility,
-              profile: {
-                avatar: post.author_avatar,
-                name: post.author_name,
-                id: post.user_id,
-              },
-              tags: post.tags,
-            }}
-          /> */}
+                  <ListItem
+                    list={{
+                      id: post.parent_id,
+                      title: post.title,
+                      description: post.content,
+                      created_at: post.created_at,
+                      likes: post.likes,
+                      dislikes: post.dislikes,
+                      comment_count: post.comment_count,
+                      visibility: post.visibility,
+                      profile: {
+                        avatar: post.author_avatar,
+                        username: post.author_name,
+                        id: post.user_id,
+                      },
+                      games: post.games,
+                      tags: post.tags,
+                    }}
+                  />
                 </div>
               );
             }

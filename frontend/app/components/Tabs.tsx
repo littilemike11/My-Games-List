@@ -1,16 +1,17 @@
 "use client";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const SORT_OPTIONS: Record<
   string,
   { label: string; value: string; order: "asc" | "desc" }[]
 > = {
-  //   posts: [
-  //     { label: "Most Liked", value: "liked" },
-  //     { label: "Most Commented", value: "commented" },
-  //     { label: "Most Recent", value: "recent" },
-  //   ],
+  posts: [
+    { label: "Most Liked", value: "likes", order: "desc" },
+    { label: "Most Commented", value: "comments", order: "desc" },
+    { label: "Date(desc ↓)", value: "date", order: "desc" },
+    { label: "Date(asc ↑)", value: "date", order: "asc" },
+  ],
   //  games: [
   //     { label: "Alphabetical", value: "title" },
   //     { label: "Most Discussed", value: "comments" },
@@ -64,7 +65,7 @@ const Tabs = () => {
   //   };
   const tabs = [
     { name: "Everything", slug: "" },
-    // { name: "All Posts", slug: "posts" },
+    { name: "All Posts", slug: "posts" },
     // { name: "Games", slug: "games" },
     { name: "Reviews", slug: "reviews" },
     { name: "Discussions", slug: "discussions" },

@@ -195,18 +195,6 @@ export const getPostsByTags = async (
   return data;
 };
 
-export const getPostsByTag = async (tagId: number) => {
-  const { data, error } = await supabase
-    .from("posts_by_tag")
-    .select("*")
-    .eq("tag_id", tagId);
-  if (error) {
-    console.error("Error fetching posts: ", error);
-    throw error;
-  }
-  return data;
-};
-
 export const addTag = async (
   tag_id: number,
   parent_type: tagableContent,
