@@ -1,34 +1,23 @@
-import { getTag } from "@/app/api/supabase-api/tag-api";
-import { Tag } from "@/app/types/models";
-import { getPostsByTag } from "@/app/api/supabase-api/post-api";
+import Tabs from "@/app/components/Tabs";
 import ReviewItem from "@/app/components/ReviewItem";
-import DiscussionItem from "@/app/components/DiscussionItem";
 import ListItem from "@/app/components/ListItem";
+import DiscussionItem from "@/app/components/DiscussionItem";
+import { getPosts } from "@/app/api/supabase-api/post-api";
+export default async function PostsPage({
+  searchParams,
+}: {
+  searchParams: { sort?: string; order?: string };
+}) {
+  const sort = (searchParams.sort as "likes" | "comments" | "date") || "likes";
+  const order = (searchParams.order as "asc" | "desc") || "desc";
 
-interface Props {
-  params: { name: string };
-}
-export default async function TagPage({ params }: Props) {
-  const tag: Tag = await getTag(params.name);
-  const posts = await getPostsByTag(tag.id);
-
-  console.log(posts);
-
+  const posts = await getPosts(50, sort, order);
+  console.log("posts", posts);
   return (
     <>
-      <div className="max-w-4xl mx-auto p-4">
-        {/* Header */}
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-pretty capitalize">
-          {tag.name}
-        </h1>
-
-        <p className="mt-2">
-          {tag?.description || `Post tagged with "${tag.name}"`}
-        </p>
-
-        {/* {posts && <PostList posts={posts} />} */}
-
-        {/* Posts feed */}
+      <div>
+        <h1 className="text-4xl text-pretty text-center font-bold">Posts</h1>
+        <Tabs />
         <div className="mt-6 space-y-6">
           {posts.map((post, index) => {
             if (post.parent_type === "review") {

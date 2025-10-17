@@ -1,10 +1,30 @@
 import supabase from "@/supabase-client";
 
 //get all users
-export const getPlayers = async () => {
+export const getPlayers = async (
+  limit: number = 5,
+  sortBy: "level" | "followers" | "name" = "level",
+  orderBy: "asc" | "desc" = "desc"
+) => {
+  let column = "level";
+  switch (sortBy) {
+    case "level":
+      column = "total_xp";
+      break;
+    case "followers":
+      column = "follower_count";
+      break;
+    case "name":
+      column = "username";
+      break;
+    default:
+      column = "level";
+  }
   const { data, error } = await supabase
-    .from("profiles")
-    .select("id,created_at,username,avatar, total_xp");
+    .from("profile_with_followers")
+    .select("id,created_at,username,avatar, total_xp, follower_count")
+    .order(column, { ascending: orderBy === "asc" })
+    .limit(limit);
   if (error) {
     console.log("Error fetching: ", error);
     throw error;

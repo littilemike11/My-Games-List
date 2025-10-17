@@ -34,7 +34,7 @@ export default function RootLayout({
         <AuthProvider>
           <Navbar />
           <DrawerLayout>
-            <div className="mx-auto max-w-6xl overflow-x-hidden">
+            <div className="mx-auto w-full sm:max-w-5/6 overflow-x-hidden">
               {children}
             </div>
             <Footer />

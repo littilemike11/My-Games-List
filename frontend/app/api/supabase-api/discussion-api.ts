@@ -6,12 +6,32 @@ import {
   upsertTags,
 } from "./tag-api";
 
-export const getDiscussions = async () => {
+export const getDiscussions = async (
+  limit: number = 5,
+  sortBy: "likes" | "comments" | "date" = "likes",
+  orderBy: "asc" | "desc" = "desc"
+) => {
+  let column = "";
+  switch (sortBy) {
+    case "likes":
+      column = "likes";
+      break;
+    case "comments":
+      column = "comment_count";
+      break;
+    case "date":
+      column = "created_at";
+      break;
+    default:
+      column = "likes";
+  }
   const { data, error } = await supabase
     .from("discussions")
     .select(
       "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(username,avatar)"
-    );
+    )
+    .order(column, { ascending: orderBy === "asc" })
+    .limit(limit);
   if (error) {
     console.log("Error fetching: ", error);
     throw error;

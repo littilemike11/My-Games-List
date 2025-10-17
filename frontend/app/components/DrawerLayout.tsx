@@ -1,4 +1,5 @@
 import Navbar from "./Navbar";
+import Link from "next/link";
 export default function DrawerLayout({
   children,
 }: {
@@ -29,9 +30,30 @@ export default function DrawerLayout({
           <nav className="menu bg-base-200 text-base-content min-h-full w-80 p-4 space-y-4">
             {/* Main nav */}
             <ul className="font-medium space-y-2">
-              <li>For You</li>
-              <li>Popular</li>
-              <li>Latest</li>
+              <li>
+                <Link href={"/"}>🏠 Home</Link>
+              </li>
+              <li>
+                <Link href={"/popular"}>✨ Popular</Link>
+              </li>
+              <li>
+                <Link href={"/games"}>🎮 Games</Link>
+              </li>
+              <li>
+                <Link href={"/reviews"}>⭐ Reviews</Link>
+              </li>
+              <li>
+                <Link href={"/discussions"}>💬 Discussions</Link>
+              </li>
+              <li>
+                <Link href={"/lists"}>📜 lists</Link>
+              </li>
+              <li>
+                <Link href={"/players"}>👥 Players</Link>
+              </li>
+              <li>
+                <Link href={"/news"}>📰 News</Link>
+              </li>
             </ul>
 
             {/* Content Filters */}

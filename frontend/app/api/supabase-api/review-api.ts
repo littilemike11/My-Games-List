@@ -1,11 +1,32 @@
 import supabase from "@/supabase-client";
 import { getPostTags, getTagsByName } from "./tag-api";
-export const getReviews = async () => {
+export const getReviews = async (
+  limit: number = 5,
+  sortBy: "likes" | "comments" | "date" = "likes",
+  orderBy: "asc" | "desc" = "desc"
+) => {
+  let column = "";
+  switch (sortBy) {
+    case "likes":
+      column = "likes";
+      break;
+    case "comments":
+      column = "comment_count";
+      break;
+    case "date":
+      column = "created_at";
+      break;
+    default:
+      column = "likes";
+  }
+
   const { data, error } = await supabase
     .from("reviews")
     .select(
       "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(username,avatar),game:games(id,name,cover,slug)"
-    );
+    )
+    .order(column, { ascending: orderBy === "asc" })
+    .limit(limit);
   if (error) {
     console.log("Error fetching: ", error);
     throw error;
@@ -83,7 +104,7 @@ export const searchReviews = async (name: string, limit: number = 5) => {
   return mappedData;
 };
 
-//  i feel a view may not be needed, try again with id and collect info from other table columns
+//  i feel a view may not be needed, try again with id and collect info from other column columns
 export const getReviewsByGame = async (slug: string) => {
   const { data, error } = await supabase
     .from("reviews_with_game_slug")
