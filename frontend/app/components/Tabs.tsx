@@ -34,14 +34,16 @@ const SORT_OPTIONS: Record<
     { label: "Date(asc ↑)", value: "date", order: "asc" },
   ],
   players: [
-    { label: "Alphabetical", value: "name", order: "desc" },
-    { label: "Most Followed", value: "followers", order: "desc" },
     { label: "Highest Level", value: "level", order: "desc" },
+    { label: "Most Followed", value: "followers", order: "desc" },
+    { label: "Alphabetical(desc ↓)", value: "name", order: "desc" },
+    { label: "Alphabetical(asc ↑)", value: "name", order: "asc" },
   ],
   tags: [
-    { label: "Alphabetical", value: "name", order: "desc" },
     { label: "Most Used", value: "usage", order: "desc" },
     { label: "Most Followed", value: "followers", order: "desc" },
+    { label: "Alphabetical(desc ↓)", value: "name", order: "desc" },
+    { label: "Alphabetical(asc ↑)", value: "name", order: "asc" },
   ],
 };
 

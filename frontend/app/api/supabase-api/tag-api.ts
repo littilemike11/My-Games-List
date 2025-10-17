@@ -18,11 +18,36 @@ export const getTags = async (limit: number = 5) => {
 };
 
 //get most used tag link
-// export const getTagsLinks = async (limit: number = 5) => {
-//   //select highest count of tags
-//   const {data,error}= await supabase.from("tag_links").select("
-//     tag:tags(id)")
-// };
+export const getPopularTags = async (
+  limit: number = 5,
+  sortBy: "usage" | "followers" | "name" = "usage",
+  orderBy: "asc" | "desc" = "desc"
+) => {
+  let column = "usage_count";
+  switch (sortBy) {
+    case "usage":
+      column = "usage_count";
+      break;
+    case "followers":
+      column = "follow_count";
+      break;
+    case "name":
+      column = "name";
+      break;
+    default:
+      column = "usage_count";
+  }
+  const { data, error } = await supabase
+    .from("tag_stats")
+    .select("tag_id, usage_count, follow_count,name,description,type")
+    .order(column, { ascending: orderBy === "asc" })
+    .limit(limit);
+  if (error) {
+    console.error("Error fetching games: ", error);
+    throw error;
+  }
+  return data;
+};
 
 export const searchTags = async (
   name: string,
