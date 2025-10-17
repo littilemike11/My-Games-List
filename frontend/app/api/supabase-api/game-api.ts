@@ -1,4 +1,4 @@
-import supabase from "@/supabase-client";
+import supabase from "@/app/utils/supabase/client";
 import { Game, GamePreview } from "@/app/types/models";
 
 export async function upsertGame(igdbGame: Game | GamePreview) {

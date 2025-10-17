@@ -1,5 +1,5 @@
 import { contentType } from "@/app/types/models";
-import supabase from "@/supabase-client";
+import supabase from "@/app/utils/supabase/client";
 
 //reaction counts is determined by supabase triggers
 

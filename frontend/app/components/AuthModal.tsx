@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import supabase from "@/supabase-client";
+import supabase from "@/app/utils/supabase/client";
 
 export default function AuthModal({
   isOpen,

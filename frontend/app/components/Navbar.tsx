@@ -4,7 +4,7 @@ import Link from "next/link";
 import AuthModal from "@/app/components/AuthModal";
 import { useAuth } from "../auth/auth-context";
 import { useState } from "react";
-import supabase from "@/supabase-client";
+import supabase from "@/app/utils/supabase/client";
 const Navbar = () => {
   const [showAuth, setShowAuth] = useState(false);
   const { session, profile, loading } = useAuth();

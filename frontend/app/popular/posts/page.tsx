@@ -12,7 +12,6 @@ export default async function PostsPage({
   const order = (searchParams.order as "asc" | "desc") || "desc";
 
   const posts = await getPosts(50, sort, order);
-  console.log("posts", posts);
   return (
     <>
       <div>
