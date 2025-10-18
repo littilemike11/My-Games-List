@@ -1,4 +1,5 @@
 import { getPopularTags } from "@/app/api/supabase-api/tag-api";
+import FollowTagButton from "@/app/components/FollowTagButton";
 import Tabs from "@/app/components/Tabs";
 import TagItem from "@/app/components/TagItem";
 export default async function TagsPage({
@@ -50,6 +51,7 @@ export default async function TagsPage({
                     type: tag.type,
                   }}
                 />
+                <FollowTagButton TagID={tag.tag_id} />
               </div>
               <p className="text-sm line-clamp-3">
                 {tag.description || "No description available."}

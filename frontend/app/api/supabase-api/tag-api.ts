@@ -261,3 +261,43 @@ export const batchRemoveTags = async (ids: number[]) => {
   }
   return data;
 };
+
+// Following Tags
+export const isFollowingTag = async (user_id: string, tag_id: number) => {
+  const { data, error } = await supabase
+    .from("tag_follows")
+    .select("id")
+    .eq("user_id", user_id)
+    .eq("tag_id", tag_id)
+    .maybeSingle();
+  if (error) {
+    console.error("Error following tag: ", error);
+    throw error;
+  }
+  return data ? true : false;
+};
+export const followTag = async (user_id: string, tag_id: number) => {
+  const { data, error } = await supabase
+    .from("tag_follows")
+    .insert([{ user_id, tag_id }])
+    .select()
+    .single();
+  if (error) {
+    console.error("Error following tag: ", error);
+    throw error;
+  }
+  return data;
+};
+
+export const unFollowTag = async (user_id: string, tag_id: number) => {
+  const { data, error } = await supabase
+    .from("tag_follows")
+    .delete()
+    .eq("user_id", user_id)
+    .eq("tag_id", tag_id);
+  if (error) {
+    console.error("Error unfollowing tag: ", error);
+    throw error;
+  }
+  return data;
+};
