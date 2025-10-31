@@ -124,7 +124,21 @@ export const getFollowing = async (user_id: string) => {
     console.error("Error getting following", error);
     throw error;
   }
-  return data?.map((row) => row.following);
+  return data?.flatMap((row) => row.following);
+};
+
+// all who user_id is following
+export const getFollowingIDs = async (user_id: string) => {
+  const { data, error } = await supabase
+    .from("user_follows")
+    .select("following_id")
+    .eq("follower_id", user_id);
+
+  if (error) {
+    console.error("Error getting following", error);
+    throw error;
+  }
+  return data?.map((row) => row.following_id);
 };
 
 export const checkFollowing = async (

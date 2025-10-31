@@ -262,6 +262,36 @@ export const batchRemoveTags = async (ids: number[]) => {
   return data;
 };
 
+export const getFollowedTagIDs = async (user_id: string) => {
+  const { data, error } = await supabase
+    .from("tag_follows")
+    .select("tag_id")
+    .eq("user_id", user_id)
+    .order("created_at", { ascending: false });
+  if (error) {
+    console.error("Error removing tags: ", error);
+    throw error;
+  }
+  return data.map((tag) => Number(tag.tag_id)) ?? [];
+};
+export const getFollowedTags = async (user_id: string) => {
+  const { data, error } = await supabase
+    .from("tag_follows")
+    .select("tag:tags(id,name,type,description)")
+    .eq("user_id", user_id)
+    .order("created_at", { ascending: false });
+  if (error) {
+    console.error("Error removing tags: ", error);
+    throw error;
+  }
+
+  return data.flatMap((tag) => tag.tag) ?? [];
+  // const mappedData = data.map((tag: any) => ({
+  //   tag: tag.tag,
+  // }));
+  // return mappedData;
+};
+
 // Following Tags
 export const isFollowingTag = async (user_id: string, tag_id: number) => {
   const { data, error } = await supabase
