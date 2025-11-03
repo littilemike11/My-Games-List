@@ -1,44 +1,18 @@
-// "use client";
-
-// import { useEffect } from "react";
-// import { useAuth } from "@/app/auth/auth-context";
-// import { useRouter } from "next/navigation";
-// import { redirect } from "next/navigation";
-// // import { getUserProfile } from "@/app/auth/server";
-
-// export default function Home() {
-//   const { profile, loading } = useAuth();
-//   const router = useRouter();
-
-//   useEffect(() => {
-//     if (!loading && !profile) {
-//       router.replace("/popular"); // redirect for unsigned users
-//     }
-//   }, [loading, profile, router]);
-
-//   if (loading || !profile) {
-//     return <div>Loading...</div>; // prevent flicker
-//   }
-
-//   return (
-//     <div>
-//       <h1>Your Feed</h1>
-//       {/* feed content */}
-//     </div>
-//   );
-// }
-// app/page.tsx
+// app/feed/page.tsx
 import { redirect } from "next/navigation";
-import { createClient } from "./utils/supabase/server";
+import { createClient } from "@/app/utils/supabase/server";
 
-export default async function Home() {
+export default async function FeedPage() {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.auth.getUser();
+  const { data: user, error } = await supabase.auth.getClaims();
 
-  if (error || !data?.user) {
-    redirect("/popular"); // not signed in
+  if (error || !user?.claims) {
+    redirect("/popular");
   }
-
-  redirect("/feed"); // signed in
+  return (
+    <div>
+      <h1>Welcome {user.claims.user_metadata.username}</h1>
+    </div>
+  );
 }

@@ -5,19 +5,14 @@ import { createClient } from "../utils/supabase/server";
 export default async function FeedPage() {
   const supabase = await createClient();
 
-  // This reads the session cookie from the request
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error || !user) {
-    redirect("/popular"); // not signed in
+  const { data, error } = await supabase.auth.getClaims();
+  if (error || !data?.claims) {
+    console.log(data);
+    redirect("/popular");
   }
-
   return (
     <div>
-      <h1>Welcome {user.email}</h1>
+      <h1>Welcome </h1>
     </div>
   );
 }
