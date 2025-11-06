@@ -261,3 +261,73 @@ export const batchRemoveTags = async (ids: number[]) => {
   }
   return data;
 };
+
+export const getFollowedTagIDs = async (user_id: string) => {
+  const { data, error } = await supabase
+    .from("tag_follows")
+    .select("tag_id")
+    .eq("user_id", user_id)
+    .order("created_at", { ascending: false });
+  if (error) {
+    console.error("Error removing tags: ", error);
+    throw error;
+  }
+  return data.map((tag) => Number(tag.tag_id)) ?? [];
+};
+export const getFollowedTags = async (user_id: string) => {
+  const { data, error } = await supabase
+    .from("tag_follows")
+    .select("tag:tags(id,name,type,description)")
+    .eq("user_id", user_id)
+    .order("created_at", { ascending: false });
+  if (error) {
+    console.error("Error removing tags: ", error);
+    throw error;
+  }
+
+  return data.flatMap((tag) => tag.tag) ?? [];
+  // const mappedData = data.map((tag: any) => ({
+  //   tag: tag.tag,
+  // }));
+  // return mappedData;
+};
+
+// Following Tags
+export const isFollowingTag = async (user_id: string, tag_id: number) => {
+  const { data, error } = await supabase
+    .from("tag_follows")
+    .select("id")
+    .eq("user_id", user_id)
+    .eq("tag_id", tag_id)
+    .maybeSingle();
+  if (error) {
+    console.error("Error following tag: ", error);
+    throw error;
+  }
+  return data ? true : false;
+};
+export const followTag = async (user_id: string, tag_id: number) => {
+  const { data, error } = await supabase
+    .from("tag_follows")
+    .insert([{ user_id, tag_id }])
+    .select()
+    .single();
+  if (error) {
+    console.error("Error following tag: ", error);
+    throw error;
+  }
+  return data;
+};
+
+export const unFollowTag = async (user_id: string, tag_id: number) => {
+  const { data, error } = await supabase
+    .from("tag_follows")
+    .delete()
+    .eq("user_id", user_id)
+    .eq("tag_id", tag_id);
+  if (error) {
+    console.error("Error unfollowing tag: ", error);
+    throw error;
+  }
+  return data;
+};

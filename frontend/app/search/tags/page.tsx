@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { searchTags } from "@/app/api/supabase-api/tag-api";
 import { Tag } from "@/app/types/models";
 import TagItem from "@/app/components/TagItem";
+import FollowTagButton from "@/app/components/FollowTagButton";
 
 const TagResultsPage = () => {
   const searchParams = useSearchParams();
@@ -71,6 +72,7 @@ const TagResultsPage = () => {
               >
                 <div className="flex items-center justify-between mb-2">
                   <TagItem tag={tag} />
+                  <FollowTagButton TagID={tag.id} />
                 </div>
                 <p className="text-sm line-clamp-3">
                   {tag.description || "No description available."}
