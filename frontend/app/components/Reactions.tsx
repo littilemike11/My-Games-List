@@ -8,6 +8,7 @@ import {
   removeReaction,
   getUserReactions,
 } from "../api/supabase-api/reaction-api";
+import AuthModal from "./AuthModal";
 
 type ReactionProps = {
   likeCount: number;
@@ -31,24 +32,30 @@ const Reactions: React.FC<ReactionProps> = ({
 
   const { session } = useAuth();
   const userID = session?.user.id;
+  const [showAuth, setShowAuth] = useState(false);
+
   async function handleReaction(type: "like" | "dislike") {
-    if (!userID) return; // must be logged in
     try {
-      if (userReaction === type && reactionId) {
-        // remove reaction
-        await removeReaction(userID, reactionId);
-        setUserReaction(null);
-        setReactionId(null);
-      } else {
-        // add or switch reaction
-        const newReaction = await addReaction(
-          userID,
-          parent_type,
-          parent_id,
-          type === "like"
-        );
-        setUserReaction(type);
-        setReactionId(newReaction.id);
+      if (!userID) {
+        setShowAuth(true);
+      } // must be logged in
+      else {
+        if (userReaction === type && reactionId) {
+          // remove reaction
+          await removeReaction(userID, reactionId);
+          setUserReaction(null);
+          setReactionId(null);
+        } else {
+          // add or switch reaction
+          const newReaction = await addReaction(
+            userID,
+            parent_type,
+            parent_id,
+            type === "like"
+          );
+          setUserReaction(type);
+          setReactionId(newReaction.id);
+        }
       }
     } catch (err) {
       console.error("Failed to update reaction:", err);
@@ -103,6 +110,8 @@ const Reactions: React.FC<ReactionProps> = ({
           <span>{commentCount} </span>
           <button className="btn btn-ghost btn-square size-6 ">💬</button>
         </div>
+        {/* only auth users can leave reactions */}
+        <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
       </div>
     </>
   );

@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { contentType } from "../types/models";
 import { createComment } from "../api/supabase-api/comment-api";
 import { useAuth } from "../auth/auth-context";
-
+import AuthModal from "./AuthModal";
 const CreateComment: React.FC<{
   parentType: contentType;
   parentID: number;
@@ -13,8 +13,17 @@ const CreateComment: React.FC<{
   const [isCommenting, setIsCommenting] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
   const { session } = useAuth();
   const userID = session?.user.id;
+
+  const handleComment = () => {
+    if (userID) {
+      setIsCommenting(true);
+    } else {
+      setShowAuth(true);
+    }
+  };
 
   const addComment = async () => {
     if (!newComment.trim() || !userID) return;
@@ -77,12 +86,16 @@ const CreateComment: React.FC<{
           </div>
         </div>
       ) : (
-        <button
-          onClick={() => setIsCommenting(true)}
-          className="btn btn-primary self-start"
-        >
-          {parentType === "comment" ? "Reply" : "Add a comment"}
-        </button>
+        <div>
+          <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
+
+          <button
+            onClick={handleComment}
+            className="btn btn-primary self-start"
+          >
+            {parentType === "comment" ? "Reply" : "Add a comment"}
+          </button>
+        </div>
       )}
     </>
   );

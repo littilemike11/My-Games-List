@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useAuth } from "../auth/auth-context";
+import AuthModal from "./AuthModal";
 import {
   checkFollowing,
   followUser,
@@ -10,6 +11,8 @@ import {
 const FollowButton: React.FC<{ playerID: string }> = ({ playerID }) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showAuth, setShowAuth] = useState(false);
+
   const { session, profile } = useAuth();
   const userID = session?.user.id;
   const isOwnProfile = session && userID === playerID;
@@ -31,7 +34,10 @@ const FollowButton: React.FC<{ playerID: string }> = ({ playerID }) => {
   }, [userID, playerID]);
 
   const toggleFollow = async () => {
-    if (!userID) return;
+    if (!userID) {
+      setShowAuth(true);
+      return;
+    }
 
     try {
       if (isFollowing) {
@@ -67,9 +73,12 @@ const FollowButton: React.FC<{ playerID: string }> = ({ playerID }) => {
       Unfollow
     </button>
   ) : (
-    <button onClick={toggleFollow} className="btn btn-primary">
-      Follow
-    </button>
+    <div>
+      <button onClick={toggleFollow} className="btn btn-primary">
+        Follow
+      </button>
+      <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
+    </div>
   );
 };
 
