@@ -8,6 +8,7 @@ import {
 } from "@/app/api/supabase-api/list-api";
 import { useAuth } from "@/app/auth/auth-context";
 import { useEffect, useState } from "react";
+import AuthModal from "../AuthModal";
 type CTAProps = {
   game: Game;
   gameID: number;
@@ -22,6 +23,7 @@ type GameStatus = {
 const CTA: React.FC<CTAProps> = ({ game, gameID }) => {
   const { session, profile } = useAuth();
   const userID = session?.user.id;
+  const [showAuth, setShowAuth] = useState(false);
 
   const [gameStatus, setGameStatus] = useState<GameStatus>({
     played: false,
@@ -32,12 +34,12 @@ const CTA: React.FC<CTAProps> = ({ game, gameID }) => {
 
   const toggleGameStatus = async (status: StatusKey) => {
     try {
-      // Update local state first
-      setGameStatus((prev) => ({
-        ...prev,
-        [status]: !prev[status], // toggle the specific status
-      }));
       if (userID) {
+        // Update local state first
+        setGameStatus((prev) => ({
+          ...prev,
+          [status]: !prev[status], // toggle the specific status
+        }));
         const updateStatus = await upsertUserGameStatus(
           gameID,
           userID,
@@ -45,6 +47,8 @@ const CTA: React.FC<CTAProps> = ({ game, gameID }) => {
           !gameStatus[status]
         );
         console.log(updateStatus);
+      } else {
+        setShowAuth(true);
       }
     } catch (error) {
       console.error("error adding game to list:", error);
@@ -111,6 +115,7 @@ const CTA: React.FC<CTAProps> = ({ game, gameID }) => {
     <>
       <div className="flex flex-col sm:flex-row items-center gap-6">
         <CreateReview game={game}></CreateReview>
+        <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
 
         <div className="join">
           {/* Primary button for the first status (wishlist in this example) */}

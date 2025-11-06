@@ -1,4 +1,4 @@
-import supabase from "@/supabase-client";
+import supabase from "@/app/utils/supabase/client";
 import {
   getPostsByTags,
   getPostTags,

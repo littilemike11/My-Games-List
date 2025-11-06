@@ -9,6 +9,8 @@ import TagSection from "./TagSection";
 const CreateDiscussion: React.FC<{ ctaType?: "input" | "button" }> = ({
   ctaType = "input",
 }) => {
+  const [showAuth, setShowAuth] = useState(false);
+
   const pathname = usePathname();
   console.log(pathname);
   // Extract current category from pathname
@@ -54,7 +56,10 @@ const CreateDiscussion: React.FC<{ ctaType?: "input" | "button" }> = ({
   };
 
   const openModal = () => {
-    if (!session) return;
+    if (!session) {
+      setShowAuth(true);
+      return;
+    }
     const modal = document.getElementById(
       "my_modal_4"
     ) as HTMLDialogElement | null;
@@ -85,6 +90,7 @@ const CreateDiscussion: React.FC<{ ctaType?: "input" | "button" }> = ({
           Start a Discussion
         </button>
       )}
+      <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
 
       <dialog id="my_modal_4" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">

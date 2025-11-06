@@ -1,5 +1,5 @@
 import { contentType } from "@/app/types/models";
-import supabase from "@/supabase-client";
+import supabase from "@/app/utils/supabase/client";
 
 export const getCommentsFromPost = async (
   content_type: string,

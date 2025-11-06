@@ -1,4 +1,4 @@
-import supabase from "@/supabase-client";
+import supabase from "@/app/utils/supabase/client";
 import { getPostTags, getTagsByName } from "./tag-api";
 export const getReviews = async (
   limit: number = 5,

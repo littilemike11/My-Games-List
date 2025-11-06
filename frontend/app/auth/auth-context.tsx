@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import supabase from "@/supabase-client";
+import supabase from "@/app/utils/supabase/client";
 import type { Session } from "@supabase/supabase-js";
 import { Profile } from "../types/models";
 //  can potential remove profile from here, and instead do it in each component manually who needs it ( ie/navbar)

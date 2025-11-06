@@ -1,5 +1,5 @@
 import { tagableContent } from "@/app/types/models";
-import supabase from "@/supabase-client";
+import supabase from "@/app/utils/supabase/client";
 
 // search tags
 

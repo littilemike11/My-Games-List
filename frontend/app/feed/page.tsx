@@ -1,6 +1,8 @@
 "use client";
 import { useAuth } from "../auth/auth-context";
 import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import { createClient } from "../utils/supabase/server";
 import { getFollowedTagIDs } from "../api/supabase-api/tag-api";
 import { getFollowing, getFollowingIDs } from "../api/supabase-api/profile-api";
 import {
@@ -20,6 +22,13 @@ export default function Feed() {
   const [recommendedGames, setRecommendedGames] = useState<GamePreview[]>([]);
 
   const userID = session?.user.id;
+  // const supabase = await createClient();
+
+  // const { data, error } = await supabase.auth.getClaims();
+  // if (error || !data?.claims) {
+  //   console.log(data);
+  //   redirect("/popular");
+  // }
 
   useEffect(() => {
     const fetchUserPref = async () => {
