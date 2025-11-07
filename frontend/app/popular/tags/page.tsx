@@ -42,7 +42,7 @@ export default async function TagsPage({
               key={tag.tag_id}
               className="card bg-base-100 shadow-md hover:shadow-lg transition rounded-xl p-4"
             >
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between gap-2 mb-2">
                 <TagItem
                   tag={{
                     id: tag.tag_id,

@@ -7,15 +7,21 @@ import {
   unFollowTag,
 } from "@/app/api/supabase-api/tag-api";
 import { useAuth } from "../auth/auth-context";
+import AuthModal from "./AuthModal";
 
 const FollowTagButton: React.FC<{ TagID: number }> = ({ TagID }) => {
   const { session, profile } = useAuth();
   const [loading, setloading] = useState(true);
   const [isFollowing, setIsFollowing] = useState<boolean>();
+  const [showAuth, setShowAuth] = useState(false);
+
   const userID = session?.user.id;
 
   useEffect(() => {
-    if (!userID) return;
+    if (!userID) {
+      setloading(false);
+      return;
+    }
     const fetchTags = async () => {
       if (userID) {
         try {
@@ -31,7 +37,10 @@ const FollowTagButton: React.FC<{ TagID: number }> = ({ TagID }) => {
   }, [userID]);
 
   const handleSubmit = async () => {
-    if (!userID) return;
+    if (!userID) {
+      setShowAuth(true);
+      return;
+    }
     try {
       if (isFollowing) {
         await unFollowTag(userID, TagID);
@@ -54,6 +63,7 @@ const FollowTagButton: React.FC<{ TagID: number }> = ({ TagID }) => {
       >
         {loading ? "loading..." : isFollowing ? "Unfollow" : "Follow"}
       </button>
+      <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
     </>
   );
 };
