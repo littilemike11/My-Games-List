@@ -43,6 +43,7 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
+  // non-users are sent to popular pg instead of home pg
   if (
     request.nextUrl.pathname == "/" &&
     !user
@@ -52,6 +53,18 @@ export async function updateSession(request: NextRequest) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
     url.pathname = "/popular";
+    return NextResponse.redirect(url);
+  }
+
+  if (
+    request.nextUrl.pathname == "/list/new" &&
+    !user
+    // !request.nextUrl.pathname.startsWith("/login") &&
+    // !request.nextUrl.pathname.startsWith("/auth")
+  ) {
+    // no user, potentially respond by redirecting the user to the login page
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth/sign-up";
     return NextResponse.redirect(url);
   }
 
