@@ -1,7 +1,11 @@
 import { Profile, UserGameList } from "../types/models";
 import Link from "next/link";
 import FollowButton from "./FollowButton";
-import { getLevel, getLevelProgress } from "../utils/functions";
+import {
+  addRecentSearch,
+  getLevel,
+  getLevelProgress,
+} from "../utils/functions";
 import ListItem from "./ListItem";
 export const ProfileItem: React.FC<{
   profile: Profile;
@@ -40,6 +44,9 @@ export const ProfileItem: React.FC<{
               <Link
                 className="italic link link-hover"
                 href={`/user/${profile.username}`}
+                onClick={() =>
+                  addRecentSearch(profile.username, `/user/${profile.username}`)
+                }
               >
                 {profile.username}
               </Link>

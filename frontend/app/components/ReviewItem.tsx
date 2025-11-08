@@ -1,6 +1,6 @@
 import { Review } from "../types/models";
 import GamePreviewLink from "./GamePreviewLink";
-import { formatDate } from "../utils/functions";
+import { addRecentSearch, formatDate } from "../utils/functions";
 import CommentItem from "./CommentItem";
 import Reactions from "./Reactions";
 import CreateComment from "./CreateComment";
@@ -31,6 +31,12 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
           <Link
             className="link link-hover"
             href={`/user/${review.profile?.username}/review/${review.id}`}
+            onClick={() => {
+              addRecentSearch(
+                review.title,
+                `/user/${review.profile?.username}/review/${review.id}`
+              );
+            }}
           >
             <h2 className="card-title text-lg line-clamp-2 text-pretty font-semibold">
               {review.title}
@@ -48,6 +54,12 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
                 <Link
                   className="link link-hover"
                   href={`/user/${review.profile?.username}`}
+                  onClick={() =>
+                    addRecentSearch(
+                      review.profile?.username,
+                      `/user/${review.profile?.username}`
+                    )
+                  }
                 >
                   {review.profile?.username}
                 </Link>

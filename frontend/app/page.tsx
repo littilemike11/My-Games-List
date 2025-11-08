@@ -15,6 +15,7 @@ import {
 import DiscussionItem from "@/app/components/DiscussionItem";
 import ListItem from "@/app/components/ListItem";
 import ReviewItem from "@/app/components/ReviewItem";
+import PersonalizeSection from "./components/PersonalizeSection";
 import Link from "next/link";
 import { ProfileItem } from "@/app/components/ProfileItem";
 import { GamePreview } from "@/app/types/models";
@@ -53,10 +54,14 @@ export default function Feed() {
   }, [userID]);
   return (
     <>
-      <h1 className="text-4xl text-pretty text-center font-bold mb-6">
-        Welcome <span className="italic">{profile?.username}</span>
-      </h1>
-
+      <div className="flex mb-6 items-end">
+        <h1 className="flex-1 text-4xl capitalize text-pretty text-center font-bold ">
+          Welcome <span className="italic">{profile?.username}</span>
+        </h1>
+        {/* <div className=" items-center gap-2 pr-4">
+          <PersonalizeSection />
+        </div> */}
+      </div>
       <div className="flex flex-col items-center space-y-6">
         <h2 className="text-2xl sm:text-3xl text-pretty font-semibold">
           Posts from your Favorite Tags

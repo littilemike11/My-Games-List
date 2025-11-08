@@ -23,8 +23,8 @@ export interface User {
 export interface Profile {
   total_xp: number;
   id: string;
-  username: String;
-  avatar: String;
+  username: string;
+  avatar: string;
   bio?: String;
 }
 
@@ -177,7 +177,10 @@ export interface GameEntry {
     cover?: string;
   };
 }
-
+export interface History {
+  title: string;
+  link: string;
+}
 export type ListVisibility = "private" | "public" | "friends";
 export type ListType =
   | "custom"

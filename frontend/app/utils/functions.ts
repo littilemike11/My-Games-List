@@ -1,4 +1,4 @@
-import { Game, GamePreview } from "../types/models";
+import { Game, GamePreview, History } from "../types/models";
 export const parseGame = (gameInfo: any): Game => {
   return {
     id: gameInfo.id,
@@ -80,3 +80,27 @@ export function getLevelProgress(xp: number) {
   //find percent complete
   //diff btwn curr and next lvl= 57
 }
+
+export function addRecentSearch(title: string, link: string) {
+  const visit: History = { title, link };
+  let visits = [];
+  const recentSearches = localStorage.getItem("searches");
+  if (recentSearches) {
+    visits = JSON.parse(recentSearches);
+  }
+  visits = [visit, ...visits.filter((v: History) => v.link !== link)].slice(
+    0,
+    5
+  );
+  localStorage.setItem("searches", JSON.stringify(visits));
+}
+// export function addRecentVisit(title: string, link: string) {
+//   // if (typeof window === "undefined") return; // guard for SSR
+//   const visit = { title, link };
+//   let visits = JSON.parse(localStorage.getItem("recentVisits") || "[]");
+
+//   // Prevent duplicates & limit to 5
+//   visits = [visit, ...visits.filter((v) => v.link !== link)].slice(0, 5);
+
+//   localStorage.setItem("recentVisits", JSON.stringify(visits));
+// }

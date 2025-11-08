@@ -1,4 +1,5 @@
 import { List } from "../types/models";
+import { addRecentSearch } from "../utils/functions";
 import GamePreviewLink from "./GamePreviewLink";
 import Link from "next/link";
 const ListItem: React.FC<{
@@ -44,6 +45,12 @@ const ListItem: React.FC<{
             <Link
               className="italic link link-hover"
               href={`/user/${list.profile.username}`}
+              onClick={() =>
+                addRecentSearch(
+                  list.profile.username,
+                  `/user/${list.profile.username}`
+                )
+              }
             >
               {list.profile.username}
             </Link>

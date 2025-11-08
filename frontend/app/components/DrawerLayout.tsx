@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useAuth } from "../auth/auth-context";
 import { getFollowing } from "../api/supabase-api/profile-api";
 import { getFollowedTags } from "../api/supabase-api/tag-api";
-import { GamePreview, ProfilePreview, Tag } from "../types/models";
+import { GamePreview, History, ProfilePreview, Tag } from "../types/models";
 import TagItem from "./TagItem";
 import { IGDBgenres } from "../mockData/genreTags";
 import { IGDBthemes } from "../mockData/themeTags";
@@ -21,6 +21,7 @@ export default function DrawerLayout({
   const [favTags, setFavTags] = useState<Tag[]>([]);
   const [recommendedGames, setRecommendedGames] = useState<GamePreview[]>([]);
   const [following, setFollowing] = useState<ProfilePreview[]>([]);
+  const [searches, setSearches] = useState<History[]>([]);
   type SectionName = "Platforms" | "Genres" | "Themes";
 
   interface Preference {
@@ -46,6 +47,7 @@ export default function DrawerLayout({
 
   // ✅ Load from localStorage on mount
   useEffect(() => {
+    // get user pref
     const stored = localStorage.getItem("userPreferences");
     if (stored) {
       try {
@@ -56,6 +58,14 @@ export default function DrawerLayout({
     } else {
       // current empty
       localStorage.setItem("userPreferences", JSON.stringify(selectedOptions));
+    }
+
+    // get recent searches
+    const recentSearches = localStorage.getItem("searches");
+    if (recentSearches) {
+      setSearches(JSON.parse(recentSearches));
+    } else {
+      localStorage.setItem("searches", JSON.stringify(searches));
     }
   }, []);
 
@@ -202,6 +212,14 @@ export default function DrawerLayout({
               <li>
                 <details>
                   <summary>Recently Visited</summary>
+                  <ul>
+                    {searches.length > 0 &&
+                      searches.map((visit: History, index) => (
+                        <li key={index}>
+                          <Link href={visit.link}>{visit.title}</Link>
+                        </li>
+                      ))}
+                  </ul>
                 </details>
               </li>
               <li>
