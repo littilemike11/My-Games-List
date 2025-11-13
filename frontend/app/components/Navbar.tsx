@@ -9,6 +9,7 @@ import { FaPlus } from "react-icons/fa";
 
 import Search from "./Search";
 import CreateDiscussion from "./CreateDiscussion";
+// import { getLevel } from "../utils/functions";
 const Navbar = () => {
   const [showAuth, setShowAuth] = useState(false);
   const { session, profile, loading } = useAuth();
@@ -184,12 +185,13 @@ const Navbar = () => {
                   role="button"
                   className="btn btn-ghost btn-circle avatar"
                 >
-                  <div className="w-10 rounded-full">
-                    <img
-                      alt="Tailwind CSS Navbar component"
-                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                    />
-                  </div>
+                  <figure>
+                    <div className="avatar avatar-placeholder">
+                      <div className="bg-neutral text-neutral-content w-10 rounded-full">
+                        <span>{profile?.username[0].toUpperCase()}</span>
+                      </div>
+                    </div>
+                  </figure>
                 </div>
                 <ul
                   tabIndex={0}

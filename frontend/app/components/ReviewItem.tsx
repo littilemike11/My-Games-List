@@ -41,15 +41,21 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
             <div className="flex flex-col gap-2 ">
               {/* user info */}
               <div className="flex items-center justify-start gap-3">
-                <img
-                  className="size-8 rounded-box "
-                  src="https://img.daisyui.com/images/profile/demo/1@94.webp"
-                />
                 <Link
                   className="link link-hover"
                   href={`/user/${review.profile?.username}`}
                 >
-                  {review.profile?.username}
+                  <figure>
+                    <div className="avatar avatar-placeholder">
+                      <div className="bg-neutral text-neutral-content w-8 rounded-full">
+                        <span>{review.profile?.username[0].toUpperCase()}</span>
+                      </div>
+                    </div>
+
+                    <span className="ml-2 italic">
+                      {review.profile?.username || "(deleted)"}
+                    </span>
+                  </figure>
                 </Link>
 
                 <span> reviewed</span>

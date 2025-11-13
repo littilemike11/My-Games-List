@@ -26,21 +26,23 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
           {/* Author info and date */}
           <div className="flex items-center justify-between text-sm ">
             <div className="flex items-center gap-3">
-              <img
-                src="https://img.daisyui.com/images/profile/demo/1@94.webp"
-                alt={`Profile of ${
-                  discussion.profile?.username || "Deleted User"
-                }`}
-                className="w-8 h-8 rounded-full object-cover"
-                loading="lazy"
-              />
               <Link
                 className="link link-hover"
                 href={`/user/${discussion.profile?.username}`}
               >
-                <span className="italic">
-                  {discussion.profile?.username || "(deleted)"}
-                </span>
+                <figure>
+                  <div className="avatar avatar-placeholder">
+                    <div className="bg-neutral text-neutral-content w-8 rounded-full">
+                      <span>
+                        {discussion.profile?.username[0].toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+
+                  <span className="ml-2 italic">
+                    {discussion.profile?.username || "(deleted)"}
+                  </span>
+                </figure>
               </Link>
             </div>
             <time className="opacity-50">
