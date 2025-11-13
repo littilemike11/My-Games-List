@@ -197,56 +197,67 @@ export default function DrawerLayout({
                 <Link href={"/popular/players"}>👥 Players</Link>
               </li>
               <li>
-                <Link href={"/news"}>📰 News</Link>
+                <Link href={"/popular/tags"}>🏷️ Tags</Link>
               </li>
               <li>
+                <Link href={"/news"}>📰 News</Link>
+              </li>
+
+              {/* recently visited */}
+              {/* <li>
                 <details>
                   <summary>Recently Visited</summary>
                 </details>
-              </li>
-              <li>
-                <details>
-                  <summary>Tags</summary>
-                  <ul>
-                    {favTags.length > 0 &&
-                      favTags.map((tag) => (
-                        <li key={tag.id}>
-                          <TagItem tag={tag} />
-                        </li>
-                      ))}
-                  </ul>
-                </details>
-              </li>
-              <li>
-                <details>
-                  <summary>Following</summary>
-                  <ul>
-                    {following.length > 0 &&
-                      following.map((user) => (
-                        <li key={user.id}>
-                          <div className="flex gap-2 items-center">
-                            <figure>
-                              <div className="avatar avatar-placeholder">
-                                <div className="bg-neutral text-neutral-content w-8 rounded-full">
-                                  <span className="text-sm">
-                                    {user.username[0].toUpperCase()}
-                                  </span>
+              </li> */}
+              {userID && (
+                <li>
+                  <details>
+                    <summary>Followed Tags</summary>
+                    <ul>
+                      {favTags.length > 0 &&
+                        favTags.map((tag) => (
+                          <li key={tag.id}>
+                            <TagItem tag={tag} />
+                          </li>
+                        ))}
+                    </ul>
+                  </details>
+                </li>
+              )}
+              {/* following */}
+              {userID && (
+                <li>
+                  <details>
+                    <summary>Following</summary>
+                    <ul>
+                      {following.length > 0 &&
+                        following.map((user) => (
+                          <li key={user.id}>
+                            <div className="flex gap-2 items-center">
+                              <figure>
+                                <div className="avatar avatar-placeholder">
+                                  <div className="bg-neutral text-neutral-content w-8 rounded-full">
+                                    <span className="text-sm">
+                                      {user.username[0].toUpperCase()}
+                                    </span>
+                                  </div>
                                 </div>
-                              </div>
-                            </figure>
-                            <Link
-                              className="italic link link-hover"
-                              href={`/user/${user.username}`}
-                            >
-                              {user.username}
-                            </Link>
-                          </div>
-                        </li>
-                      ))}
-                  </ul>
-                </details>
-              </li>
-              <li>
+                              </figure>
+                              <Link
+                                className="italic link link-hover"
+                                href={`/user/${user.username}`}
+                              >
+                                {user.username}
+                              </Link>
+                            </div>
+                          </li>
+                        ))}
+                    </ul>
+                  </details>
+                </li>
+              )}
+              {/* personalize */}
+              {/* <li>
                 <details open>
                   <summary>Personalize</summary>
                   <ul>
@@ -281,7 +292,7 @@ export default function DrawerLayout({
                     ))}
                   </ul>
                 </details>
-              </li>
+              </li> */}
             </ul>
           </nav>
         </div>

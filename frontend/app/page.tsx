@@ -171,9 +171,9 @@ export default function Feed() {
           </p>
         )}
 
-        <h2 className="text-2xl sm:text-3xl text-pretty font-semibold">
+        {/* <h2 className="text-2xl sm:text-3xl text-pretty font-semibold">
           Games you may like
-        </h2>
+        </h2> */}
       </div>
     </>
   );

@@ -5,6 +5,10 @@ import AuthModal from "@/app/components/AuthModal";
 import { useAuth } from "../auth/auth-context";
 import { useState } from "react";
 import supabase from "@/app/utils/supabase/client";
+import { FaPlus } from "react-icons/fa";
+
+import Search from "./Search";
+import CreateDiscussion from "./CreateDiscussion";
 const Navbar = () => {
   const [showAuth, setShowAuth] = useState(false);
   const { session, profile, loading } = useAuth();
@@ -14,7 +18,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="navbar bg-base-300 fixed z-50 shadow-sm h-16 ">
+      <div className="navbar items-baseline bg-base-300 fixed z-50 shadow-sm h-16 ">
         <div className="flex-none xl:hidden">
           <label
             htmlFor="my-drawer-2"
@@ -65,8 +69,10 @@ const Navbar = () => {
                 </div>
               </div> */}
         </div>
-        <div className="navbar-center hidden">
-          <ul className="menu menu-horizontal px-1">
+        <div className="navbar-center hidden lg:block ">
+          <Search />
+          {/* <ul className="menu menu-horizontal px-1">
+            
             <li>
               <Link className="text-xs" href={"/search"}>
                 <svg
@@ -118,56 +124,105 @@ const Navbar = () => {
                 📰 <span className="hidden xl:flex">News</span>
               </Link>
             </li>
-          </ul>
+          </ul> */}
         </div>
         <div className="navbar-end gap-2">
-          <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
-
-          {session ? (
-            <div className="dropdown dropdown-end">
-              <div
-                tabIndex={0}
-                role="button"
-                className="btn btn-ghost btn-circle avatar"
-              >
-                <div className="w-10 rounded-full">
-                  <img
-                    alt="Tailwind CSS Navbar component"
-                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                  />
-                </div>
-              </div>
-              <ul
-                tabIndex={0}
-                className="menu menu-sm space-y-2 dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
-              >
-                <p>Welcome {profile?.username}! </p>
-                <li>
-                  <Link
-                    href={`/user/${profile?.username}`}
-                    className="link link-hover"
+          <ul className="menu menu-horizontal items-center sm:gap-2">
+            {/* create content */}
+            {session && (
+              <li>
+                <div className="dropdown dropdown-end p-0">
+                  <div
+                    tabIndex={0}
+                    role="button"
+                    className="btn btn-ghost btn-sm"
                   >
-                    Profile
-                  </Link>
-                </li>
-                <li>
-                  <a>Settings</a>
-                </li>
-                <li>
-                  <button onClick={logout} className="btn">
-                    Logout
-                  </button>
-                </li>
-              </ul>
-            </div>
-          ) : (
-            <button
-              className="btn btn-primary"
-              onClick={() => setShowAuth(true)}
-            >
-              Sign In
-            </button>
-          )}
+                    <FaPlus />
+                  </div>
+                  <ul
+                    tabIndex={-1}
+                    className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+                  >
+                    <li>
+                      <Link href={"/list/new"}>Create List</Link>
+                    </li>
+                    <li>
+                      <CreateDiscussion ctaType="button" />
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            )}
+            {/* search */}
+            <li>
+              <Link className="lg:hidden" href={"/search"}>
+                <svg
+                  className="h-[1em] opacity-50"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    strokeWidth="2.5"
+                    fill="none"
+                    stroke="currentColor"
+                  >
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.3-4.3"></path>
+                  </g>
+                </svg>
+                <span className="hidden lg:block">Search</span>
+              </Link>
+            </li>
+            <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
+
+            {session ? (
+              <div className="dropdown dropdown-end">
+                <div
+                  tabIndex={0}
+                  role="button"
+                  className="btn btn-ghost btn-circle avatar"
+                >
+                  <div className="w-10 rounded-full">
+                    <img
+                      alt="Tailwind CSS Navbar component"
+                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                    />
+                  </div>
+                </div>
+                <ul
+                  tabIndex={0}
+                  className="menu menu-sm space-y-2 dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+                >
+                  <p>Welcome {profile?.username}! </p>
+                  <li>
+                    <Link
+                      href={`/user/${profile?.username}`}
+                      className="link link-hover"
+                    >
+                      Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <a>Settings</a>
+                  </li>
+                  <li>
+                    <button onClick={logout} className="btn">
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            ) : (
+              <button
+                className="btn btn-primary"
+                onClick={() => setShowAuth(true)}
+              >
+                Sign In
+              </button>
+            )}
+          </ul>
         </div>
       </div>
     </>

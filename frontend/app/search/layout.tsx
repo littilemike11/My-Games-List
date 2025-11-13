@@ -7,7 +7,9 @@ export default function SearchLayout({
   return (
     <>
       <div className=" pt-4 p-4 w-full">
-        <Search />
+        <div className="lg:hidden">
+          <Search />
+        </div>
         {children}
       </div>
     </>
