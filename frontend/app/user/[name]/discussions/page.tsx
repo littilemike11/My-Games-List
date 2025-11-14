@@ -1,7 +1,7 @@
 import { getDiscussionsByUser } from "@/app/api/supabase-api/discussion-api";
-import PostList from "@/app/components/PostList";
 import { Discussion } from "@/app/types/models";
 import { getPlayerByName } from "@/app/api/supabase-api/profile-api";
+import DiscussionItem from "@/app/components/DiscussionItem";
 interface DiscussionsPageProps {
   params: { name: string };
 }
@@ -20,7 +20,11 @@ export default async function DiscussionsPage({
       </h2>
       <div className="divider"></div>
       {discussions.length > 0 ? (
-        <PostList posts={discussions} type="Discussion" />
+        <div className="flex flex-col gap-4">
+          {discussions.map((discussion) => (
+            <DiscussionItem key={discussion.id} discussion={discussion} />
+          ))}
+        </div>
       ) : (
         <p>{username} has not posted any discussions yet</p>
       )}

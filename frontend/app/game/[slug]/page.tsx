@@ -22,8 +22,8 @@ export default async function GamePage({ params }: Props) {
     <>
       {/* Main Section: Cover + Info */}
 
-      <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-10">
-        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8">
+      <div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Cover + Stats */}
           <div className="lg:col-span-3 space-y-4">
             {game.cover && (
@@ -55,7 +55,7 @@ export default async function GamePage({ params }: Props) {
                 <CTA game={game} gameID={newGameID.id} />
               </div>
               {game.summary && (
-                <p className="text-base sm:text-lg leading-relaxed text-pretty">
+                <p className="text-base leading-relaxed text-pretty">
                   {game.summary}
                 </p>
               )}

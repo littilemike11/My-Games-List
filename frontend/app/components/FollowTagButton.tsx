@@ -14,7 +14,7 @@ const FollowTagButton: React.FC<{
   size?: "small" | "large";
 }> = ({ TagID, size = "small" }) => {
   const { session, profile } = useAuth();
-  const [loading, setloading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [isFollowing, setIsFollowing] = useState<boolean>();
   const [showAuth, setShowAuth] = useState(false);
 
@@ -22,7 +22,7 @@ const FollowTagButton: React.FC<{
 
   useEffect(() => {
     if (!userID) {
-      setloading(false);
+      setLoading(false);
       return;
     }
     const fetchTags = async () => {
@@ -34,7 +34,7 @@ const FollowTagButton: React.FC<{
           console.error("Error checking follow:", error);
         }
       }
-      setloading(false);
+      setLoading(false);
     };
     fetchTags();
   }, [userID]);
@@ -61,7 +61,7 @@ const FollowTagButton: React.FC<{
       <button
         onClick={handleSubmit}
         className={`btn ${
-          loading ? " btn-neutral" : isFollowing ? "btn-error" : "btn-error"
+          loading ? " btn-neutral" : isFollowing ? "btn-error" : "btn-primary"
         } ${size == "small" && "btn-xs"}`}
       >
         {loading ? "loading..." : isFollowing ? "Unfollow" : "Follow"}

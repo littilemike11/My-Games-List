@@ -63,5 +63,5 @@ export const getPostsByUserIds = async (user_ids: string[]) => {
     console.error("Error fetching posts: ", error);
     throw error;
   }
-  return data;
+  return data ?? [];
 };

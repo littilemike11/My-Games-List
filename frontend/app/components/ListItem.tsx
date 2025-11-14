@@ -9,7 +9,7 @@ const ListItem: React.FC<{
   console.log(list);
   return (
     <>
-      <div className="bg-base-100 max-w-[26rem] w-full h-full rounded-lg border border-base-200 hover:shadow-lg shadow-sm transition-all duration-200">
+      <div className="bg-base-100 max-w-[26rem] w-full h-full rounded-lg border border-base-200 hover:shadow-lg shadow-sm transition-all duration-200 p-2">
         <div className="flex flex-col space-y-2 w-full">
           <Link
             className="link link-hover decoration-primary"

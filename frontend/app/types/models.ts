@@ -1,4 +1,4 @@
-export type Post = Review | Discussion | List;
+// export type Post = Review | Discussion | List;
 
 export type contentType = "review" | "discussion" | "list" | "comment";
 
@@ -135,8 +135,33 @@ export interface Tag {
   owner_id?: string;
 }
 
+export interface Post {
+  author_avatar: string;
+  author_name: string;
+  comment_count: number;
+  content: string;
+  created_at: Date; // ISO timestamp
+  dislikes: number;
+  game_cover?: string;
+  game_id?: number;
+  game_name?: string;
+  game_slug?: string;
+  games: GamePreview[];
+  hours_played?: number;
+  likes: number;
+  parent_id: number;
+  parent_type: taggableContent;
+  platform?: string;
+  rating?: number;
+  tag_id?: number;
+  tags: Tag[];
+  title: string;
+  user_id: string;
+  visibility: ListVisibility;
+}
+
 export type tagType = "community" | "official" | "restricted";
-export type tagableContent = "review" | "discussion" | "list";
+export type taggableContent = "review" | "discussion" | "list";
 export interface UserGameList {
   custom_lists: any;
   user_id: string;

@@ -13,7 +13,7 @@ const Stats: React.FC<StatsProps> = ({ rating, liked, ratingCount }) => {
     <>
       <div className="text-sm opacity-80 flex flex-col">
         <div className="flex justify-center items-center space-x-5">
-          <div className="rating rating-half">
+          <div className="rating rating-xs rating-half">
             {starCount.map((star, index) => (
               <div
                 key={index}
