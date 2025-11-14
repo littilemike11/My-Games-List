@@ -25,11 +25,16 @@ export default async function ListsPage({ params }: ListsPageProps) {
       {/* <CreateList /> */}
       <div>
         {lists.length > 0 ? (
-          lists.map((list, index) => <ListItem key={index} list={list} />)
+          <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6 ">
+            {lists.map((list, index) => (
+              <ListItem key={index} list={list} />
+            ))}
+          </div>
         ) : (
           <p>{username} has not posted any lists yet</p>
         )}
       </div>
+
       {/* featured, popular this week, recently liked, crew picks */}
     </>
   );

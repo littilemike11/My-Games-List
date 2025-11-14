@@ -43,7 +43,7 @@ const ListResultsPage = () => {
 
         {/* Results */}
         {lists.length > 0 ? (
-          <div className="flex flex-col gap-4">
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6 place-items-center">
             {lists.map((list) => (
               <ListItem key={list.id} list={list} />
             ))}

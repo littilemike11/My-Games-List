@@ -9,7 +9,10 @@ import {
 import { useAuth } from "../auth/auth-context";
 import AuthModal from "./AuthModal";
 
-const FollowTagButton: React.FC<{ TagID: number }> = ({ TagID }) => {
+const FollowTagButton: React.FC<{
+  TagID: number;
+  size?: "small" | "large";
+}> = ({ TagID, size = "small" }) => {
   const { session, profile } = useAuth();
   const [loading, setloading] = useState(true);
   const [isFollowing, setIsFollowing] = useState<boolean>();
@@ -57,9 +60,9 @@ const FollowTagButton: React.FC<{ TagID: number }> = ({ TagID }) => {
     <>
       <button
         onClick={handleSubmit}
-        className={`btn btn-xs ${
+        className={`btn ${
           loading ? " btn-neutral" : isFollowing ? "btn-error" : "btn-error"
-        }`}
+        } ${size == "small" && "btn-xs"}`}
       >
         {loading ? "loading..." : isFollowing ? "Unfollow" : "Follow"}
       </button>

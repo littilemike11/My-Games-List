@@ -16,7 +16,7 @@ export default async function PlayersPage({
       <div>
         <h1 className="text-4xl text-pretty text-center font-bold">Players</h1>
         <Tabs />
-        <div className="flex flex-col items-center">
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6 place-items-center">
           {players.map((player) => (
             <ProfileItem
               key={player.id}

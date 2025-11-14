@@ -1,9 +1,7 @@
 import { Review } from "../types/models";
 import GamePreviewLink from "./GamePreviewLink";
 import { formatDate } from "../utils/functions";
-import CommentItem from "./CommentItem";
 import Reactions from "./Reactions";
-import CreateComment from "./CreateComment";
 import Link from "next/link";
 import TagItem from "./TagItem";
 const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
@@ -18,10 +16,10 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
 
   return (
     <>
-      <div className="card card-xs md:card-md card-side bg-base-100 w-full h-full shadow-sm">
+      <div className="card card-side bg-base-100 w-full h-full rounded-lg border border-base-200 hover:shadow-lg shadow-sm transition-all duration-200">
         {/* game cover img Optional */}
         {showCover && (
-          <figure className="flex-shrink-0 w-28 sm:w-44 h-32 sm:h-56">
+          <figure className="flex-shrink-0 w-24 sm:w-40 h-32 sm:h-52">
             <GamePreviewLink game={review.game!} />
           </figure>
         )}
@@ -29,40 +27,40 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
         <div className="card-body">
           {/* title */}
           <Link
-            className="link link-hover"
+            className="link link-hover decoration-primary"
             href={`/user/${review.profile?.username}/review/${review.id}`}
           >
-            <h2 className="card-title text-lg line-clamp-2 text-pretty font-semibold">
+            <h2 className="card-title text-primary line-clamp-2 text-pretty font-bold">
               {review.title}
             </h2>
           </Link>
 
-          <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-start gap-2 ">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 ">
             <div className="flex flex-col gap-2 ">
               {/* user info */}
-              <div className="flex items-center justify-start gap-3">
+              <div>
                 <Link
                   className="link link-hover"
                   href={`/user/${review.profile?.username}`}
                 >
-                  <figure>
+                  <div className="flex items-baseline">
                     <div className="avatar avatar-placeholder">
                       <div className="bg-neutral text-neutral-content w-8 rounded-full">
                         <span>{review.profile?.username[0].toUpperCase()}</span>
                       </div>
                     </div>
 
-                    <span className="ml-2 italic">
+                    <span className="ml-2 w-full font-medium italic">
                       {review.profile?.username || "(deleted)"}
                     </span>
-                  </figure>
+                  </div>
                 </Link>
-
+                {/* 
                 <span> reviewed</span>
-                <span className="font-semibold">{review.game?.name}</span>
+                <span className="font-semibold">{review.game?.name}</span> */}
               </div>
               {/* rating */}
-              <div className="rating rating-half rating-sm">
+              <div className="rating rating-half rating-xs">
                 {[...Array(20)].map((_, index) => {
                   const rating = (index + 1) / 2;
                   return (
@@ -77,15 +75,18 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
                   );
                 })}
               </div>
-              <p className="font-medium">{review.content}</p>
             </div>
 
-            <div className="flex flex-row md:flex-col flex-shrink-0 md:text-right text-sm w-fit gap-2 opacity-50">
-              <span>{formatDate(review.created_at!)}</span>
-              <p>{review.platform}</p>
-              <p>🕗 {review.hours_played}hrs</p>
+            <div className="flex text-pretty flex-col flex-shrink-0 h-fit text-sm w-fit gap-2 opacity-50">
+              <span>
+                {formatDate(review.created_at!)}, 🕗 {review.hours_played}hrs
+              </span>
+              <span>{review.platform}</span>
+              {/* <span>🕗 {review.hours_played}hrs</span> */}
             </div>
           </div>
+          <p className="font-medium">{review.content}</p>
+
           {/* Tags */}
           <div className="flex flex-wrap gap-2">
             {review.tags?.map((tag) => (
@@ -101,9 +102,7 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
               parent_type="review"
               parent_id={review.id}
             />
-            {/* <CreateComment parentType={"review"} parentID={review.id} /> */}
           </div>
-          {/* <CommentItem parentType="review" parentID={review.id} /> */}
         </div>
       </div>
     </>

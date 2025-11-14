@@ -54,7 +54,7 @@ export default function Feed() {
   return (
     <>
       <h1 className="text-4xl text-pretty text-center font-bold mb-6">
-        Welcome <span className="italic">{profile?.username}</span>
+        Welcome <span className="italic capitalize">{profile?.username}</span>
       </h1>
 
       <div className="flex flex-col items-center space-y-6">

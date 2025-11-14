@@ -70,7 +70,7 @@ const TagResultsPage = () => {
                 key={tag.id}
                 className="card bg-base-100 shadow-md hover:shadow-lg transition rounded-xl p-4"
               >
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between gap-2 mb-2">
                   <TagItem tag={tag} />
                   <FollowTagButton TagID={tag.id} />
                 </div>

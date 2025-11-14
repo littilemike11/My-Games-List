@@ -45,10 +45,8 @@ export const ProfileItem: React.FC<{
               </Link>
             </h2>
             {/* bio */}
-            <p className="line-clamp-2">
-              A card component has a figure, a body part, and inside body there
-              are title and actions parts
-            </p>
+            {profile.bio && <p className="line-clamp-2">{profile.bio}</p>}
+
             <div className="card-actions">
               <FollowButton playerID={profile.id} />
             </div>

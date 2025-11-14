@@ -30,11 +30,10 @@ const ListPage = () => {
       {/* {List && <ListItem List={List} />} */}
       {list && (
         <div className="flex flex-col gap-2">
-          <h2 className="text-3xl">{list.title}</h2>
+          <h2 className="text-3xl font-bold text-primary">{list.title}</h2>
           <p className="text-sm">Created by {name}</p>
-
-          <p> {list.description}</p>
-          <ul className="flex ">
+          <p className="text-base"> {list.description}</p>
+          <ul className="flex gap-2 ">
             {list.tags?.map((tag) => (
               <li key={tag.id}>
                 <TagItem tag={tag} />
@@ -48,17 +47,19 @@ const ListPage = () => {
             parent_id={list.id}
             parent_type="list"
           />
-          <div className="bg-base-100  w-full p-2 overflow-auto justify-around  flex gap-2 flex-wrap">
+          <div className="bg-base-100 w-full p-2 overflow-auto flex gap-4 flex-wrap">
             {list.games.map((game) => (
-              <GamePreviewLink
-                key={game.id}
-                game={{
-                  id: game.id,
-                  cover: game.cover,
-                  name: game.name,
-                  slug: game.slug,
-                }}
-              />
+              <div className="h-40">
+                <GamePreviewLink
+                  key={game.id}
+                  game={{
+                    id: game.id,
+                    cover: game.cover,
+                    name: game.name,
+                    slug: game.slug,
+                  }}
+                />
+              </div>
             ))}
           </div>
         </div>

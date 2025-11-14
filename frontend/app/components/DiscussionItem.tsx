@@ -1,24 +1,21 @@
 import { Discussion } from "../types/models";
 import { formatDate } from "../utils/functions";
 import Reactions from "./Reactions";
-import CreateComment from "./CreateComment";
-import CommentItem from "./CommentItem";
 import Link from "next/link";
 import TagItem from "./TagItem";
 const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
   discussion,
 }) => {
-  console.log(discussion.tags);
   return (
     <>
-      <div className="card bg-base-100 w-full rounded-lg shadow-sm">
-        <div className="card-body space-y-4">
+      <div className="card bg-base-100 w-full rounded-lg border border-base-200 hover:shadow-lg shadow-sm transition-all duration-200">
+        <div className="card-body space-y-2">
           {/* Title */}
           <Link
-            className="link link-hover"
+            className="link link-hover decoration-primary"
             href={`/user/${discussion.profile?.username}/discussion/${discussion.id}`}
           >
-            <h2 className="card-title  line-clamp-2 font-semibold">
+            <h2 className="card-title text-primary line-clamp-2 font-bold">
               {discussion.title}
             </h2>
           </Link>
@@ -39,7 +36,7 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
                     </div>
                   </div>
 
-                  <span className="ml-2 italic">
+                  <span className="ml-2 font-medium italic">
                     {discussion.profile?.username || "(deleted)"}
                   </span>
                 </figure>
@@ -51,7 +48,7 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
           </div>
 
           {/* Content preview */}
-          <p>{discussion.content}</p>
+          <p className="text-sm sm:text-base">{discussion.content}</p>
 
           {/* Tags */}
           <div className="flex flex-wrap gap-2">
@@ -69,9 +66,7 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
               parent_type="discussion"
               parent_id={discussion.id}
             />
-            {/* <CreateComment parentType="discussion" parentID={discussion.id} /> */}
           </div>
-          {/* <CommentItem parentType="discussion" parentID={discussion.id} /> */}
         </div>
       </div>
     </>

@@ -26,11 +26,11 @@ export default async function TagPage({ params }: Props) {
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-pretty capitalize">
             {tag.name}
           </h1>
-          <FollowTagButton TagID={tag.id} />
+          <FollowTagButton size="large" TagID={tag.id} />
         </div>
 
         <p className="mt-2 opacity-70">
-          {tag?.description || `Post tagged with "${tag.name}"`}
+          {tag?.description || `Posts tagged with "${tag.name}"`}
         </p>
 
         {/* {posts && <PostList posts={posts} />} */}

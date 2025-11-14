@@ -43,7 +43,7 @@ limit 10;`,
   }
 
   return (
-    <div className="flex flex-col gap-2 items-center md:mx-4 lg:mx-16">
+    <div className="flex flex-col gap-2 items-center ">
       <h1 className="text-4xl text-pretty text-center font-bold">
         Welcome to <span className="italic">The Save Room</span>
       </h1>
