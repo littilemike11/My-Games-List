@@ -9,12 +9,14 @@ import { FaPlus } from "react-icons/fa";
 
 import Search from "./Search";
 import CreateDiscussion from "./CreateDiscussion";
+import { redirect } from "next/navigation";
 // import { getLevel } from "../utils/functions";
 const Navbar = () => {
   const [showAuth, setShowAuth] = useState(false);
   const { session, profile, loading } = useAuth();
   const logout = () => {
     supabase.auth.signOut();
+    redirect("/popular");
   };
 
   return (
@@ -148,7 +150,7 @@ const Navbar = () => {
                       <Link href={"/list/new"}>Create List</Link>
                     </li>
                     <li>
-                      <CreateDiscussion ctaType="button" />
+                      <Link href={"/discussion/new"}> Start Discussion</Link>
                     </li>
                   </ul>
                 </div>
