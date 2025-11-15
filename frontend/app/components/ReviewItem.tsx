@@ -4,6 +4,7 @@ import { formatDate } from "../utils/functions";
 import Reactions from "./Reactions";
 import Link from "next/link";
 import TagItem from "./TagItem";
+import Paragraph from "./Paragraph";
 const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
   review,
   showCover = true,
@@ -85,7 +86,10 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
               {/* <span>🕗 {review.hours_played}hrs</span> */}
             </div>
           </div>
-          <p className="font-medium">{review.content}</p>
+          <div className="font-medium">
+            <Paragraph text={review.content} />
+          </div>
+          {/* <p className="font-medium">{review.content}</p> */}
 
           {/* Tags */}
           <div className="flex flex-wrap gap-2">

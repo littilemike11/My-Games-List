@@ -6,6 +6,7 @@ import Info from "@/app/components/gamePage/Info";
 import CTA from "@/app/components/gamePage/CTA";
 import TabSection from "@/app/components/gamePage/TabSection";
 import { upsertGame } from "@/app/api/supabase-api/game-api";
+import Paragraph from "@/app/components/Paragraph";
 interface Props {
   params: { slug: string };
 }
@@ -83,9 +84,10 @@ export default async function GamePage({ params }: Props) {
               <CTA game={game} gameID={newGameID.id} />
 
               {game.summary && (
-                <p className="text-base leading-relaxed text-pretty">
-                  {game.summary}
-                </p>
+                // <p className="text-base leading-relaxed text-pretty">
+                //   {game.summary}
+                // </p>
+                <Paragraph text={game.summary} />
               )}
             </div>
           </main>

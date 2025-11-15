@@ -3,6 +3,7 @@ import { formatDate } from "../utils/functions";
 import Reactions from "./Reactions";
 import Link from "next/link";
 import TagItem from "./TagItem";
+import Paragraph from "./Paragraph";
 const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
   discussion,
 }) => {
@@ -48,7 +49,9 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
           </div>
 
           {/* Content preview */}
-          <p className="text-sm sm:text-base">{discussion.content}</p>
+          <div className="font-medium">
+            <Paragraph text={discussion.content} />
+          </div>
 
           {/* Tags */}
           <div className="flex flex-wrap gap-2">
