@@ -30,8 +30,8 @@ const Stats: React.FC<StatsProps> = ({ rating, liked, ratingCount }) => {
 
         <div className="flex justify-center gap-4">
           {/* <span>⭐ {rating.toFixed(0)} / 100</span> */}
-          <span>👍 {liked ?? 0} likes</span>
-          <span>🕹️ {ratingCount ?? 0} played</span>
+          <span>👍 {liked ?? 0}</span>
+          <span>🕹️ {ratingCount ?? 0}</span>
         </div>
       </div>
     </>

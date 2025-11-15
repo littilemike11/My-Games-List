@@ -173,7 +173,7 @@ export default function DrawerLayout({
             className="drawer-overlay"
           ></label>
 
-          <nav className="menu bg-base-200 text-base-content min-h-full w-80 p-4 space-y-4">
+          <nav className="menu bg-base-200 text-base-content min-h-full w-64 p-4 space-y-4">
             <ul className=" bg-base-200 rounded-box text-lg space-y-2 w-full">
               <li>
                 <Link href={"/"}>🏠 Home</Link>
