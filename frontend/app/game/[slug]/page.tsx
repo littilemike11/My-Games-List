@@ -11,67 +11,86 @@ interface Props {
 }
 
 export default async function GamePage({ params }: Props) {
-  const query = `fields cover.url, first_release_date, genres.name, name, slug, platforms.name, storyline, summary, themes.name, involved_companies.developer, involved_companies.publisher, involved_companies.company.name, screenshots.url, rating, rating_count, similar_games.name, similar_games.slug, similar_games.cover.url,hypes, franchises.games.name, franchises.games.slug, franchises.games.cover.url; where slug = "${params.slug}";`;
+  const query = `fields cover.url, first_release_date, genres.name, name, slug, platforms.name, storyline, summary, themes.name, involved_companies.developer, involved_companies.publisher, involved_companies.company.name, screenshots.url, rating, rating_count, similar_games.name, similar_games.slug, similar_games.cover.url,hypes, franchises.games.name, franchises.games.slug, franchises.games.cover.url, videos.name, videos.video_id , artworks.url; where slug = "${params.slug}";`;
   const response = await getGames(query);
   console.log(response);
   const game: Game = parseGame(response[0]);
   const newGameID = await upsertGame(game);
   console.log(newGameID.id);
+  console.log(game);
 
   return (
     <>
       {/* Main Section: Cover + Info */}
+      {/* HERO SECTION */}
+      <div className="relative w-full h-[30vh] sm:h-[50vh] lg:h-[60vh] overflow-hidden rounded-2xl mb-8 bg-base-200">
+        {/* Background image */}
+        {game.artwork?.[0] && (
+          <img
+            src={game.artwork[0]}
+            alt={`${game.name} artwork`}
+            className="absolute inset-0 w-full h-full "
+            // object-center object-cover scale-110 sm:scale-105 transition-all
+          />
+        )}
 
-      <div>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Cover + Stats */}
-          <div className="lg:col-span-3 space-y-4">
+        {/* Dark gradient overlay */}
+        <div
+          className="absolute inset-0 bg-gradient-to-b 
+                  from-black/10 via-black/60 to-base-100/95 sm:to-base-100/70"
+        />
+
+        {/* Foreground text */}
+        <div className="relative z-10 flex flex-col justify-end h-full p-4 sm:p-8 lg:p-12">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white drop-shadow-md line-clamp-2">
+            {game.name}
+          </h1>
+          <p className="text-gray-300 text-sm sm:text-lg drop-shadow">
+            {game.release_date}
+          </p>
+        </div>
+      </div>
+
+      <div className="p-2 sm:p-4 lg:p-8">
+        <div className="grid grid-cols-12 gap-8">
+          {/* 📀 Cover + Stats + Info (Right column on desktop) */}
+          <div className="col-span-12 lg:col-span-3 space-y-6">
             {game.cover && (
               <img
                 src={game.cover}
-                alt={`${game.name} cover art`}
-                className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-full mx-auto rounded-2xl shadow-lg object-cover"
+                alt={`${game.name} cover`}
+                className="w-40 sm:w-56 mx-auto rounded-2xl shadow-lg object-cover"
               />
             )}
-            <div>
-              <Stats
-                rating={game.rating}
-                liked={game.liked || 0}
-                ratingCount={game.ratingCount}
-              />
-            </div>
-          </div>
-          {/* Game Info Section */}
-          <div className="lg:col-span-6 space-y-4">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-pretty">
-              {game.name}
-            </h1>
-            <p className="text-gray-400 text-sm">{game.release_date}</p>
-
-            <div className="flex flex-col lg:flex-col-reverse">
-              {/* <p className="text-md text-pretty">{game.storyline}</p> */}
-
-              <div className=" py-6">
-                <CTA game={game} gameID={newGameID.id} />
-              </div>
-              {game.summary && (
-                <p className="text-base leading-relaxed text-pretty">
-                  {game.summary}
-                </p>
-              )}
-            </div>
-          </div>
-          {/* Sidebar Info */}
-          <div className="lg:col-span-3">
-            <Info
-              genres={game.genres}
-              platforms={game.platforms}
-              themes={game.themes}
-              developers={game.developers}
-              publishers={game.publishers}
+            <Stats
+              rating={game.rating}
+              liked={game.liked || 0}
+              ratingCount={game.ratingCount}
             />
           </div>
+          {/* 📝 CTA + Summary (Left column) */}
+          <main className="col-span-12 lg:col-span-6 space-y-6">
+            <CTA game={game} gameID={newGameID.id} />
+
+            {game.summary && (
+              <p className="text-base leading-relaxed text-pretty">
+                {game.summary}
+              </p>
+            )}
+          </main>
+          <aside className="col-span-12 lg:col-span-3 space-y-6">
+            <div className="border border-base-300 rounded-xl p-4">
+              <Info
+                genres={game.genres}
+                platforms={game.platforms}
+                themes={game.themes}
+                developers={game.developers}
+                publishers={game.publishers}
+              />
+            </div>
+          </aside>
         </div>
+
         {/* tabs section */}
         {/* name of each tab group should be unique */}
         <TabSection

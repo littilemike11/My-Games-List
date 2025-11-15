@@ -56,6 +56,9 @@ export interface Game extends GamePreview {
   storyline: string;
   summary: string;
   themes: string[];
+  artwork?: string[];
+  video_name?: string[];
+  video_url?: string[];
 }
 
 export interface GamePreview {

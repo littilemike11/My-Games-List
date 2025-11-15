@@ -109,7 +109,7 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
 
   return (
     <>
-      <button className="btn btn-primary w-max btn-lg" onClick={openModal}>
+      <button className="btn btn-primary sm:btn-lg" onClick={openModal}>
         <FaSquarePen />
         Write a Review
       </button>

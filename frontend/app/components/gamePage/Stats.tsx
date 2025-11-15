@@ -28,7 +28,7 @@ const Stats: React.FC<StatsProps> = ({ rating, liked, ratingCount }) => {
           <div className="stat-value">{Math.round(rating * 2) / 20}</div>
         </div>
 
-        <div className="flex justify-around">
+        <div className="flex justify-center gap-4">
           {/* <span>⭐ {rating.toFixed(0)} / 100</span> */}
           <span>👍 {liked ?? 0} likes</span>
           <span>🕹️ {ratingCount ?? 0} played</span>

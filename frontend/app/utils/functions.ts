@@ -34,6 +34,12 @@ export const parseGame = (gameInfo: any): Game => {
     genres: gameInfo.genres?.map((genre: any) => genre.name) ?? [],
     platforms: gameInfo.platforms?.map((platform: any) => platform.name) ?? [],
     themes: gameInfo.themes?.map((t: any) => t.name) ?? [],
+    artwork:
+      gameInfo.artworks?.map((art: any) =>
+        art.url.replace("t_thumb", "t_original")
+      ) ?? [],
+    video_name: gameInfo.videos?.map((vid: any) => vid.name) ?? [],
+    video_url: gameInfo.videos?.map((vid: any) => vid.video_id) ?? [],
   };
 };
 
