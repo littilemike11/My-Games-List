@@ -1,12 +1,14 @@
 import Carousel from "../components/Carousel";
 import { getReviews } from "../api/supabase-api/review-api";
 import { getDiscussions } from "../api/supabase-api/discussion-api";
+import { getLists } from "../api/supabase-api/list-api";
 import getGames from "../api/igdb-api";
 import { parseGamePreview } from "../utils/functions";
-import { Discussion, GamePreview, Review } from "../types/models";
+import { Discussion, GamePreview, List, Review } from "../types/models";
 import Tabs from "../components/Tabs";
 import ReviewItem from "../components/ReviewItem";
 import DiscussionItem from "../components/DiscussionItem";
+import ListItem from "../components/ListItem";
 
 export default async function Home() {
   const todayTimestamp = Math.floor(Date.now() / 1000);
@@ -30,15 +32,25 @@ limit 10;`,
   let anticipatedGames: GamePreview[] = [];
   let reviews: Review[] = [];
   let discussions: Discussion[] = [];
+  let lists: List[] = [];
   try {
-    const responses = await Promise.all(queries.map((q) => getGames(q)));
-    popularGames = responses[0].map(parseGamePreview);
-    recentGames = responses[1].map(parseGamePreview);
-    anticipatedGames = responses[2].map(parseGamePreview);
-    reviews = await getReviews();
-    discussions = await getDiscussions();
-    // const reviews = await getReviews();
-    // console.log(reviews);
+    const [gameResponses, reviewsRes, discussionsRes, listsRes] =
+      await Promise.all([
+        Promise.all(queries.map((q) => getGames(q))), // array of game arrays
+        getReviews(),
+        getDiscussions(),
+        getLists(),
+      ]);
+
+    // Parse game groups
+    popularGames = gameResponses[0].map(parseGamePreview);
+    recentGames = gameResponses[1].map(parseGamePreview);
+    anticipatedGames = gameResponses[2].map(parseGamePreview);
+
+    // Assign other results
+    reviews = reviewsRes;
+    discussions = discussionsRes;
+    lists = listsRes;
   } catch (error) {
     console.error("Failed to fetch home page games:", error);
   }
@@ -64,11 +76,11 @@ limit 10;`,
         ))}
       </div>
       <Carousel title="Most Anticipated" games={anticipatedGames} />
-      {/* <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6 ">
+      <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6 ">
         {lists.map((list, index) => (
           <ListItem key={index} list={list} />
         ))}
-      </div> */}
+      </div>
     </div>
   );
 }

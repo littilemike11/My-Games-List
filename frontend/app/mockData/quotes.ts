@@ -1,15 +1,121 @@
 type quote = {
   text: string;
-  author?: string;
-  game: string;
+  origin?: string;
 };
 
 const quotes: quote[] = [
   // rule enforcement
   {
     text: "would you kindly",
-    author: "",
-    game: "Bioshock",
+    origin: "Bioshock",
+  },
+];
+const errorQuotes: quote[] = [
+  {
+    text: "Stop rght there, criminal scum",
+    origin: "The Elder Scrolls",
+  },
+  {
+    text: "What is bravery, without a dash of recklessness?",
+    origin: "Dark Souls",
+  },
+  {
+    text: "You’ve met with a terrible fate, haven’t you?",
+    origin: "Legend of Zelda: Majora's Mask",
+  },
+];
+
+const welcomeQuotes: quote[] = [
+  {
+    text: "Rest now, Traveler",
+    origin: "",
+  },
+  {
+    text: "Take a beak, you've earned it",
+    origin: "Animal Crossing (Isabelle)",
+  },
+  {
+    text: "Welcome Home, Ashen One",
+    origin: "Dark Souls III",
+  },
+  {
+    text: "Welcome Back",
+    origin: "Phasmophobia",
+  },
+  {
+    text: "It's time to kick ass and chew bubblegum... an I'm all outta gum.",
+    origin: "Duke Nukem",
+  },
+  {
+    text: "Stay awhile and listen.",
+    origin: "Diablo II (Deckard Cain)",
+  },
+  {
+    text: "Welcome back, Commander",
+    origin: "Mass Effect 2",
+  },
+  {
+    text: "You've been gone a long time. The world's changed.",
+    origin: "Destiny 2",
+  },
+  {
+    text: "Nothing's changed. Everything's changed.",
+    origin: "Life is Strange",
+  },
+  {
+    text: "Let's get this show on the road",
+    origin: "Overwatch (Lucio)",
+  },
+  {
+    text: "You've returned. The world outside is not kind, is it?",
+    origin: "Dark Souls II (Emerald Herald)",
+  },
+  {
+    text: "sit down by the fire, and let us speak of days gone by.",
+    origin: "Dragon Age: Inquistion",
+  },
+  {
+    text: "You look like you've seen some things. Come, take a load off.",
+    origin: "Red Dead Redemption 2",
+  },
+  {
+    text: "Rest easy, hero. You've earned it.",
+    origin: "Overwatch (Solder:76)",
+  },
+  {
+    text: "Take a break. You've done enough for today",
+    origin: "Animal Crossing",
+  },
+  {
+    text: "Bonfire lit",
+    origin: "Dark Souls",
+  },
+];
+
+const searchQuotes: quote[] = [
+  {
+    text: "It's dangerous to go alone, take this!",
+    origin: "The Legend of Zelda ( )",
+  },
+  {
+    text: "Exploration is the essence of human spirit",
+    origin: "Pikmin",
+  },
+  {
+    text: "The unknown isn't always to be feared. Sometimes it's the key to discovery.",
+    origin: "Metroid Prime",
+  },
+  {
+    text: "A search for truth is never easy",
+    origin: "Assassin's Creed",
+  },
+  {
+    text: "The world is full of secrets waiting to be discovered.",
+    origin: " The Elder Scrolls V: Skyrim",
+  },
+  {
+    text: "We're not just wandering aimlessly... we're searching fro something more.",
+    origin: "Kingdom Hearts",
   },
 ];
 /*
