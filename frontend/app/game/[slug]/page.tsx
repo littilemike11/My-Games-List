@@ -7,6 +7,7 @@ import CTA from "@/app/components/gamePage/CTA";
 import TabSection from "@/app/components/gamePage/TabSection";
 import { upsertGame } from "@/app/api/supabase-api/game-api";
 import Paragraph from "@/app/components/Paragraph";
+import GameHero from "@/app/components/GameHero";
 interface Props {
   params: { slug: string };
 }
@@ -24,30 +25,33 @@ export default async function GamePage({ params }: Props) {
     <>
       {/* HERO SECTION (artwork + title/date) */}
       {game.artwork?.[0] && (
-        <div className="relative w-full h-[30vh] sm:h-[35vh] md:h-[40vh] lg:h-[45vh] overflow-hidden rounded-2xl  bg-base-200">
-          {/* Background image */}
-          <img
-            src={game.artwork[0]}
-            alt={`${game.name} artwork`}
-            className="absolute inset-0 w-full h-full "
-            // object-center object-cover scale-110 sm:scale-105 transition-all
-          />
-          {/* Dark gradient overlay */}
-          <div
-            className="absolute inset-0 bg-gradient-to-b 
-                  from-black/10 via-black/60 to-base-100/95 sm:to-base-100/70"
-          />
+        <GameHero
+          bgImage={game.artwork[0]}
+          heading={game.name}
+          subHeading={game.release_date!}
+          CTA={false}
+        />
+        // <div className="relative w-full h-[30vh] sm:h-[35vh] md:h-[40vh] lg:h-[45vh] overflow-hidden rounded-2xl  bg-base-200">
+        //   {/* Background image */}
+        //   <img
+        //     src={game.artwork[0]}
+        //     alt={`${game.name} artwork`}
+        //     className="absolute inset-0 w-full h-full "
+        //   />
+        //   <div
+        //     className="absolute inset-0 bg-gradient-to-b
+        //           from-black/10 via-black/60 to-base-100/95 sm:to-base-100/70"
+        //   />
 
-          {/* Foreground text */}
-          <div className="relative z-10 flex flex-col justify-end h-full p-4 sm:p-8 lg:p-12">
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white drop-shadow-md line-clamp-2">
-              {game.name}
-            </h1>
-            <p className="text-gray-300 text-sm sm:text-lg drop-shadow">
-              {game.release_date}
-            </p>
-          </div>
-        </div>
+        //   <div className="relative z-10 flex flex-col justify-end h-full p-4 sm:p-8 lg:p-12">
+        //     <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white drop-shadow-md line-clamp-2">
+        //       {game.name}
+        //     </h1>
+        //     <p className="text-gray-300 text-sm sm:text-lg drop-shadow">
+        //       {game.release_date}
+        //     </p>
+        //   </div>
+        // </div>
       )}
 
       <div className="p-2">
