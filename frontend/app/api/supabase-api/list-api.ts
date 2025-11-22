@@ -145,6 +145,24 @@ export const getListsByUser = async (ownerID: string) => {
   return mappedData;
 };
 
+export const getListsByGame = async (gameID: number) => {
+  const { data, error } = await supabase
+    .from("list_games")
+    .select("list_id")
+    .eq("game_id", gameID);
+  if (error) {
+    console.error("Error fetching lists: ", error);
+    throw error;
+  }
+  if (data) {
+    let listIDs = data.map((id) => id.list_id);
+    console.log("lists from game id", gameID, listIDs);
+
+    const lists = await getListsByIDs(listIDs);
+    return lists ?? [];
+  }
+};
+
 export const getUserGameLists = async (
   status?: ListType,
   username?: string,
@@ -219,6 +237,53 @@ export const getListByID = async (
     tags: (Array.isArray(tags) ? tags.flat() : []) as Tag[],
     games: (data.games ?? []).map((g: any) => g.game), // flatten list_games -> games
   };
+  return mappedData;
+};
+
+export const getListsByIDs = async (
+  listIDs: number[],
+  isPreview: boolean = false
+) => {
+  const query = supabase
+    .from("lists")
+    .select(
+      `
+      id,
+      created_at,
+      title,
+      description,
+      likes,
+      dislikes,
+      comment_count,
+      profile:profiles(id, username, avatar),
+      games:list_games(
+        game:games(id, slug, name, cover)
+      )
+    `
+    )
+    .in("id", listIDs)
+    .eq("visibility", "public")
+    .order("created_at", { referencedTable: "list_games", ascending: false });
+  if (isPreview) {
+    query.limit(5, { referencedTable: "list_games" });
+  }
+
+  const { data: lists, error } = await query;
+
+  if (error) {
+    console.error("Error fetching list :", error);
+    return null;
+  }
+
+  if (!lists) return null;
+  const mappedData = await Promise.all(
+    lists.map(async (list: any) => ({
+      ...list,
+      profile: list.profile,
+      tags: await getPostTags("list", list.id),
+      games: (list.games ?? []).map((g: any) => g.game), // flatten list_games -> games
+    }))
+  );
   return mappedData;
 };
 

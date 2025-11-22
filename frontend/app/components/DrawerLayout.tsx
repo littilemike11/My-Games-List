@@ -166,7 +166,7 @@ export default function DrawerLayout({
           {children}
         </div>
         {/* drawer side */}
-        <div className="drawer-side pt-16 ">
+        <div className="drawer-side z-40 pt-16 ">
           <label
             htmlFor="my-drawer-2"
             aria-label="close sidebar"

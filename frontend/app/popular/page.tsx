@@ -10,6 +10,10 @@ import ReviewItem from "../components/ReviewItem";
 import DiscussionItem from "../components/DiscussionItem";
 import ListItem from "../components/ListItem";
 import GameHero from "../components/GameHero";
+import Quote from "../components/Quote";
+import { welcomeQuotes } from "../mockData/quotes";
+import WhyUsSection from "../components/WhyUsSection";
+import { createClient } from "../utils/supabase/server";
 
 export default async function Home() {
   const todayTimestamp = Math.floor(Date.now() / 1000);
@@ -36,6 +40,8 @@ limit 10;`,
   let discussions: Discussion[] = [];
   let lists: List[] = [];
   let artworks: any = [];
+  let randomQuote =
+    welcomeQuotes[Math.floor(Math.random() * welcomeQuotes.length)];
   const heading = (
     <>
       Welcome to <span className="italic">The Save Room</span>
@@ -80,22 +86,30 @@ limit 10;`,
         heading={heading}
         subHeading="A Community Hub for Gamers by Gamers"
       />
-
+      <Quote content={randomQuote.text} origin={randomQuote.origin} />
       <Tabs />
       {/* shows popular lists and members */}
       <Carousel title="What's the Meta?" games={recentGames} />
+      <h2 className="text-xl font-medium text-center">
+        At <span className="italic">The Save Room</span> you can ...
+      </h2>
+
+      <WhyUsSection />
+      <h2 className="text-xl font-medium text-center">Trending Reviews</h2>
       <div className="flex flex-col space-y-10">
         {reviews.map((review) => (
           <ReviewItem key={review.id} review={review} />
         ))}
       </div>
       <Carousel title="Classic Gems" games={popularGames} />
+      <h2 className="text-xl font-medium text-center">Trending Discussions</h2>
       <div className="flex flex-col gap-4">
         {discussions.map((discussion) => (
           <DiscussionItem key={discussion.id} discussion={discussion} />
         ))}
       </div>
       <Carousel title="Most Anticipated" games={anticipatedGames} />
+      <h2 className="text-xl font-medium text-center">Trending Lists</h2>
       <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6 ">
         {lists.map((list, index) => (
           <ListItem key={index} list={list} />

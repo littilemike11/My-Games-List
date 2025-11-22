@@ -38,8 +38,10 @@ export const parseGame = (gameInfo: any): Game => {
       gameInfo.artworks?.map((art: any) =>
         art.url.replace("t_thumb", "t_original")
       ) ?? [],
-    video_name: gameInfo.videos?.map((vid: any) => vid.name) ?? [],
-    video_url: gameInfo.videos?.map((vid: any) => vid.video_id) ?? [],
+    videos: gameInfo.videos?.map((vid: any) => ({
+      name: vid.name,
+      url: vid.video_id,
+    })),
   };
 };
 

@@ -1,3 +1,5 @@
+import TagItem from "../components/TagItem";
+import FollowButton from "../components/FollowButton";
 const page = () => {
   return (
     <>
@@ -18,6 +20,14 @@ const page = () => {
             activity stream of passionate game criticism, discussion and
             discovery.
           </p>
+
+          <div>
+            <p>
+              Follow <span className="italic">The Save Room</span> to keep in
+              touch with the latest updates, announcements and changes
+            </p>
+            <FollowButton playerID={""} />
+          </div>
         </section>
 
         {/* What You Can Do */}

@@ -5,7 +5,7 @@ const Quote: React.FC<{ content: string; origin?: string }> = ({
   return (
     <>
       <div className="quote">
-        <p>{content}</p>
+        <p className="italic">{content}</p>
         {origin && <p className="text-right">- {origin}</p>}
       </div>
     </>

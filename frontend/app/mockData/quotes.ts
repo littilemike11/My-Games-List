@@ -25,11 +25,11 @@ const errorQuotes: quote[] = [
   },
 ];
 
-const welcomeQuotes: quote[] = [
-  {
-    text: "Rest now, Traveler",
-    origin: "",
-  },
+export const welcomeQuotes: quote[] = [
+  // {
+  //   text: "Rest now, Traveler",
+  //   origin: "",
+  // },
   {
     text: "Take a beak, you've earned it",
     origin: "Animal Crossing (Isabelle)",

@@ -31,27 +31,6 @@ export default async function GamePage({ params }: Props) {
           subHeading={game.release_date!}
           CTA={false}
         />
-        // <div className="relative w-full h-[30vh] sm:h-[35vh] md:h-[40vh] lg:h-[45vh] overflow-hidden rounded-2xl  bg-base-200">
-        //   {/* Background image */}
-        //   <img
-        //     src={game.artwork[0]}
-        //     alt={`${game.name} artwork`}
-        //     className="absolute inset-0 w-full h-full "
-        //   />
-        //   <div
-        //     className="absolute inset-0 bg-gradient-to-b
-        //           from-black/10 via-black/60 to-base-100/95 sm:to-base-100/70"
-        //   />
-
-        //   <div className="relative z-10 flex flex-col justify-end h-full p-4 sm:p-8 lg:p-12">
-        //     <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white drop-shadow-md line-clamp-2">
-        //       {game.name}
-        //     </h1>
-        //     <p className="text-gray-300 text-sm sm:text-lg drop-shadow">
-        //       {game.release_date}
-        //     </p>
-        //   </div>
-        // </div>
       )}
 
       <div className="p-2">
@@ -68,7 +47,7 @@ export default async function GamePage({ params }: Props) {
         )}
         <div className="grid  grid-cols-12 gap-8 mb-6">
           {/* 📀 Cover + Stats  (Right column on desktop) */}
-          <div className="col-span-12  md:col-span-5 xl:col-span-3 space-y-6">
+          <div className="col-span-12  md:col-span-5 space-y-6">
             {game.cover && (
               <img
                 src={game.cover}
@@ -83,7 +62,7 @@ export default async function GamePage({ params }: Props) {
             />
           </div>
           {/* 📝 CTA + Summary (Left column) */}
-          <main className="col-span-12 md:order-3 xl:order-2 xl:col-span-6">
+          <main className="col-span-12 md:order-3 ">
             <div className="flex flex-col md:flex-col-reverse gap-6">
               <CTA game={game} gameID={newGameID.id} />
 
@@ -96,7 +75,7 @@ export default async function GamePage({ params }: Props) {
             </div>
           </main>
           {/* game info (theme,genre,publisher , etc ...) */}
-          <aside className="col-span-12 md:order-2 md:col-span-7 xl:order-3 xl:col-span-3 space-y-6">
+          <aside className="col-span-12 md:order-2 md:col-span-7 space-y-6">
             <div className="border border-base-300 rounded-xl p-4">
               <Info
                 genres={game.genres}
@@ -112,10 +91,13 @@ export default async function GamePage({ params }: Props) {
         {/* tabs section */}
         {/* name of each tab group should be unique */}
         <TabSection
+          gameID={newGameID.id}
           game={game}
-          screenshots={game.screenshots}
+          screenshots={game.screenshots ?? []}
+          artwork={game.artwork ?? []}
+          videos={game.videos ?? []}
           franchise={game.franchise ?? []}
-          similarGames={game.similarGames}
+          similarGames={game.similarGames ?? []}
         />
       </div>
     </>
