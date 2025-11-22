@@ -1,5 +1,17 @@
 import supabase from "@/app/utils/supabase/client";
 
+export const checkUsername = async (inputName: string) => {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("username", inputName)
+    .maybeSingle();
+  if (data) {
+    return true;
+  }
+  return false;
+};
+
 //get all users
 export const getPlayers = async (
   limit: number = 5,

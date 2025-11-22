@@ -1,26 +1,54 @@
 "use client";
-import AuthModal from "@/app/components/AuthModal";
+
 import supabase from "@/app/utils/supabase/client";
+import { checkUsername } from "@/app/api/supabase-api/profile-api";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 export default function SignUpPage() {
   const [mode, setMode] = useState<"login" | "signup">("signup");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    // Allow only letters, numbers, underscore, dash — and max 12 chars
+    const cleaned = value
+      .replace(/[^a-zA-Z0-9_-]/g, "") // remove disallowed chars
+      .slice(0, 16); // enforce max length
+
+    setUsername(cleaned);
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
+    const validUserName = username.toLocaleLowerCase();
 
     if (mode === "signup") {
+      if (confirmPassword !== password) {
+        setError("passwords must match");
+        setLoading(false);
+
+        return;
+      }
+      const usernameExists = await checkUsername(validUserName);
+      if (usernameExists) {
+        setError("Username is taken");
+        setLoading(false);
+
+        return;
+      }
       const { data: newUser, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          data: { username }, // pass username in user metadata
+          data: { username: validUserName }, // pass username in user metadata
         },
       });
 
@@ -29,6 +57,7 @@ export default function SignUpPage() {
         setLoading(false);
         return;
       }
+      redirect("/welcome");
 
       // No need to manually insert into profiles or call createDefaultLists()
       // The trigger handles both automatically
@@ -63,7 +92,7 @@ export default function SignUpPage() {
               placeholder="Username"
               className="input input-bordered w-full mb-2"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={handleUsernameChange}
             />
           )}
 
@@ -83,6 +112,14 @@ export default function SignUpPage() {
             className="input input-bordered w-full mb-2"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+          />
+          <input
+            required
+            type="password"
+            placeholder="Confirm Password"
+            className="input input-bordered w-full mb-2"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
 
           {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
