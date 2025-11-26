@@ -13,7 +13,7 @@ import GameHero from "../components/GameHero";
 import Quote from "../components/Quote";
 import { welcomeQuotes } from "../mockData/quotes";
 import WhyUsSection from "../components/WhyUsSection";
-import { createClient } from "../utils/supabase/server";
+import Link from "next/link";
 
 export default async function Home() {
   const todayTimestamp = Math.floor(Date.now() / 1000);
@@ -90,31 +90,61 @@ limit 10;`,
       <Tabs />
       {/* shows popular lists and members */}
       <Carousel title="What's the Meta?" games={recentGames} />
-      <h2 className="text-xl font-medium text-center">
-        At <span className="italic">The Save Room</span> you can ...
-      </h2>
-
       <WhyUsSection />
-      <h2 className="text-xl font-medium text-center">Trending Reviews</h2>
-      <div className="flex flex-col space-y-10">
-        {reviews.map((review) => (
-          <ReviewItem key={review.id} review={review} />
-        ))}
-      </div>
+      {/* popular reviews */}
+      <section className="mb-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-6">
+          Trending Reviews
+        </h2>
+        <div className="flex flex-col space-y-10">
+          {reviews.map((review) => (
+            <ReviewItem key={review.id} review={review} />
+          ))}
+        </div>
+        <div className="flex justify-end w-full my-2">
+          <Link className="link link:hover" href={`/popular/reviews`}>
+            view more reviews...
+          </Link>
+        </div>
+      </section>
+
       <Carousel title="Classic Gems" games={popularGames} />
-      <h2 className="text-xl font-medium text-center">Trending Discussions</h2>
-      <div className="flex flex-col gap-4">
-        {discussions.map((discussion) => (
-          <DiscussionItem key={discussion.id} discussion={discussion} />
-        ))}
-      </div>
+      {/* popular discussions */}
+      <section className="mb-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-6">
+          Trending Discussions
+        </h2>
+        <div className="flex flex-col space-y-10">
+          {discussions.map((discussion) => (
+            <DiscussionItem key={discussion.id} discussion={discussion} />
+          ))}
+        </div>
+        <div className="flex justify-end w-full my-2">
+          <Link className="link link:hover" href={`/popular/discussions`}>
+            view more discussions...
+          </Link>
+        </div>
+      </section>
+
       <Carousel title="Most Anticipated" games={anticipatedGames} />
-      <h2 className="text-xl font-medium text-center">Trending Lists</h2>
-      <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6 ">
-        {lists.map((list, index) => (
-          <ListItem key={index} list={list} />
-        ))}
-      </div>
+
+      {/* popular lists */}
+      <section className="mb-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-6">
+          Trending Lists
+        </h2>
+        <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6 ">
+          {lists.map((list, index) => (
+            <ListItem key={index} list={list} />
+          ))}
+        </div>
+        <div className="flex justify-end w-full my-2">
+          <Link className="link link:hover" href={`/popular/lists`}>
+            view more lists...
+          </Link>
+        </div>
+      </section>
+      {/* possibly add top players/tags + add recent games carousel */}
     </div>
   );
 }
