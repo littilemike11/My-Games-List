@@ -15,10 +15,9 @@ export default async function DiscussionsPage({
   const discussions: Discussion[] = await getDiscussionsByUser(userID.id);
   return (
     <div className="mx-4 sm:mx-[2rem]">
-      <h2 className="text-2xl mb-4">
+      <h2 className="text-2xl mb-6 pb-2 border-b">
         {username}'s Discussions ({discussions.length}){" "}
       </h2>
-      <div className="divider"></div>
       {discussions.length > 0 ? (
         <div className="flex flex-col gap-4">
           {discussions.map((discussion) => (

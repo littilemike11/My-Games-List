@@ -10,14 +10,17 @@ const GameHero: React.FC<{
     <>
       {CTA ? (
         <div
-          className="hero h-[30vh] sm:h-[35vh] md:h-[40vh] lg:h-[45vh]"
+          className="hero h-[30vh] sm:h-[35vh] md:h-[40vh] lg:h-[45vh] rounded-b-2xl "
           style={{
             backgroundImage: `url(${bgImage})`,
             objectFit: "cover",
             overflow: "hidden",
           }}
         >
-          <div className="hero-overlay"></div>
+          <div
+            className="hero-overlay bg-gradient-to-b 
+                  from-black/10 via-black/60 to-base-100/95 sm:to-base-100/70"
+          ></div>
           <div className="hero-content text-neutral-content text-center">
             <div className="max-w-md">
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white drop-shadow-md line-clamp-2 text-balance">
@@ -33,7 +36,7 @@ const GameHero: React.FC<{
           </div>
         </div>
       ) : (
-        <div className="relative w-full h-[30vh] sm:h-[35vh] md:h-[40vh] lg:h-[45vh] overflow-hidden rounded-2xl  bg-base-200">
+        <div className="relative w-full h-[30vh] sm:h-[35vh] md:h-[40vh] lg:h-[45vh] overflow-hidden rounded-b-2xl  bg-base-200">
           {/* Background image */}
           <img
             src={bgImage}
@@ -54,10 +57,6 @@ const GameHero: React.FC<{
               {heading}
             </h1>
             <p className=" text-sm sm:text-lg drop-shadow">{subHeading} </p>
-
-            {/* <Link href={"/auth/sign-up"} className="btn w-fit btn-primary">
-              Get Started
-            </Link> */}
           </div>
         </div>
       )}

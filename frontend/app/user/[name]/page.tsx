@@ -38,7 +38,7 @@ export default function UserGamesTabs() {
   if (!currentUser) return <p>Loading...</p>;
 
   return (
-    <main className="max-w-6xl mx-auto px-4 py-12 space-y-6">
+    <main className=" px-2 py-6 space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">{currentUser.username}'s Games</h1>
@@ -54,7 +54,7 @@ export default function UserGamesTabs() {
               key={s.key}
               onClick={() => setActiveTab(s.key)}
               className={
-                "pb-2 font-medium border-b-2 transition-colors " +
+                "pb-2 font-medium border-b-2 transition-colors cursor-pointer " +
                 (isActive
                   ? "border-primary text-primary"
                   : "border-transparent text-base-content/70 hover:text-base-content")
