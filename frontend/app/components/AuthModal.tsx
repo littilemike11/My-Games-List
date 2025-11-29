@@ -74,12 +74,12 @@ export default function AuthModal({
       if (signInError) {
         setError(signInError.message);
       } else {
-        // onClose();
+        onClose();
       }
     }
     setLoading(false);
     // ideally redirect to the page you tried to go to previously
-    redirect("/");
+    // redirect("/");
   };
 
   return (

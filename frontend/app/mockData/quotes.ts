@@ -92,10 +92,10 @@ export const welcomeQuotes: quote[] = [
   },
 ];
 
-const searchQuotes: quote[] = [
+export const searchQuotes: quote[] = [
   {
     text: "It's dangerous to go alone, take this!",
-    origin: "The Legend of Zelda ( )",
+    origin: "The Legend of Zelda",
   },
   {
     text: "Exploration is the essence of human spirit",

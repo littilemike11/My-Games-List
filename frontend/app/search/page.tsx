@@ -23,6 +23,7 @@ import { searchLists } from "../api/supabase-api/list-api";
 import { ProfileItem } from "../components/ProfileItem";
 import DiscussionItem from "../components/DiscussionItem";
 import ListItem from "../components/ListItem";
+import { searchQuotes } from "../mockData/quotes";
 const Page = () => {
   const searchParams = useSearchParams();
   const query = searchParams.get("q")?.trim();
@@ -214,15 +215,15 @@ const Page = () => {
     );
   }
 
+  let randomQuote =
+    searchQuotes[Math.floor(Math.random() * searchQuotes.length)];
+
   // Default welcome content when no query
   return (
     <main>
       <div className="flex flex-col space-y-12 pt-4 p-4 items-center w-full">
         <div>
-          <Quote
-            content="It's dangerous to go alone! Take this."
-            origin="The Legend of Zelda"
-          />
+          <Quote content={randomQuote.text} origin={randomQuote.origin} />
         </div>
         <div className="bg-base-300 p-4">
           <p>Search for games, tags, players, discussions, reviews and lists</p>

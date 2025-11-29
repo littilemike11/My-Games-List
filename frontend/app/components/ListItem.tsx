@@ -18,7 +18,7 @@ const ListItem: React.FC<{
             <h3 className="text-xl font-bold text-primary">{list.title}</h3>
           </Link>
 
-          <div className="flex border relative h-40 group overflow-hidden">
+          <div className="flex border h-40 group overflow-hidden">
             {list.games.map((game) => (
               <div
                 key={game.id}

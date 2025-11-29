@@ -72,7 +72,7 @@ const Navbar = () => {
                 </div>
               </div> */}
         </div>
-        <div className="navbar-center hidden lg:block ">
+        <div className="navbar-center hidden xl:ml-64 lg:block ">
           <Search />
           {/* <ul className="menu menu-horizontal px-1">
             
@@ -131,6 +131,28 @@ const Navbar = () => {
         </div>
         <div className="navbar-end gap-2">
           <ul className="menu menu-horizontal items-center sm:gap-2">
+            {/* search */}
+            <li>
+              <Link className="lg:hidden" href={"/search"}>
+                <svg
+                  className="h-[1em] opacity-50"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    strokeWidth="2.5"
+                    fill="none"
+                    stroke="currentColor"
+                  >
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.3-4.3"></path>
+                  </g>
+                </svg>
+                <span className="hidden lg:block">Search</span>
+              </Link>
+            </li>
             {/* create content */}
             {session && (
               <li>
@@ -156,28 +178,7 @@ const Navbar = () => {
                 </div>
               </li>
             )}
-            {/* search */}
-            <li>
-              <Link className="lg:hidden" href={"/search"}>
-                <svg
-                  className="h-[1em] opacity-50"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                >
-                  <g
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                    strokeWidth="2.5"
-                    fill="none"
-                    stroke="currentColor"
-                  >
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <path d="m21 21-4.3-4.3"></path>
-                  </g>
-                </svg>
-                <span className="hidden lg:block">Search</span>
-              </Link>
-            </li>
+
             <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
 
             {session ? (
