@@ -1,4 +1,4 @@
-import { tagableContent } from "@/app/types/models";
+import { taggableContent } from "@/app/types/models";
 import supabase from "@/app/utils/supabase/client";
 
 // search tags
@@ -77,7 +77,7 @@ export const getTag = async (tagName: string) => {
     .from("tags")
     .select("id,name,description,type")
     .eq("name", tagName)
-    .single();
+    .maybeSingle();
   if (error) {
     console.error("Error fetching games: ", error);
     throw error;
@@ -162,7 +162,7 @@ export const updateTagDescription = async (
 
 //get all tags from a post
 export const getPostTags = async (
-  parent_type: tagableContent,
+  parent_type: taggableContent,
   parent_id: number
 ) => {
   const { data, error } = await supabase
@@ -181,7 +181,7 @@ export const getPostTags = async (
 //tags cannot be deleted by users only admins
 export const getPostsByTags = async (
   tagIds: number[],
-  parent_type: tagableContent
+  parent_type: taggableContent
 ) => {
   const { data, error } = await supabase
     .from("tag_links")
@@ -197,7 +197,7 @@ export const getPostsByTags = async (
 
 export const addTag = async (
   tag_id: number,
-  parent_type: tagableContent,
+  parent_type: taggableContent,
   parent_id: Number
 ) => {
   const { count } = await supabase
@@ -223,7 +223,7 @@ export const addTag = async (
 
 // Add multiple tags in one request
 export const batchAddTags = async (
-  tags: { tag_id: number; parent_type: tagableContent; parent_id: number }[]
+  tags: { tag_id: number; parent_type: taggableContent; parent_id: number }[]
 ) => {
   const { data, error } = await supabase
     .from("tag_links")

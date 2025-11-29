@@ -8,7 +8,6 @@ import supabase from "@/app/utils/supabase/client";
 import { FaPlus } from "react-icons/fa";
 
 import Search from "./Search";
-import CreateDiscussion from "./CreateDiscussion";
 import { redirect } from "next/navigation";
 // import { getLevel } from "../utils/functions";
 const Navbar = () => {
@@ -47,7 +46,7 @@ const Navbar = () => {
           {/* Primary button for the first status (wishlist in this example) */}
           <Link href={"/"} className="btn btn-ghost text-xl join-item">
             The Save Room
-          </Link>{" "}
+          </Link>
           {/* <div className="dropdown">
                 <div
                   tabIndex={0}
@@ -72,7 +71,7 @@ const Navbar = () => {
                 </div>
               </div> */}
         </div>
-        <div className="navbar-center hidden xl:ml-64 lg:block ">
+        <div className="navbar-center hidden lg:block xl:ml-64">
           <Search />
           {/* <ul className="menu menu-horizontal px-1">
             

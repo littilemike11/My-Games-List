@@ -69,7 +69,7 @@ export const getPlayerByName = async (username: string) => {
     console.error("Error getting user", error);
     throw error;
   }
-  return data;
+  return data ?? null;
 };
 export const getPlayerIdByName = async (username: string) => {
   const { data, error } = await supabase

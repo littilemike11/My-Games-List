@@ -31,7 +31,7 @@ const ReviewPage = () => {
           <CommentSection parentType={"review"} parentID={+id} />
         </div>
       ) : (
-        <p>Review doesn't exist</p>
+        <p className="text-lg text-error">Review doesn't exist</p>
       )}
     </>
   );

@@ -8,6 +8,7 @@ import TabSection from "@/app/components/gamePage/TabSection";
 import { upsertGame } from "@/app/api/supabase-api/game-api";
 import Paragraph from "@/app/components/Paragraph";
 import GameHero from "@/app/components/GameHero";
+import { notFound } from "next/navigation";
 interface Props {
   params: { slug: string };
 }
@@ -16,10 +17,16 @@ export default async function GamePage({ params }: Props) {
   const query = `fields cover.url, first_release_date, genres.name, name, slug, platforms.name, storyline, summary, themes.name, involved_companies.developer, involved_companies.publisher, involved_companies.company.name, screenshots.url, rating, rating_count, similar_games.name, similar_games.slug, similar_games.cover.url,hypes, franchises.games.name, franchises.games.slug, franchises.games.cover.url, videos.name, videos.video_id , artworks.url; where slug = "${params.slug}";`;
   const response = await getGames(query);
   console.log(response);
-  const game: Game = parseGame(response[0]);
-  const newGameID = await upsertGame(game);
-  console.log(newGameID.id);
-  console.log(game);
+  let game: Game;
+  let newGameID;
+  if (response.length > 0) {
+    game = parseGame(response[0]);
+    newGameID = await upsertGame(game);
+    console.log(newGameID.id);
+    console.log(game);
+  } else {
+    notFound();
+  }
 
   return (
     <>

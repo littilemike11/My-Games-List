@@ -3,12 +3,13 @@ import { Tag } from "@/app/types/models";
 import { getPostsByTag } from "@/app/api/supabase-api/post-api";
 import FollowTagButton from "@/app/components/FollowTagButton";
 import PostList from "@/app/components/PostList";
-
+import { notFound } from "next/navigation";
 interface Props {
   params: { name: string };
 }
 export default async function TagPage({ params }: Props) {
-  const tag: Tag = await getTag(params.name);
+  const tag: Tag | null = await getTag(params.name);
+  if (!tag) notFound();
   const posts = await getPostsByTag(tag.id);
 
   return (

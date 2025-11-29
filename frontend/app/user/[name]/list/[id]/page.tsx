@@ -28,7 +28,7 @@ const ListPage = () => {
   return (
     <>
       {/* {List && <ListItem List={List} />} */}
-      {list && (
+      {list ? (
         <div className="flex flex-col gap-2">
           <h2 className="text-3xl font-bold text-primary">{list.title}</h2>
           <p className="text-sm">Created by {name}</p>
@@ -62,11 +62,12 @@ const ListPage = () => {
               </div>
             ))}
           </div>
+          {/* comments of List */}
+          <CommentSection parentType={"list"} parentID={+id} />
         </div>
+      ) : (
+        <p className="text-lg text-error">List doesn't exist</p>
       )}
-
-      {/* comments of List */}
-      <CommentSection parentType={"list"} parentID={+id} />
     </>
   );
 };

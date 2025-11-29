@@ -31,7 +31,7 @@ const DiscussionPage = () => {
           <CommentSection parentType={"discussion"} parentID={+id} />
         </div>
       ) : (
-        <p>discussion doesn't exist</p>
+        <p className="text-lg text-error">Discussion doesn't exist</p>
       )}
     </>
   );
