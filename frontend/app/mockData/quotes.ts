@@ -10,9 +10,9 @@ const quotes: quote[] = [
     origin: "Bioshock",
   },
 ];
-const errorQuotes: quote[] = [
+export const errorQuotes: quote[] = [
   {
-    text: "Stop rght there, criminal scum",
+    text: "Stop right there, criminal scum",
     origin: "The Elder Scrolls",
   },
   {

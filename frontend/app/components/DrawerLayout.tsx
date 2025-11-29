@@ -11,6 +11,7 @@ import { IGDBgenres } from "../mockData/genreTags";
 import { IGDBthemes } from "../mockData/themeTags";
 import { platforms } from "../mockData/platforms";
 import getGames from "../api/igdb-api";
+import Footer from "./Footer";
 export default function DrawerLayout({
   children,
 }: {
@@ -155,7 +156,7 @@ export default function DrawerLayout({
     <>
       <div className="drawer xl:drawer-open">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content pt-16 ">
+        <div className="drawer-content pt-16 min-h-screen">
           {/* Page content here */}
           {/* <label
             htmlFor="my-drawer-2"
