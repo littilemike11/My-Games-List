@@ -5,7 +5,7 @@ import Link from "next/link";
 import { getPlayerByName } from "@/app/api/supabase-api/profile-api";
 import { getUserGames } from "@/app/api/supabase-api/list-api";
 import { UserGameList, StatusKey, GameEntry } from "@/app/types/models";
-
+import GamePreviewLink from "@/app/components/GamePreviewLink";
 export default function UserGamesTabs() {
   const { name } = useParams<{ name: string }>();
   const [games, setGames] = useState<GameEntry[]>([]);
@@ -67,23 +67,32 @@ export default function UserGamesTabs() {
       </div>
 
       {/* Games Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
         {getGamesByStatus(activeTab).length > 0 ? (
           getGamesByStatus(activeTab).map((g) => (
-            <Link
+            // <Link
+            //   key={g.game.id}
+            //   href={`/game/${g.game.slug}`}
+            //   className="group relative rounded-lg overflow-hidden shadow hover:shadow-lg transition"
+            // >
+            //   <img
+            //     src={g.game.cover}
+            //     alt={g.game.name}
+            //     className="w-full h-40 object-cover group-hover:scale-105 transition-transform"
+            //   />
+            //   <span className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-40 text-xs text-white text-center truncate px-1 py-0.5">
+            //     {g.game.name}
+            //   </span>
+            // </Link>
+            <GamePreviewLink
               key={g.game.id}
-              href={`/game/${g.game.slug}`}
-              className="group relative rounded-lg overflow-hidden shadow hover:shadow-lg transition"
-            >
-              <img
-                src={g.game.cover}
-                alt={g.game.name}
-                className="w-full h-40 object-cover group-hover:scale-105 transition-transform"
-              />
-              <span className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-40 text-xs text-white text-center truncate px-1 py-0.5">
-                {g.game.name}
-              </span>
-            </Link>
+              game={{
+                id: g.game.id,
+                slug: g.game.slug,
+                cover: g.game.cover,
+                name: g.game.name,
+              }}
+            />
           ))
         ) : (
           <p className="col-span-full text-sm text-base-content/60 italic">
