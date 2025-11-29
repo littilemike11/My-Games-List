@@ -25,12 +25,10 @@ import DiscussionItem from "../components/DiscussionItem";
 import ListItem from "../components/ListItem";
 const Page = () => {
   const searchParams = useSearchParams();
-  const query = searchParams
-    .get("q")
-    ?.trim()
-    .toLowerCase()
-    .replace(/[\s+/]+/g, "-") // turn spaces, +, / into -
-    .replace(/-+/g, "-"); // collapse multiple - into one
+  const query = searchParams.get("q")?.trim();
+  // .toLowerCase()
+  // .replace(/[\s+/]+/g, "-") // turn spaces, +, / into -
+  // .replace(/-+/g, "-"); // collapse multiple - into one
 
   const [games, setGames] = useState<GamePreview[]>([]);
   const [players, setPlayers] = useState<Profile[]>([]);
