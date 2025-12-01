@@ -18,7 +18,7 @@ export default function Feed() {
   const [postsByTags, setPostsByTags] = useState<any[]>([]);
   const [postsByFollowers, setPostsByFollowers] = useState<any[]>([]);
   const [recommendedGames, setRecommendedGames] = useState<GamePreview[]>([]);
-
+  const [loading, setLoading] = useState(true);
   const userID = session?.user.id;
 
   useEffect(() => {
@@ -41,6 +41,8 @@ export default function Feed() {
           }
         } catch (error) {
           console.log("error getting tags", error);
+        } finally {
+          setLoading(false);
         }
       }
     };
@@ -56,7 +58,13 @@ export default function Feed() {
         <h2 className="text-2xl sm:text-3xl text-pretty font-semibold">
           Posts from your Favorite Tags
         </h2>
-        {postsByTags.length > 0 ? (
+        {loading ? (
+          <div className="flex w-52 flex-col gap-4">
+            <div className="skeleton h-40 w-full"></div>
+            <div className="skeleton h-40 w-full"></div>
+            <div className="skeleton h-40 w-full"></div>
+          </div>
+        ) : postsByTags.length > 0 ? (
           <PostList posts={postsByTags} />
         ) : (
           <p>
@@ -71,7 +79,13 @@ export default function Feed() {
           Posts from your Followers
         </h2>
         <div>
-          {postsByFollowers.length > 0 ? (
+          {loading ? (
+            <div className="flex w-52 flex-col gap-4">
+              <div className="skeleton h-40 w-full"></div>
+              <div className="skeleton h-40 w-full"></div>
+              <div className="skeleton h-40 w-full"></div>
+            </div>
+          ) : postsByFollowers.length > 0 ? (
             <PostList posts={postsByFollowers} />
           ) : (
             <p>

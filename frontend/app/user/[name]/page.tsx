@@ -35,7 +35,14 @@ export default function UserGamesTabs() {
   const getGamesByStatus = (status: StatusKey) =>
     games.filter((g) => g[status]);
 
-  if (!currentUser) return <p>Loading...</p>;
+  if (!currentUser)
+    return (
+      <div className="flex w-52 flex-col gap-4">
+        <div className="skeleton h-40 w-full"></div>
+        <div className="skeleton h-40 w-full"></div>
+        <div className="skeleton h-40 w-full"></div>
+      </div>
+    );
 
   return (
     <main className=" px-2 py-6 space-y-6">

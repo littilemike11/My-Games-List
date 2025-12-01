@@ -32,19 +32,25 @@ export default function UserLayout({
   const [userProfile, setUserProfile] = useState<Profile>();
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const fetchUser = async () => {
     try {
       const user = await getPlayerByName(name);
-      console.log("user", user);
+      if (!user) {
+        setLoading(false);
+        return;
+      }
       setUserProfile(user);
-      if (!user) return;
+
       const stats = await getPlayerStats(user.id);
       console.log(stats);
       setFollowerCount(stats?.follower_count);
       setFollowingCount(stats?.following_count);
     } catch (error) {
       console.error("error getting user:", error);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -53,7 +59,23 @@ export default function UserLayout({
   const isOwnProfile =
     session &&
     profile?.username.toLocaleLowerCase() == name.toLocaleLowerCase();
-  if (userProfile) {
+
+  if (loading) {
+    return (
+      <>
+        <div className="flex w-96 flex-col gap-4">
+          <div className="flex items-center gap-4">
+            <div className="skeleton h-16 w-16 shrink-0 rounded-full"></div>
+            <div className="flex flex-col gap-4">
+              <div className="skeleton h-4 w-20"></div>
+              <div className="skeleton h-4 w-28"></div>
+            </div>
+          </div>
+          <div className="skeleton h-48 w-full"></div>
+        </div>
+      </>
+    );
+  } else if (userProfile && !loading) {
     return (
       <div className=" px-4 py-12 space-y-6">
         {/* Profile header */}
