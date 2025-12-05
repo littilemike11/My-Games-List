@@ -59,6 +59,19 @@ export const searchPlayers = async (query: string, limit: number = 5) => {
 };
 
 // get a single user
+export const getPlayerByID = async (userID: string) => {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id,created_at,username,avatar,bio,total_xp")
+    .eq("id", userID)
+    .single();
+  if (error) {
+    console.error("Error getting user", error);
+    throw error;
+  }
+  return data ?? null;
+};
+// get a single user
 export const getPlayerByName = async (username: string) => {
   const { data, error } = await supabase
     .from("profiles")
@@ -89,14 +102,14 @@ export const getPlayerIdByName = async (username: string) => {
 export const updateProfile = async (
   user_id: string,
   updates: {
-    avatar: string;
+    // avatar: string;
     bio: string;
   }
 ) => {
   const { data, error } = await supabase
     .from("profiles")
     .update(updates)
-    .eq("user_id", user_id)
+    .eq("id", user_id)
     .select()
     .single();
   if (error) {

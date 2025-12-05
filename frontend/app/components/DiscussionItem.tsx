@@ -4,6 +4,7 @@ import Reactions from "./Reactions";
 import Link from "next/link";
 import TagItem from "./TagItem";
 import Paragraph from "./Paragraph";
+import PostOptions from "./PostOptions";
 const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
   discussion,
 }) => {
@@ -12,14 +13,22 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
       <div className="card bg-base-100 w-full rounded-lg border border-base-200 hover:shadow-lg shadow-sm transition-all duration-200">
         <div className="card-body space-y-2">
           {/* Title */}
-          <Link
-            className="link link-hover decoration-primary"
-            href={`/user/${discussion.profile?.username}/discussion/${discussion.id}`}
-          >
-            <h2 className="card-title text-primary line-clamp-2 font-bold">
-              {discussion.title}
-            </h2>
-          </Link>
+          <div className="flex justify-between">
+            <Link
+              className="link link-hover decoration-primary"
+              href={`/user/${discussion.profile?.username}/discussion/${discussion.id}`}
+            >
+              <h2 className="card-title text-primary line-clamp-2 font-bold">
+                {discussion.title}
+              </h2>
+            </Link>
+            <PostOptions
+              postType="discussion"
+              postID={discussion.id}
+              ownerID={discussion.profile.id}
+              ownerName={discussion.profile.username}
+            />
+          </div>
 
           {/* Author info and date */}
           <div className="flex items-center justify-between text-sm ">

@@ -5,6 +5,7 @@ import Reactions from "./Reactions";
 import Link from "next/link";
 import TagItem from "./TagItem";
 import Paragraph from "./Paragraph";
+import PostOptions from "./PostOptions";
 const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
   review,
   showCover = true,
@@ -27,14 +28,24 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
 
         <div className="card-body">
           {/* title */}
-          <Link
-            className="link link-hover decoration-primary"
-            href={`/user/${review.profile?.username}/review/${review.id}`}
-          >
-            <h2 className="card-title text-primary line-clamp-2 text-pretty font-bold">
-              {review.title}
-            </h2>
-          </Link>
+          <div className="flex justify-between">
+            <Link
+              className="link link-hover decoration-primary"
+              href={`/user/${review.profile?.username}/review/${review.id}`}
+            >
+              <h2 className="card-title text-primary line-clamp-2 text-pretty font-bold">
+                {review.title}
+              </h2>
+            </Link>
+            <div>
+              <PostOptions
+                postType="review"
+                postID={review.id}
+                ownerID={review.profile?.id}
+                ownerName={review.profile.username}
+              />
+            </div>
+          </div>
 
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 ">
             <div className="flex flex-col gap-2 ">

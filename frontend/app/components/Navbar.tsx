@@ -209,7 +209,7 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li>
-                    <a>Settings</a>
+                    <Link href={"/profile"}>Settings</Link>
                   </li>
                   <li>
                     <button onClick={logout} className="btn">

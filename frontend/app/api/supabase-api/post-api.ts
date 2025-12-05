@@ -1,3 +1,4 @@
+import { taggableContent } from "@/app/types/models";
 import supabase from "@/app/utils/supabase/client";
 
 //get posts
@@ -64,4 +65,20 @@ export const getPostsByUserIds = async (user_ids: string[]) => {
     throw error;
   }
   return data ?? [];
+};
+
+export const getPostByID = async (
+  postType: taggableContent,
+  postID: number
+) => {
+  const { data, error } = await supabase
+    .from(`${postType}s`)
+    .select("user_id")
+    .eq("id", postID)
+    .single();
+  if (error) {
+    console.error("Error fetching posts: ", error);
+    throw error;
+  }
+  return data;
 };

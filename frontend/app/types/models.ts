@@ -23,9 +23,9 @@ export interface User {
 export interface Profile {
   total_xp: number;
   id: string;
-  username: String;
-  avatar: String;
-  bio?: String;
+  username: string;
+  avatar: string;
+  bio?: string;
 }
 
 export interface ProfilePreview {
@@ -82,7 +82,7 @@ export interface Review {
   rating: number;
   content: string;
   title: string;
-  user_id?: string;
+  user_id: string;
   platform: string;
   hours_played: number;
   comment_count?: number;
@@ -99,7 +99,7 @@ export interface Discussion {
   tags?: Tag[];
   content: string;
   title: string;
-  user_id?: string;
+  user_id: string;
   profile: ProfilePreview;
   comment_count: number;
 }

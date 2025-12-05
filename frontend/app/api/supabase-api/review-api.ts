@@ -23,7 +23,7 @@ export const getReviews = async (
   const { data, error } = await supabase
     .from("reviews")
     .select(
-      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(username,avatar),game:games(id,name,cover,slug)"
+      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(id,username,avatar),game:games(id,name,cover,slug)"
     )
     .order(column, { ascending: orderBy === "asc" })
     .limit(limit);
@@ -78,7 +78,7 @@ export const searchReviews = async (name: string, limit: number = 5) => {
   const { data, error } = await supabase
     .from("reviews_with_game_slug")
     .select(
-      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(username,avatar), game_cover, game_slug, game_name"
+      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(id, username,avatar), game_cover, game_slug, game_name"
     )
     .ilike("title", `%${name}%`) // search substring match
     .limit(limit);
@@ -109,7 +109,7 @@ export const getReviewsByGame = async (slug: string) => {
   const { data, error } = await supabase
     .from("reviews_with_game_slug")
     .select(
-      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(username,avatar),game:games(id,name,cover,slug)"
+      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(id, username,avatar),game:games(id,name,cover,slug)"
     )
     .eq("game_slug", slug);
 

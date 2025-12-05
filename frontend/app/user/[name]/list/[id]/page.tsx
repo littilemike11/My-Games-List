@@ -49,9 +49,8 @@ const ListPage = () => {
           />
           <div className="bg-base-100 w-full p-2 overflow-auto flex gap-4 flex-wrap">
             {list.games.map((game) => (
-              <div className="h-40">
+              <div key={game.id} className="h-40">
                 <GamePreviewLink
-                  key={game.id}
                   game={{
                     id: game.id,
                     cover: game.cover,

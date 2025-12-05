@@ -113,14 +113,16 @@ export default function SignUpPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <input
-            required
-            type="password"
-            placeholder="Confirm Password"
-            className="input input-bordered w-full mb-2"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
+          {mode === "signup" && (
+            <input
+              required
+              type="password"
+              placeholder="Confirm Password"
+              className="input input-bordered w-full mb-2"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          )}
 
           {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
 

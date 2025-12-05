@@ -80,7 +80,7 @@ export default function UserLayout({
       <div className=" px-4 py-12 space-y-6">
         {/* Profile header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center-safe gap-4">
             {userProfile && (
               <figure className="flex flex-col items-center">
                 <div
@@ -104,38 +104,42 @@ export default function UserLayout({
                 </div>
                 <figcaption className="text-sm opacity-70">
                   XP: {userProfile.total_xp}
-                </figcaption>{" "}
+                </figcaption>
               </figure>
             )}
 
             <div>
-              <h1 className="text-3xl font-bold">{name}</h1>
-              <p className="text-sm text-base-content/70">
-                User bio goes here.
-              </p>
+              <h1 className="text-3xl font-bold capitalize">{name}</h1>
+              {/* <p className="text-sm text-base-content/70">{profile?.bio}</p> */}
             </div>
             <div>
               {isOwnProfile ? (
-                <button className="btn btn-outline btn-sm min-h-fit">
+                <Link
+                  href={"/profile"}
+                  className="btn btn-outline btn-sm min-h-fit"
+                >
                   ✏️ <span className="hidden sm:block">Edit Profile</span>
-                </button>
+                </Link>
               ) : (
                 userProfile && <FollowButton playerID={userProfile.id} />
               )}
             </div>
           </div>
-          <div className="stats shadow">
-            <div className="stat">
-              <div className="stat-value">{followerCount}</div>
-              <div className="stat-title">Followers</div>
-            </div>
+          <div>
+            <div className="stats shadow">
+              <div className="stat">
+                <div className="stat-value">{followerCount}</div>
+                <div className="stat-title">Followers</div>
+              </div>
 
-            <div className="stat">
-              <div className="stat-value">{followingCount}</div>
-              <div className="stat-title">Following</div>
+              <div className="stat">
+                <div className="stat-value">{followingCount}</div>
+                <div className="stat-title">Following</div>
+              </div>
             </div>
           </div>
         </div>
+        <p className="text-sm text-base-content/70">{profile?.bio}</p>
 
         {/* Top-level tabs */}
         <nav className="flex gap-6 border-b border-base-300">

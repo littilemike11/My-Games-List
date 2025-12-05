@@ -28,7 +28,7 @@ export const getDiscussions = async (
   const { data, error } = await supabase
     .from("discussions")
     .select(
-      "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(username,avatar)"
+      "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(id, username,avatar)"
     )
     .order(column, { ascending: orderBy === "asc" })
     .limit(limit);
@@ -51,7 +51,7 @@ export const searchDiscussions = async (query: string, limit: number = 5) => {
   const { data, error } = await supabase
     .from("discussions")
     .select(
-      "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(username,avatar)"
+      "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(id, username,avatar)"
     )
     .ilike("title", `%${query}%`)
     .limit(limit);
@@ -74,7 +74,7 @@ export const getDiscussionsByTag = async (tag: string) => {
   const { data, error } = await supabase
     .from("discussions")
     .select(
-      "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(username,avatar)"
+      "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(id, username,avatar)"
     )
     .contains("tags", [tag]);
   if (error) {
@@ -107,7 +107,7 @@ export const getDiscussionsByTags = async (tags: string[]) => {
   const { data, error } = await supabase
     .from("discussions")
     .select(
-      "id,created_at,title,content,likes,dislikes,comment_count,profile:profiles(username,avatar)"
+      "id,created_at,title,content,likes,dislikes,comment_count,profile:profiles(id, username,avatar)"
     )
     .in("id", discussionsIds);
   if (error) {
@@ -129,7 +129,7 @@ export const getDiscussionsByUser = async (id: string) => {
   const { data, error } = await supabase
     .from("discussions")
     .select(
-      "id, created_at, title, content, likes, dislikes, comment_count, tags, profile:profiles(username, avatar)"
+      "id, created_at, title, content, likes, dislikes, comment_count, tags, profile:profiles(id, username, avatar)"
     )
     .eq("user_id", id);
 

@@ -3,6 +3,7 @@ import GamePreviewLink from "./GamePreviewLink";
 import Link from "next/link";
 import Reactions from "./Reactions";
 import TagItem from "./TagItem";
+import PostOptions from "./PostOptions";
 const ListItem: React.FC<{
   list: List;
 }> = ({ list }) => {
@@ -11,12 +12,20 @@ const ListItem: React.FC<{
     <>
       <div className="bg-base-100 max-w-[26rem] w-full h-full rounded-lg border border-base-200 hover:shadow-lg shadow-sm transition-all duration-200 p-2">
         <div className="flex flex-col space-y-2 w-full">
-          <Link
-            className="link link-hover decoration-primary"
-            href={`/user/${list.profile.username}/list/${list.id}`}
-          >
-            <h3 className="text-xl font-bold text-primary">{list.title}</h3>
-          </Link>
+          <div className="flex justify-between">
+            <Link
+              className="link link-hover decoration-primary"
+              href={`/user/${list.profile.username}/list/${list.id}`}
+            >
+              <h3 className="text-xl font-bold text-primary">{list.title}</h3>
+            </Link>
+            <PostOptions
+              postType="list"
+              postID={list.id}
+              ownerID={list.profile.id}
+              ownerName={list.profile.username}
+            />
+          </div>
 
           <div className="flex border h-40 group overflow-hidden">
             {list.games.map((game) => (
