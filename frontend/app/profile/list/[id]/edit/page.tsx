@@ -1,10 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/auth/auth-context";
+import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
 import {
   batchAddGamesToList,
   updateList,
+  createList,
   getUserGames,
+  getOwnListByID,
+  batchUpdateGamesToList,
 } from "@/app/api/supabase-api/list-api";
 import {
   GamePreview,
@@ -16,15 +21,17 @@ import GamePreviewLink from "@/app/components/GamePreviewLink";
 import Link from "next/link";
 import TagSection from "@/app/components/TagSection";
 import GameSearch from "@/app/components/GameSearch";
-import { getListByID } from "@/app/api/supabase-api/list-api";
 const page = () => {
+  const { id } = useParams<{ id: string }>();
   const [tags, setTags] = useState<string[]>([]);
-  const { session, profile, loading } = useAuth();
+  const [oldTagIds, setOldTagIds] = useState<number[]>([]);
+  const { session, profile } = useAuth();
   const [games, setGames] = useState<any[]>([]);
+  const [oldgames, setOldGames] = useState<GamePreview[]>([]);
+
   const [filteredGames, setFilteredGames] = useState<any[]>([]);
   const [list, setList] = useState<GamePreview[]>([]);
-  const [listInfo, setListInfo] = useState<List>();
-
+  const [loading, setloading] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [visibility, setVisibility] = useState<ListVisibility>("public");
@@ -32,53 +39,56 @@ const page = () => {
 
   useEffect(() => {
     const getList = async () => {
-      const response = await getListByID(35);
+      if (!userID) return;
+      const response = await getOwnListByID(+id, userID);
       console.log(response);
+      setOldTagIds(response?.tags?.flatMap((tag) => tag.id) ?? []);
+      console.log("oldtags", oldTagIds);
       setTags(response?.tags?.flatMap((tag) => tag.name) ?? []);
       setDescription(response?.description ?? "");
+      setVisibility(response?.visibility ?? "public");
       setTitle(response?.title ?? "");
       setList(response?.games ?? []);
+      setOldGames(response?.games ?? []);
     };
     getList();
-  }, []);
+  }, [userID]);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    setloading(true);
     e.preventDefault(); // 🚫 stop page refresh
     try {
       if (!title || !list || !session) {
         console.log("missing something");
         return;
       }
-      if (userID) {
-        const newList = await createList({
-          title,
+      //   update list
+      if (userID && list.length > 0) {
+        console.log("oldtags", oldTagIds);
+        const updatedList = await updateList(
+          userID,
+          +id,
+          oldgames,
+          list,
+          oldTagIds,
           tags,
-          visibility,
-          description,
-          user_id: userID,
-        });
-        console.log("Created list:", newList);
-
-        if (newList && list.length > 0) {
-          const insertedGames = await batchAddGamesToList(list, newList.id);
-          console.log("Inserted games:", insertedGames);
-        }
+          {
+            title,
+            visibility,
+            description,
+          }
+        );
+        console.log("updated list:", updatedList);
+        setOldTagIds(updatedList.tags);
+        setOldGames(list);
       }
-      refreshList();
-      // maybe close modal or reset form here
+      setloading(false);
     } catch (error) {
       console.error("Error in handleSubmit:", error);
       console.log("Something went wrong. Check console for details.");
     }
   };
 
-  const refreshList = () => {
-    setDescription("");
-    setTitle("");
-    setVisibility("public");
-    setTags([]);
-    setList([]);
-  };
   const getGames = async () => {
     if (userID) {
       const response = await getUserGames(userID);
@@ -109,7 +119,6 @@ const page = () => {
       setFilteredGames(games);
     }
   };
-
   return (
     <>
       {/* Open the modal using document.getElementById('ID').showModal() method */}
@@ -206,18 +215,21 @@ const page = () => {
                   {/* current games */}
                   <div className="bg-base-100  w-full p-2 overflow-auto justify-around  flex gap-2 flex-wrap">
                     {filteredGames.map((game) => (
-                      <div
-                        className="hover:scale-105 transition-transform duration-200 "
-                        key={game.game.id}
-                        title={game.game?.name}
-                        onClick={() => addGameToList(game.game)}
-                      >
-                        <img
-                          className="w-full h-20 object-cover cursor-pointer"
-                          src={game.game?.cover}
-                          alt={`${game.game?.name} cover`}
-                        />
+                      <div key={game.game.id} className="h-20">
+                        <GamePreviewLink game={game.game} />
                       </div>
+                      //   <div
+                      //     className="hover:scale-105 transition-transform duration-200 "
+                      //     key={game.game.id}
+                      //     title={game.game?.name}
+                      //     onClick={() => addGameToList(game.game)}
+                      //   >
+                      //     <img
+                      //       className="w-full h-20 object-cover cursor-pointer"
+                      //       src={game.game?.cover}
+                      //       alt={`${game.game?.name} cover`}
+                      //     />
+                      //   </div>
                     ))}
                   </div>
                 </div>
@@ -253,9 +265,15 @@ const page = () => {
           </div>
         </fieldset>
         <div className="modal-action flex justify-between w-full">
-          <button type="submit" className="btn btn-success">
-            Save
-          </button>
+          {list.length > 0 ? (
+            <button type="submit" className="btn btn-success">
+              {loading ? "Updating ..." : "Save"}
+            </button>
+          ) : (
+            <button disabled className="btn cursor-not-allowed">
+              Add a game
+            </button>
+          )}
           <Link href={`/user/${profile?.username}`}>
             <button type="button" className="btn btn-error">
               Cancel

@@ -7,7 +7,7 @@ import {
   StatusKey,
   Tag,
 } from "@/app/types/models";
-import { getPostTags, upsertTags } from "./tag-api";
+import { batchUpdatePostTags, getPostTags, upsertTags } from "./tag-api";
 import { upsertGame } from "./game-api";
 export const getLists = async (
   limit: number = 5,
@@ -192,7 +192,47 @@ export const getUserGameLists = async (
 
   return data;
 };
+export const getOwnListByID = async (listID: number, userID: string) => {
+  const query = supabase
+    .from("lists")
+    .select(
+      `
+      id,
+      created_at,
+      title,
+      visibility,
+      description,
+      likes,
+      dislikes,
+      comment_count,
+      profile:profiles(id, username, avatar),
+      games:list_games(
+        game:games(id, slug, name, cover)
+      )
+    `
+    )
+    .eq("id", listID)
+    .eq("user_id", userID)
+    .order("created_at", { referencedTable: "list_games", ascending: false });
 
+  const { data, error } = await query.single();
+
+  if (error) {
+    console.error("Error fetching list :", error);
+    return null;
+  }
+
+  if (!data) return null;
+  const tags = await getPostTags("list", listID);
+
+  const mappedData: List = {
+    ...data,
+    profile: Array.isArray(data.profile) ? data.profile[0] : data.profile,
+    tags: (Array.isArray(tags) ? tags.flat() : []) as Tag[],
+    games: (data.games ?? []).map((g: any) => g.game), // flatten list_games -> games
+  };
+  return mappedData;
+};
 export const getListByID = async (
   listID: number,
   isPreview: boolean = false
@@ -465,6 +505,36 @@ export const addGameToList = async (game_id: number, list_id: number) => {
   return data;
 };
 
+export const batchUpdateGamesToList = async (
+  oldGames: GamePreview[],
+  games: GamePreview[],
+  list_id: number
+) => {
+  // convert to sets for easy compare, ensures uniqueness
+  const oldSet = new Set(oldGames.flatMap((game) => game.id));
+  const newSet = new Set(games.flatMap((game) => game.id));
+  // if both sets are equal, no updates
+  const eqSet = (xs: Set<number>, ys: Set<number>) =>
+    xs.size === ys.size && [...xs].every((x) => ys.has(x));
+  console.log(oldSet, newSet);
+  if (eqSet(oldSet, newSet)) return;
+
+  const gamesToRemove = [...oldSet].filter((id) => !newSet.has(id));
+  const gameIDsToAdd = [...newSet].filter((id) => !oldSet.has(id));
+  console.log("game ids to add", gameIDsToAdd);
+  const gamesToAdd = games.filter((game) => gameIDsToAdd.includes(game.id));
+  console.log(games);
+  console.log("games to add", gamesToAdd);
+  await Promise.all([
+    batchAddGamesToList(gamesToAdd, list_id),
+    batchRemoveGamesFromList(gamesToRemove, list_id),
+  ]);
+
+  return {
+    added: gamesToRemove,
+    removed: gamesToAdd,
+  };
+};
 export const batchAddGamesToList = async (
   games: GamePreview[],
   list_id: number
@@ -494,6 +564,23 @@ export const batchAddGamesToList = async (
   return data;
 };
 
+export const batchRemoveGamesFromList = async (
+  gameIDs: number[],
+  list_id: number
+) => {
+  const { data, error } = await supabase
+    .from("list_games")
+    .delete()
+    .eq("list_id", list_id)
+    .in("game_id", gameIDs);
+
+  if (error) {
+    console.error("Error removing games", error);
+    throw error;
+  }
+  return data;
+};
+
 //add game to default list by type
 // export const addGameByType = async (
 //   game_id: number,
@@ -511,14 +598,19 @@ export const batchAddGamesToList = async (
 export const updateList = async (
   user_id: string,
   list_id: number,
+  oldGames: GamePreview[],
+  games: GamePreview[],
+  oldTagIDs: number[],
+  newTags: string[],
+
   updates: {
     title: string;
-    tags: string[];
     visibility: ListVisibility;
     description: string;
   }
 ) => {
-  const { data, error } = await supabase
+  // update basic list info (title, visibility, description)
+  const { data: list, error } = await supabase
     .from("lists")
     .update(updates)
     .eq("id", list_id)
@@ -529,7 +621,14 @@ export const updateList = async (
     console.error("Error Updating List", error);
     throw error;
   }
-  return data;
+  // updating new tags if any
+  // upsert tags
+  const tagRows = await upsertTags(newTags);
+  const newTagIDs = tagRows.flatMap((tag) => tag.id);
+
+  await batchUpdatePostTags(oldTagIDs, newTagIDs, "list", list_id);
+  await batchUpdateGamesToList(oldGames, games, list_id);
+  return { ...list, tags: newTagIDs };
 };
 
 // change position of game in list

@@ -121,6 +121,7 @@ export const createTag = async (
 
 export const upsertTags = async (tags: string[]) => {
   // prepare rows
+  if (tags.length == 0) return [];
   const rows = tags.map((name) => ({
     name,
     type: "community",
@@ -223,18 +224,56 @@ export const addTag = async (
 
 // Add multiple tags in one request
 export const batchAddTags = async (
-  tags: { tag_id: number; parent_type: taggableContent; parent_id: number }[]
+  tags: number[],
+  parent_type: taggableContent,
+  parent_id: number
 ) => {
-  const { data, error } = await supabase
-    .from("tag_links")
-    .insert(tags)
-    .select();
+  const tagLinks = tags.map((tag) => ({
+    parent_type,
+    parent_id,
+    tag_id: tag,
+  }));
 
+  const { data, error } = await supabase.from("tag_links").insert(tagLinks);
   if (error) {
     console.error("Error adding tags: ", error);
     throw error;
   }
   return data;
+};
+
+export const batchUpdatePostTags = async (
+  oldTagIDs: number[],
+  newTagIDs: number[],
+  postType: taggableContent,
+  postID: number
+) => {
+  // convert to sets for easy compare, ensures uniqueness
+  const oldSet = new Set(oldTagIDs);
+  const newSet = new Set(newTagIDs);
+  // if both sets are equal, no updates
+  const eqSet = (xs: Set<number>, ys: Set<number>) =>
+    xs.size === ys.size && [...xs].every((x) => ys.has(x));
+
+  console.log(oldSet, newSet);
+  if (eqSet(oldSet, newSet)) return;
+  // if oldtagid not in newtag then delete
+  const tagsToRemove = [...oldSet].filter((id) => !newSet.has(id));
+  // if oldtagid in newtag, do nothing (keep it there)
+  // if new tag not in old tag add it
+  const tagsToAdd = [...newSet].filter((id) => !oldSet.has(id));
+  // if old is [1,2,3]
+  // and new is [1,4,5]
+  // remove 2,3 add 4,5
+
+  await Promise.all([
+    batchAddTags(tagsToAdd, postType, postID),
+    batchRemoveTags(tagsToRemove, postType, postID),
+  ]);
+  return {
+    added: tagsToAdd,
+    removed: tagsToRemove,
+  };
 };
 export const removeTag = async (id: number) => {
   const { data, error } = await supabase
@@ -249,11 +288,17 @@ export const removeTag = async (id: number) => {
 };
 
 // Remove multiple tags by their IDs
-export const batchRemoveTags = async (ids: number[]) => {
+export const batchRemoveTags = async (
+  TagIDs: number[],
+  postType: taggableContent,
+  postID: number
+) => {
   const { data, error } = await supabase
     .from("tag_links")
     .delete()
-    .in("id", ids);
+    .eq("parent_type", postType)
+    .eq("parent_id", postID)
+    .in("tag_id", TagIDs);
 
   if (error) {
     console.error("Error removing tags: ", error);

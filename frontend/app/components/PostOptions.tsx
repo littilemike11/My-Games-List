@@ -24,9 +24,7 @@ const PostOptions: React.FC<{
           {userID == ownerID ? (
             <>
               <li>
-                <Link href={`/user/${ownerName}/${postType}/${postID}/edit`}>
-                  Edit
-                </Link>
+                <Link href={`/profile/${postType}/${postID}/edit`}>Edit</Link>
               </li>
               {/* delete modal */}
               <li>
