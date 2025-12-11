@@ -42,7 +42,7 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
                 postType="review"
                 postID={review.id}
                 ownerID={review.profile?.id}
-                ownerName={review.profile.username}
+                ownerName={review.profile?.username}
               />
             </div>
           </div>

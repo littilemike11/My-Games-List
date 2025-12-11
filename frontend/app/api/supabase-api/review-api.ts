@@ -1,5 +1,11 @@
 import supabase from "@/app/utils/supabase/client";
-import { getPostTags, getTagsByName } from "./tag-api";
+import {
+  batchUpdatePostTags,
+  getPostTags,
+  getTagsByName,
+  upsertTags,
+} from "./tag-api";
+import { Tag } from "@/app/types/models";
 export const getReviews = async (
   limit: number = 5,
   sortBy: "likes" | "comments" | "date" = "likes",
@@ -179,6 +185,31 @@ export const getReviewsByUser = async (id: string) => {
   return mappedData;
 };
 
+export const getOwnReviewByID = async (user_id: string, reviewID: number) => {
+  const { data, error } = await supabase
+    .from("reviews")
+    .select(
+      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(id,username,avatar),game:games(id,name,cover,slug)"
+    )
+    .eq("id", reviewID)
+    .eq("user_id", user_id)
+    .maybeSingle();
+  if (error) {
+    console.log("Error fetching review: ", error);
+    throw error;
+  }
+  if (!data) return null;
+  const tags = await getPostTags("review", reviewID);
+
+  const mappedData = {
+    ...data,
+    profile: data.profile?.[0] ?? data.profile,
+    game: data.game?.[0] ?? data.game,
+    tags: (Array.isArray(tags) ? tags.flat() : []) as Tag[],
+  };
+  return mappedData;
+};
+
 export const createReview = async (
   title: string,
   content: string,
@@ -233,7 +264,10 @@ export const createReview = async (
 export const updateReview = async (
   id: number,
   user_id: string,
+  oldTagIDs: number[],
+  tags: string[],
   updates: {
+    // game_id: number;
     title?: string;
     content?: string;
     rating?: number;
@@ -241,18 +275,24 @@ export const updateReview = async (
     hours_played?: number;
   }
 ) => {
-  const { data, error } = await supabase
+  const { data: review, error } = await supabase
     .from("reviews")
-    .upsert(updates)
+    .update(updates)
     .eq("id", id)
     .eq("user_id", user_id)
     .select()
     .single();
   if (error) {
-    console.log("Error updating:", error);
+    console.error("Error Updating review", error);
     throw error;
   }
-  return data;
+  // updating new tags if any
+  // upsert tags
+  const tagRows = await upsertTags(tags);
+  const newTagIDs = tagRows.flatMap((tag) => tag.id);
+
+  await batchUpdatePostTags(oldTagIDs, newTagIDs, "review", id);
+  return { ...review, tags: newTagIDs };
 };
 
 export const deleteReview = async (id: number, user_id: string) => {

@@ -215,7 +215,7 @@ export const getOwnListByID = async (listID: number, userID: string) => {
     .eq("user_id", userID)
     .order("created_at", { referencedTable: "list_games", ascending: false });
 
-  const { data, error } = await query.single();
+  const { data, error } = await query.maybeSingle();
 
   if (error) {
     console.error("Error fetching list :", error);

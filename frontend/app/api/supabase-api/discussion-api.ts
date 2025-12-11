@@ -1,10 +1,13 @@
 import supabase from "@/app/utils/supabase/client";
 import {
+  batchUpdatePostTags,
   getPostsByTags,
   getPostTags,
   getTagsByName,
   upsertTags,
 } from "./tag-api";
+import { Tag } from "@/app/types/models";
+import { batchUpdateGamesToList } from "./list-api";
 
 export const getDiscussions = async (
   limit: number = 5,
@@ -168,7 +171,34 @@ export const getDiscussionByID = async (discussionID: number) => {
   const mappedData = {
     ...data,
     profile: data.profile?.[0] ?? data.profile,
-    tags: tags[0] ?? tags,
+    tags: (Array.isArray(tags) ? tags.flat() : []) as Tag[],
+  };
+  return mappedData;
+};
+
+export const getOwnDiscussionByID = async (
+  user_id: string,
+  discussionID: number
+) => {
+  const { data, error } = await supabase
+    .from("discussions")
+    .select(
+      "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(id,username,avatar)"
+    )
+    .eq("id", discussionID)
+    .eq("user_id", user_id)
+    .maybeSingle();
+  if (error) {
+    console.log("Error fetching: ", error);
+    throw error;
+  }
+  if (!data) return null;
+  const tags = await getPostTags("discussion", discussionID);
+
+  const mappedData = {
+    ...data,
+    profile: data.profile?.[0] ?? data.profile,
+    tags: (Array.isArray(tags) ? tags.flat() : []) as Tag[],
   };
   return mappedData;
 };
@@ -217,13 +247,14 @@ export const createDiscussion = async ({
 export const updateDiscussion = async (
   id: number,
   user_id: string,
+  oldTagIDs: number[],
+  tags: string[],
   updates: {
     title: string;
     content: string;
-    tags: string[];
   }
 ) => {
-  const { data, error } = await supabase
+  const { data: discussion, error } = await supabase
     .from("discussions")
     .update(updates)
     .eq("id", id)
@@ -234,7 +265,13 @@ export const updateDiscussion = async (
     console.error("Error Updating discussion", error);
     throw error;
   }
-  return data;
+  // updating new tags if any
+  // upsert tags
+  const tagRows = await upsertTags(tags);
+  const newTagIDs = tagRows.flatMap((tag) => tag.id);
+
+  await batchUpdatePostTags(oldTagIDs, newTagIDs, "discussion", id);
+  return { ...discussion, tags: newTagIDs };
 };
 
 export const deleteDiscussion = async (id: number, user_id: string) => {
