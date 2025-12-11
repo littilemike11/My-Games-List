@@ -62,7 +62,7 @@ export default function EditReviewForm({
       console.log("Created Review:", result);
       if (result) {
         setUpdating(false);
-        router.push(`/popular/reviews`);
+        router.push(`/review/${reviewId}`);
       }
       // maybe close modal or reset form here
     } catch (error) {

@@ -94,7 +94,7 @@ export default function EditListForm({
       setOldGames(list);
       if (updatedList) {
         setUpdating(false);
-        router.push(`/popular/lists`);
+        router.push(`/list/${listID}`);
       }
     } catch (error) {
       console.error("Error in handleSubmit:", error);

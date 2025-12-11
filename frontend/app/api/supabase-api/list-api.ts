@@ -261,7 +261,7 @@ export const getListByID = async (
     query.limit(5, { referencedTable: "list_games" });
   }
 
-  const { data, error } = await query.single();
+  const { data, error } = await query.maybeSingle();
 
   if (error) {
     console.error("Error fetching list :", error);

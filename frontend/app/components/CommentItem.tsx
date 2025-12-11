@@ -1,6 +1,7 @@
 import { Comment } from "../types/models";
 import Reactions from "./Reactions";
 import CreateComment from "./CreateComment";
+import { formatDate } from "../utils/functions";
 const CommentItem: React.FC<{
   comment: Comment;
   onComment: Function;
@@ -24,10 +25,13 @@ const CommentItem: React.FC<{
             </div>
           </figure>
           <div className="flex flex-col w-full gap-1">
-            <div className="flex  items-center justify-start ">
+            <div className="flex  items-center justify-between ">
               <span className="font-semibold italic text-gray-400">
                 {comment.profile?.username}
               </span>
+              <time className="opacity-50">
+                {formatDate(comment.created_at)}
+              </time>
             </div>
             <p className="font-medium">{comment.body}</p>
             {/* Likes: {comment.likes} | Dislikes: {comment.dislikes} */}

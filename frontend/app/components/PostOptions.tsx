@@ -8,8 +8,8 @@ const PostOptions: React.FC<{
   postType: taggableContent;
   postID: number;
   ownerID: string;
-  ownerName: string;
-}> = ({ postType, postID, ownerID, ownerName }) => {
+  // ownerName: string;
+}> = ({ postType, postID, ownerID }) => {
   const { session } = useAuth();
   const userID = session?.user.id;
   console.log(ownerID);

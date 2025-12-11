@@ -15,7 +15,7 @@ const ListItem: React.FC<{
           <div className="flex justify-between">
             <Link
               className="link link-hover decoration-primary"
-              href={`/user/${list.profile.username}/list/${list.id}`}
+              href={`/list/${list.id}`}
             >
               <h3 className="text-xl font-bold text-primary">{list.title}</h3>
             </Link>
@@ -23,7 +23,7 @@ const ListItem: React.FC<{
               postType="list"
               postID={list.id}
               ownerID={list.profile.id}
-              ownerName={list.profile.username}
+              // ownerName={list.profile.username}
             />
           </div>
 

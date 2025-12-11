@@ -74,7 +74,7 @@ export const getReviewByID = async (reviewID: number) => {
     ...data,
     profile: data.profile?.[0] ?? data.profile,
     game: data.game?.[0] ?? data.game,
-    tags: tags[0] ?? tags,
+    tags: (Array.isArray(tags) ? tags.flat() : []) as Tag[],
   };
 
   return mappedData;

@@ -54,7 +54,7 @@ export default function EditDiscussionForm({
       console.log("Created discussion:", result);
       if (result) {
         setUpdating(false);
-        router.push(`/user/${username}/discussion/${discussionId}`);
+        router.push(`/discussion/${discussionId}`);
       }
       // maybe close modal or reset form here
     } catch (error) {

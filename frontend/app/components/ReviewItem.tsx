@@ -18,7 +18,7 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
 
   return (
     <>
-      <div className="card card-side bg-base-100 w-full h-full rounded-lg border border-base-200 hover:shadow-lg shadow-sm transition-all duration-200">
+      <div className="card card-side bg-base-100 w-full h-fit rounded-lg border border-base-200 hover:shadow-lg shadow-sm transition-all duration-200">
         {/* game cover img Optional */}
         {showCover && (
           <figure className="flex-shrink-0 w-24 sm:w-40 h-32 sm:h-52">
@@ -31,7 +31,7 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
           <div className="flex justify-between">
             <Link
               className="link link-hover decoration-primary"
-              href={`/user/${review.profile?.username}/review/${review.id}`}
+              href={`/review/${review.id}`}
             >
               <h2 className="card-title text-primary line-clamp-2 text-pretty font-bold">
                 {review.title}
@@ -42,7 +42,7 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
                 postType="review"
                 postID={review.id}
                 ownerID={review.profile?.id}
-                ownerName={review.profile?.username}
+                // ownerName={review.profile?.username}
               />
             </div>
           </div>

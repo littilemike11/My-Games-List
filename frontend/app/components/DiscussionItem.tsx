@@ -16,7 +16,7 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
           <div className="flex justify-between">
             <Link
               className="link link-hover decoration-primary"
-              href={`/user/${discussion.profile?.username}/discussion/${discussion.id}`}
+              href={`/discussion/${discussion.id}`}
             >
               <h2 className="card-title text-primary line-clamp-2 font-bold">
                 {discussion.title}
@@ -26,7 +26,7 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
               postType="discussion"
               postID={discussion.id}
               ownerID={discussion.profile.id}
-              ownerName={discussion.profile.username}
+              // ownerName={discussion.profile.username}
             />
           </div>
 

@@ -160,7 +160,7 @@ export const getDiscussionByID = async (discussionID: number) => {
       "id,created_at,title,content,likes,dislikes,comment_count,tags,profile:profiles(id,username,avatar)"
     )
     .eq("id", discussionID)
-    .single();
+    .maybeSingle();
   if (error) {
     console.log("Error fetching: ", error);
     throw error;
