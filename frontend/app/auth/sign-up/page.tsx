@@ -57,6 +57,7 @@ export default function SignUpPage() {
         setLoading(false);
         return;
       }
+      setLoading(false);
       redirect("/welcome");
 
       // No need to manually insert into profiles or call createDefaultLists()
@@ -77,6 +78,7 @@ export default function SignUpPage() {
     // ideally redirect to the page you tried to go to previously
     redirect("/");
   };
+
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">

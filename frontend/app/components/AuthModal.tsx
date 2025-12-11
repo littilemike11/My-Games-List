@@ -61,6 +61,9 @@ export default function AuthModal({
         setLoading(false);
         return;
       }
+      setLoading(false);
+      clear();
+      onClose();
       redirect("/welcome");
 
       // No need to manually insert into profiles or call createDefaultLists()
@@ -71,15 +74,24 @@ export default function AuthModal({
         email,
         password,
       });
+      setLoading(false);
       if (signInError) {
         setError(signInError.message);
       } else {
+        clear();
         onClose();
       }
     }
     setLoading(false);
     // ideally redirect to the page you tried to go to previously
     // redirect("/");
+  };
+
+  const clear = () => {
+    setEmail("");
+    setUsername("");
+    setPassword("");
+    setConfirmPassword("");
   };
 
   return (
