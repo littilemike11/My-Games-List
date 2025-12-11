@@ -26,7 +26,7 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
               postType="discussion"
               postID={discussion.id}
               ownerID={discussion.profile.id}
-              // ownerName={discussion.profile.username}
+              ownerName={discussion.profile.username}
             />
           </div>
 

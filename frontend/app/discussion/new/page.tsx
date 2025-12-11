@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { createDiscussion } from "@/app/api/supabase-api/discussion-api";
 import { useAuth } from "@/app/auth/auth-context";
+import { useRouter } from "next/navigation";
+
 import TagSection from "@/app/components/TagSection";
 const CreateDiscussion = () => {
   const [tags, setTags] = useState<string[]>([]);
@@ -10,8 +12,11 @@ const CreateDiscussion = () => {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const router = useRouter();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); // 🚫 stop page refresh
+
     try {
       if (!title || !content || !session) return;
       const result = await createDiscussion({
@@ -23,6 +28,9 @@ const CreateDiscussion = () => {
 
       console.log("Created discussion:", result);
       // maybe close modal or reset form here
+      if (result) {
+        router.push(`/discussion/${result.id}`);
+      }
     } catch (error) {
       console.error("Error in handleSubmit:", error);
       alert("Something went wrong. Check console for details.");

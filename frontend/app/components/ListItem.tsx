@@ -23,7 +23,7 @@ const ListItem: React.FC<{
               postType="list"
               postID={list.id}
               ownerID={list.profile.id}
-              // ownerName={list.profile.username}
+              ownerName={list.profile.username}
             />
           </div>
 
