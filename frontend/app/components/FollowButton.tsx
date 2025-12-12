@@ -54,7 +54,7 @@ const FollowButton: React.FC<{ playerID: string }> = ({ playerID }) => {
 
   if (isOwnProfile) {
     return (
-      <button className="btn btn-disabled">
+      <button aria-disabled className="btn w-fit btn-disabled">
         It's a Me, {profile?.username}
       </button>
     );

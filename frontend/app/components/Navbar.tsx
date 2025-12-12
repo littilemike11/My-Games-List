@@ -73,60 +73,6 @@ const Navbar = () => {
         </div>
         <div className="navbar-center hidden lg:block xl:ml-64">
           <Search />
-          {/* <ul className="menu menu-horizontal px-1">
-            
-            <li>
-              <Link className="text-xs" href={"/search"}>
-                <svg
-                  className="h-[1em] opacity-50"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                >
-                  <g
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                    strokeWidth="2.5"
-                    fill="none"
-                    stroke="currentColor"
-                  >
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <path d="m21 21-4.3-4.3"></path>
-                  </g>
-                </svg>
-                <span className="hidden xl:flex">Search</span>
-              </Link>
-            </li>
-            <li>
-              <Link className="text-xs" href={"/games"}>
-                🎮 <span className="hidden xl:flex">Games</span>
-              </Link>
-            </li>
-            <li>
-              <Link className="text-xs" href={"/reviews"}>
-                ⭐ <span className="hidden xl:flex">Reviews</span>
-              </Link>
-            </li>
-            <li>
-              <Link className="text-xs" href={"/discussions"}>
-                💬 <span className="hidden xl:flex">Discussions</span>
-              </Link>
-            </li>
-            <li>
-              <Link className="text-xs" href={"/lists"}>
-                📜 <span className="hidden xl:flex">lists</span>
-              </Link>
-            </li>
-            <li>
-              <Link className="text-xs" href={"/players"}>
-                👥 <span className="hidden xl:flex">Players</span>
-              </Link>
-            </li>
-            <li>
-              <Link className="text-xs" href={"/news"}>
-                📰 <span className="hidden xl:flex">News</span>
-              </Link>
-            </li>
-          </ul> */}
         </div>
         <div className="navbar-end gap-2">
           <ul className="menu menu-horizontal items-center sm:gap-2">
@@ -208,6 +154,49 @@ const Navbar = () => {
                       Profile
                     </Link>
                   </li>
+                  <ul className="pl-4">
+                    <li>
+                      <Link
+                        href={`/user/${profile?.username}/reviews`}
+                        className="link link-hover"
+                      >
+                        Reviews
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href={`/user/${profile?.username}/discussions`}
+                        className="link link-hover"
+                      >
+                        Discussions
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href={`/user/${profile?.username}/lists`}
+                        className="link link-hover"
+                      >
+                        Lists
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href={`/user/${profile?.username}/followers`}
+                        className="link link-hover"
+                      >
+                        Followers
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href={`/user/${profile?.username}/following`}
+                        className="link link-hover"
+                      >
+                        Following
+                      </Link>
+                    </li>
+                  </ul>
+
                   <li>
                     <Link href={"/profile"}>Settings</Link>
                   </li>

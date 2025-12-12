@@ -46,7 +46,7 @@ const CreateDiscussion = () => {
 
       <div>
         <div>
-          <form onSubmit={handleSubmit}>
+          <form className="max-w-3xl mx-auto my-8" onSubmit={handleSubmit}>
             <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
               <legend className="fieldset-legend font-bold text-xl">
                 What's on your mind?

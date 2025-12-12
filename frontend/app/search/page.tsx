@@ -227,14 +227,14 @@ const Page = () => {
         </div>
         <div className="bg-base-300 p-4">
           <p>Search for games, tags, players, discussions, reviews and lists</p>
-          <span>Ex. </span>
+          {/* <span>Ex. </span>
           <ul className="inline-flex">
             <li>
               <a className="link link-hover" href="">
                 popular link
               </a>
             </li>
-          </ul>
+          </ul> */}
         </div>
       </div>
     </main>
