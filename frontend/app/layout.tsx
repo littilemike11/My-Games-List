@@ -27,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="emerald">
+    <html lang="en" data-theme="night">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
@@ -53,34 +53,19 @@ export default function RootLayout({
 dark
 bumblebee
 emerald
-corporate
-synthwave
-retro
-cyberpunk
-valentine
-halloween
-garden
-forest
-aqua
-lofi
-pastel
+corporate*
+
 fantasy
-wireframe
-black
-luxury
+
 dracula
-cmyk
-autumn
-business
 acid
-lemonade
+
 night
-coffee
+
 winter
 dim
-nord
-sunset
+
 caramellatte
-abyss
+
 silk
 */

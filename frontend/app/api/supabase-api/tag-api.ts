@@ -120,26 +120,44 @@ export const createTag = async (
 };
 
 export const upsertTags = async (tags: string[]) => {
-  // prepare rows
-  if (tags.length == 0) return [];
-  const rows = tags.map((name) => ({
+  if (tags.length === 0) return [];
+
+  // 1️⃣ Fetch existing tags
+  const { data: existingTags, error: fetchError } = await supabase
+    .from("tags")
+    .select("id, name, type")
+    .in("name", tags);
+
+  if (fetchError) {
+    console.error("Error fetching existing tags:", fetchError);
+    throw fetchError;
+  }
+
+  // 2️⃣ Determine which tags are new
+  const existingNames = existingTags?.map((t) => t.name) || [];
+  const newTags = tags.filter((name) => !existingNames.includes(name));
+
+  if (newTags.length === 0) return existingTags ?? [];
+
+  // 3️⃣ Prepare rows for insert
+  const rows = newTags.map((name) => ({
     name,
     type: "community",
   }));
 
-  const { data, error } = await supabase
+  // 4️⃣ Insert new tags (no upsert!)
+  const { data: insertedTags, error: insertError } = await supabase
     .from("tags")
-    .upsert(rows, {
-      onConflict: "name",
-    })
+    .insert(rows)
     .select("id, name, type");
 
-  if (error) {
-    console.error("Error upserting tags: ", error);
-    throw error;
+  if (insertError) {
+    console.error("Error inserting new tags:", insertError);
+    throw insertError;
   }
 
-  return data;
+  // 5️⃣ Return combined array of existing + newly inserted
+  return [...(existingTags ?? []), ...(insertedTags ?? [])];
 };
 
 // users can only update tag description

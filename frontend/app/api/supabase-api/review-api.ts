@@ -239,7 +239,7 @@ export const createReview = async (
 
   // Step 2: get tag ids
 
-  const tagRows = await getTagsByName(tags);
+  const tagRows = await upsertTags(tags);
 
   // if (tagError) throw tagError;
 

@@ -26,6 +26,7 @@ export interface Profile {
   username: string;
   avatar: string;
   bio?: string;
+  is_admin: boolean;
 }
 
 export interface ProfilePreview {
