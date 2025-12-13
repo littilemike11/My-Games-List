@@ -62,7 +62,7 @@ export const searchPlayers = async (query: string, limit: number = 5) => {
 export const getPlayerByID = async (userID: string) => {
   const { data, error } = await supabase
     .from("profiles")
-    .select("id,created_at,username,avatar,bio,total_xp")
+    .select("id,created_at,username,avatar,bio,total_xp,is_admin")
     .eq("id", userID)
     .single();
   if (error) {
@@ -75,7 +75,7 @@ export const getPlayerByID = async (userID: string) => {
 export const getPlayerByName = async (username: string) => {
   const { data, error } = await supabase
     .from("profiles")
-    .select("id,created_at,username,avatar,bio,total_xp")
+    .select("id,created_at,username,avatar,bio,total_xp,is_admin")
     .ilike("username", username)
     .single();
   if (error) {

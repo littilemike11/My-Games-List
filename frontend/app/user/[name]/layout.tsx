@@ -139,7 +139,7 @@ export default function UserLayout({
             </div>
           </div>
         </div>
-        <p className="text-sm text-base-content/70">{profile?.bio}</p>
+        <p className="text-sm text-base-content/70">{userProfile?.bio}</p>
 
         {/* Top-level tabs */}
         <nav className="flex gap-6 border-b border-base-300">
