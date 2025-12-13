@@ -1,4 +1,4 @@
-import { tagableContent } from "@/app/types/models";
+import { taggableContent } from "@/app/types/models";
 import supabase from "@/app/utils/supabase/client";
 
 // search tags
@@ -77,7 +77,7 @@ export const getTag = async (tagName: string) => {
     .from("tags")
     .select("id,name,description,type")
     .eq("name", tagName)
-    .single();
+    .maybeSingle();
   if (error) {
     console.error("Error fetching games: ", error);
     throw error;
@@ -120,25 +120,44 @@ export const createTag = async (
 };
 
 export const upsertTags = async (tags: string[]) => {
-  // prepare rows
-  const rows = tags.map((name) => ({
+  if (tags.length === 0) return [];
+
+  // 1️⃣ Fetch existing tags
+  const { data: existingTags, error: fetchError } = await supabase
+    .from("tags")
+    .select("id, name, type")
+    .in("name", tags);
+
+  if (fetchError) {
+    console.error("Error fetching existing tags:", fetchError);
+    throw fetchError;
+  }
+
+  // 2️⃣ Determine which tags are new
+  const existingNames = existingTags?.map((t) => t.name) || [];
+  const newTags = tags.filter((name) => !existingNames.includes(name));
+
+  if (newTags.length === 0) return existingTags ?? [];
+
+  // 3️⃣ Prepare rows for insert
+  const rows = newTags.map((name) => ({
     name,
     type: "community",
   }));
 
-  const { data, error } = await supabase
+  // 4️⃣ Insert new tags (no upsert!)
+  const { data: insertedTags, error: insertError } = await supabase
     .from("tags")
-    .upsert(rows, {
-      onConflict: "name",
-    })
+    .insert(rows)
     .select("id, name, type");
 
-  if (error) {
-    console.error("Error upserting tags: ", error);
-    throw error;
+  if (insertError) {
+    console.error("Error inserting new tags:", insertError);
+    throw insertError;
   }
 
-  return data;
+  // 5️⃣ Return combined array of existing + newly inserted
+  return [...(existingTags ?? []), ...(insertedTags ?? [])];
 };
 
 // users can only update tag description
@@ -162,7 +181,7 @@ export const updateTagDescription = async (
 
 //get all tags from a post
 export const getPostTags = async (
-  parent_type: tagableContent,
+  parent_type: taggableContent,
   parent_id: number
 ) => {
   const { data, error } = await supabase
@@ -181,7 +200,7 @@ export const getPostTags = async (
 //tags cannot be deleted by users only admins
 export const getPostsByTags = async (
   tagIds: number[],
-  parent_type: tagableContent
+  parent_type: taggableContent
 ) => {
   const { data, error } = await supabase
     .from("tag_links")
@@ -197,7 +216,7 @@ export const getPostsByTags = async (
 
 export const addTag = async (
   tag_id: number,
-  parent_type: tagableContent,
+  parent_type: taggableContent,
   parent_id: Number
 ) => {
   const { count } = await supabase
@@ -223,18 +242,56 @@ export const addTag = async (
 
 // Add multiple tags in one request
 export const batchAddTags = async (
-  tags: { tag_id: number; parent_type: tagableContent; parent_id: number }[]
+  tags: number[],
+  parent_type: taggableContent,
+  parent_id: number
 ) => {
-  const { data, error } = await supabase
-    .from("tag_links")
-    .insert(tags)
-    .select();
+  const tagLinks = tags.map((tag) => ({
+    parent_type,
+    parent_id,
+    tag_id: tag,
+  }));
 
+  const { data, error } = await supabase.from("tag_links").insert(tagLinks);
   if (error) {
     console.error("Error adding tags: ", error);
     throw error;
   }
   return data;
+};
+
+export const batchUpdatePostTags = async (
+  oldTagIDs: number[],
+  newTagIDs: number[],
+  postType: taggableContent,
+  postID: number
+) => {
+  // convert to sets for easy compare, ensures uniqueness
+  const oldSet = new Set(oldTagIDs);
+  const newSet = new Set(newTagIDs);
+  // if both sets are equal, no updates
+  const eqSet = (xs: Set<number>, ys: Set<number>) =>
+    xs.size === ys.size && [...xs].every((x) => ys.has(x));
+
+  console.log(oldSet, newSet);
+  if (eqSet(oldSet, newSet)) return;
+  // if oldtagid not in newtag then delete
+  const tagsToRemove = [...oldSet].filter((id) => !newSet.has(id));
+  // if oldtagid in newtag, do nothing (keep it there)
+  // if new tag not in old tag add it
+  const tagsToAdd = [...newSet].filter((id) => !oldSet.has(id));
+  // if old is [1,2,3]
+  // and new is [1,4,5]
+  // remove 2,3 add 4,5
+
+  await Promise.all([
+    batchAddTags(tagsToAdd, postType, postID),
+    batchRemoveTags(tagsToRemove, postType, postID),
+  ]);
+  return {
+    added: tagsToAdd,
+    removed: tagsToRemove,
+  };
 };
 export const removeTag = async (id: number) => {
   const { data, error } = await supabase
@@ -249,11 +306,17 @@ export const removeTag = async (id: number) => {
 };
 
 // Remove multiple tags by their IDs
-export const batchRemoveTags = async (ids: number[]) => {
+export const batchRemoveTags = async (
+  TagIDs: number[],
+  postType: taggableContent,
+  postID: number
+) => {
   const { data, error } = await supabase
     .from("tag_links")
     .delete()
-    .in("id", ids);
+    .eq("parent_type", postType)
+    .eq("parent_id", postID)
+    .in("tag_id", TagIDs);
 
   if (error) {
     console.error("Error removing tags: ", error);

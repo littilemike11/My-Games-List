@@ -10,23 +10,23 @@ export const ProfileItem: React.FC<{
   return (
     <>
       <div>
-        <div className="card bg-base-100 w-96 shadow-sm">
-          <figure className="flex flex-col">
+        <div className="card py-2 w-48 shadow-sm bg-gradient-to-b from-base-200 to-base-100 hover:scale-[1.02] hover:shadow-xl transition-all duration-200">
+          <figure>
             <div
               className="radial-progress text-accent"
               style={
                 {
                   "--value": getLevelProgress(profile.total_xp), // % toward next level
-                  "--size": "7rem",
-                  "--thickness": "8px",
+                  "--size": "5rem",
+                  "--thickness": "6px",
                 } as React.CSSProperties
               }
             >
-              <div className="avatar avatar-placeholder">
-                <span className="badge badge-primary absolute right-0">
+              <div className="avatar  avatar-placeholder">
+                <span className="badge badge-primary badge-sm absolute right-0">
                   Lvl {getLevel(profile.total_xp)}
                 </span>
-                <div className="bg-neutral text-neutral-content w-24 rounded-full">
+                <div className="bg-neutral text-neutral-content size-16 rounded-full">
                   <span className="text-3xl">
                     {profile.username[0].toUpperCase()}
                   </span>
@@ -38,17 +38,15 @@ export const ProfileItem: React.FC<{
           <div className="card-body items-center text-center">
             <h2 className="card-title">
               <Link
-                className="italic link link-hover"
+                className="italic capitalize link link-hover"
                 href={`/user/${profile.username}`}
               >
                 {profile.username}
               </Link>
             </h2>
             {/* bio */}
-            <p className="line-clamp-2">
-              A card component has a figure, a body part, and inside body there
-              are title and actions parts
-            </p>
+            {profile.bio && <p className="line-clamp-2">{profile.bio}</p>}
+
             <div className="card-actions">
               <FollowButton playerID={profile.id} />
             </div>

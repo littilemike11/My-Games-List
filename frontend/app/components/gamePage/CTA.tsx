@@ -113,15 +113,15 @@ const CTA: React.FC<CTAProps> = ({ game, gameID }) => {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row items-center gap-6">
+      <div className="flex justify-center gap-2 sm:gap-6">
         <CreateReview game={game}></CreateReview>
         <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
 
-        <div className="join">
+        <div className="join items-start">
           {/* Primary button for the first status (wishlist in this example) */}
           <button
             onClick={() => toggleGameStatus("wishlist")}
-            className="btn btn-primary btn-lg join-item"
+            className="btn btn-primary btn-sm md:btn-md join-item"
           >
             {gameStatus.wishlist ? "📝 Wishlisted" : "📝 Wishlist Now"}
           </button>
@@ -132,7 +132,7 @@ const CTA: React.FC<CTAProps> = ({ game, gameID }) => {
               title="Add to other gameStatus"
               tabIndex={0}
               role="button"
-              className="btn btn-lg btn-primary rounded-r-full"
+              className="btn border btn-sm md:btn-md btn-primary rounded-r-full"
             >
               <FaChevronDown />
             </div>

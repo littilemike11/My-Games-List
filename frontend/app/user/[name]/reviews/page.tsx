@@ -1,7 +1,7 @@
 import { getReviewsByUser } from "@/app/api/supabase-api/review-api";
-import PostList from "@/app/components/PostList";
 import { Review } from "@/app/types/models";
 import { getPlayerByName } from "@/app/api/supabase-api/profile-api";
+import ReviewItem from "@/app/components/ReviewItem";
 interface ReviewsPageProps {
   params: { name: string };
 }
@@ -14,12 +14,16 @@ export default async function ReviewsPage({ params }: ReviewsPageProps) {
 
   return (
     <div className="mx-4 sm:mx-[2rem]">
-      <h2 className="text-2xl mb-4">
+      <h2 className="text-2xl mb-6 pb-2 border-b">
         {username}'s Reviews ({reviews.length})
       </h2>
       <div className="divider"></div>
       {reviews.length > 0 ? (
-        <PostList posts={reviews} type="Review" />
+        <div className="flex flex-col space-y-10">
+          {reviews.map((review) => (
+            <ReviewItem key={review.id} review={review} />
+          ))}
+        </div>
       ) : (
         <p>{username} has not posted any reviews yet</p>
       )}

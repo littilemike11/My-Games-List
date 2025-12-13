@@ -1,11 +1,5 @@
-import {
-  getListsByUser,
-  getUserGameLists,
-} from "@/app/api/supabase-api/list-api";
-import {
-  getPlayerByName,
-  getPlayerIdByName,
-} from "@/app/api/supabase-api/profile-api";
+import { getListsByUser } from "@/app/api/supabase-api/list-api";
+import { getPlayerIdByName } from "@/app/api/supabase-api/profile-api";
 import ListItem from "@/app/components/ListItem";
 import { List } from "@/app/types/models";
 interface ListsPageProps {
@@ -21,14 +15,22 @@ export default async function ListsPage({ params }: ListsPageProps) {
 
   return (
     <>
-      <h1 className="text-3xl mb-4">Lists</h1>
-      {/* <CreateList /> */}
-      <div>
-        {lists.length > 0 ? (
-          lists.map((list, index) => <ListItem key={index} list={list} />)
-        ) : (
-          <p>{username} has not posted any lists yet</p>
-        )}
+      <div className="mx-4 sm:mx-[2rem]">
+        <h2 className="text-2xl mb-6 pb-2 border-b">
+          {username}'s Lists ({lists.length})
+        </h2>
+        {/* <CreateList /> */}
+        <div>
+          {lists.length > 0 ? (
+            <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6 ">
+              {lists.map((list, index) => (
+                <ListItem key={index} list={list} />
+              ))}
+            </div>
+          ) : (
+            <p>{username} has not posted any lists yet</p>
+          )}
+        </div>
       </div>
       {/* featured, popular this week, recently liked, crew picks */}
     </>

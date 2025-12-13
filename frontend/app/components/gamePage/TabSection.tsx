@@ -1,5 +1,11 @@
 "use client";
-import { Discussion, Game, GamePreview, Review } from "@/app/types/models";
+import {
+  Discussion,
+  Game,
+  GamePreview,
+  List,
+  Review,
+} from "@/app/types/models";
 import { getReviewsByGame } from "@/app/api/supabase-api/review-api";
 import { useEffect, useState } from "react";
 import GamePreviewLink from "../GamePreviewLink";
@@ -11,28 +17,45 @@ import {
   getDiscussionsByTags,
 } from "@/app/api/supabase-api/discussion-api";
 import DiscussionItem from "../DiscussionItem";
+import { getListsByGame } from "@/app/api/supabase-api/list-api";
+import ListItem from "../ListItem";
+import CreateList from "../CreateList";
 type TabProps = {
   game: Game;
+  gameID: number;
   screenshots: string[];
+  artwork: string[];
+  videos: {
+    name?: string;
+    url: string;
+  }[];
   similarGames: GamePreview[];
   franchise: GamePreview[];
 };
 const TabSection: React.FC<TabProps> = ({
   game,
+  gameID,
   screenshots,
+  artwork,
+  videos,
   similarGames,
   franchise,
 }) => {
+  console.log(gameID);
   const tabs = [
     "Reviews",
     "Discussions",
+    "Lists",
     "Screenshots",
+    "Artwork",
+    "Videos",
     "Similar Games",
     "Related Content",
   ];
   const [activeTab, setActiveTab] = useState("Reviews");
   const [reviews, setReviews] = useState<Review[]>([]);
   const [discussions, setDiscussions] = useState<Discussion[]>([]);
+  const [lists, setLists] = useState<List[]>([]);
   const fetchReviews = async () => {
     const response = await getReviewsByGame(game.slug);
     console.log("id", game.slug);
@@ -47,9 +70,16 @@ const TabSection: React.FC<TabProps> = ({
     console.log("discussions", response);
     setDiscussions(response);
   };
+  const fetchLists = async () => {
+    const response = await getListsByGame(gameID);
+    console.log("id", gameID);
+    console.log(response);
+    setLists(response ?? []);
+  };
   useEffect(() => {
     fetchReviews();
     fetchDiscussions();
+    fetchLists();
   }, []);
   // const reviews: Review[] = await getReviewsByGame();
   const renderTabContent = () => {
@@ -80,6 +110,19 @@ const TabSection: React.FC<TabProps> = ({
             <CreateDiscussion ctaType="button" />
           </div>
         );
+      case "Lists":
+        return lists?.length ? (
+          <div className="flex flex-col gap-4">
+            {lists.map((list) => (
+              <ListItem list={list} key={list.id} />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            <p>Be the first to add this Game to a list</p>
+            <CreateList />
+          </div>
+        );
       case "Screenshots":
         return screenshots.length ? (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -94,6 +137,37 @@ const TabSection: React.FC<TabProps> = ({
           </div>
         ) : (
           <p>No screenshots available</p>
+        );
+      case "Artwork":
+        return artwork.length ? (
+          <div className="flex flex-wrap gap-4">
+            {artwork.map((url, index) => (
+              <img
+                key={index}
+                src={url}
+                alt={`artwork-${index}`}
+                className="rounded-xl shadow-md w-full object-cover"
+              />
+            ))}
+          </div>
+        ) : (
+          <p>No Artwork available</p>
+        );
+      case "Videos":
+        return videos.length ? (
+          <div className="flex flex-wrap place-content-center gap-4">
+            {videos.map((vid, index) => (
+              <iframe
+                key={index}
+                className="w-full sm:w-96 sm:h-80  h-48"
+                // width="420"
+                // height="315"
+                src={`https://www.youtube.com/embed/${vid.url}`}
+              ></iframe>
+            ))}
+          </div>
+        ) : (
+          <p>No Videos available</p>
         );
       case "Similar Games":
         return similarGames.length ? (
@@ -126,9 +200,9 @@ const TabSection: React.FC<TabProps> = ({
   return (
     <>
       <div>
-        <div className="sticky z-10 bg-base-100 top-0">
+        <div className="sticky z-10 bg-base-100 top-16">
           {/* Mobile Dropdown */}
-          <div className="md:hidden">
+          {/* <div className="md:hidden">
             <select
               className="select select-bordered select-lg w-full "
               value={activeTab}
@@ -140,10 +214,10 @@ const TabSection: React.FC<TabProps> = ({
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
 
           {/* Desktop Tabs */}
-          <div className="hidden md:flex space-x-6   border-base-300">
+          {/* <div className="hidden md:flex space-x-6   border-base-300">
             {tabs.map((tab) => (
               <button
                 key={tab}
@@ -157,6 +231,27 @@ const TabSection: React.FC<TabProps> = ({
                 {tab}
               </button>
             ))}
+          </div> */}
+
+          <div className="w-full border-b-2 flex justify-center mt-4 mb-6">
+            <div className="overflow-x-auto max-w-full ">
+              <div role="tablist" className="tabs tabs-border min-w-max ">
+                {tabs.map((tab) => (
+                  <div
+                    key={tab}
+                    role="tab"
+                    onClick={() => setActiveTab(tab)}
+                    className={`tab px-4 transition-colors ${
+                      activeTab === tab
+                        ? "tab-active text-primary hover:text-primary border-primary"
+                        : "hover:text-primary/70"
+                    }`}
+                  >
+                    {tab}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
         {/* Tab Content */}

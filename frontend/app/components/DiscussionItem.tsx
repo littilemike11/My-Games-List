@@ -1,46 +1,55 @@
 import { Discussion } from "../types/models";
 import { formatDate } from "../utils/functions";
 import Reactions from "./Reactions";
-import CreateComment from "./CreateComment";
-import CommentItem from "./CommentItem";
 import Link from "next/link";
 import TagItem from "./TagItem";
+import Paragraph from "./Paragraph";
+import PostOptions from "./PostOptions";
 const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
   discussion,
 }) => {
-  console.log(discussion.tags);
   return (
     <>
-      <div className="card bg-base-100 w-full rounded-lg shadow-sm">
-        <div className="card-body space-y-4">
+      <div className="card bg-base-100 w-full rounded-lg border border-base-200 hover:shadow-lg shadow-sm transition-all duration-200">
+        <div className="card-body space-y-2">
           {/* Title */}
-          <Link
-            className="link link-hover"
-            href={`/user/${discussion.profile?.username}/discussion/${discussion.id}`}
-          >
-            <h2 className="card-title  line-clamp-2 font-semibold">
-              {discussion.title}
-            </h2>
-          </Link>
+          <div className="flex justify-between">
+            <Link
+              className="link link-hover decoration-primary"
+              href={`/discussion/${discussion.id}`}
+            >
+              <h2 className="card-title text-primary line-clamp-2 font-bold">
+                {discussion.title}
+              </h2>
+            </Link>
+            <PostOptions
+              postType="discussion"
+              postID={discussion.id}
+              ownerID={discussion.profile.id}
+              ownerName={discussion.profile.username}
+            />
+          </div>
 
           {/* Author info and date */}
           <div className="flex items-center justify-between text-sm ">
             <div className="flex items-center gap-3">
-              <img
-                src="https://img.daisyui.com/images/profile/demo/1@94.webp"
-                alt={`Profile of ${
-                  discussion.profile?.username || "Deleted User"
-                }`}
-                className="w-8 h-8 rounded-full object-cover"
-                loading="lazy"
-              />
               <Link
                 className="link link-hover"
                 href={`/user/${discussion.profile?.username}`}
               >
-                <span className="italic">
-                  {discussion.profile?.username || "(deleted)"}
-                </span>
+                <figure>
+                  <div className="avatar avatar-placeholder">
+                    <div className="bg-neutral text-neutral-content w-8 rounded-full">
+                      <span>
+                        {discussion.profile?.username[0].toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+
+                  <span className="ml-2 font-medium italic">
+                    {discussion.profile?.username || "(deleted)"}
+                  </span>
+                </figure>
               </Link>
             </div>
             <time className="opacity-50">
@@ -49,7 +58,9 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
           </div>
 
           {/* Content preview */}
-          <p>{discussion.content}</p>
+          <div className="font-medium">
+            <Paragraph text={discussion.content} />
+          </div>
 
           {/* Tags */}
           <div className="flex flex-wrap gap-2">
@@ -67,9 +78,7 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
               parent_type="discussion"
               parent_id={discussion.id}
             />
-            {/* <CreateComment parentType="discussion" parentID={discussion.id} /> */}
           </div>
-          {/* <CommentItem parentType="discussion" parentID={discussion.id} /> */}
         </div>
       </div>
     </>

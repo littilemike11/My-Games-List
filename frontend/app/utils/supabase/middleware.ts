@@ -57,7 +57,10 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (
-    request.nextUrl.pathname == "/list/new" &&
+    // unsigned on users cannot create lists or discussions
+    (request.nextUrl.pathname == "/list/new" ||
+      request.nextUrl.pathname.startsWith("/profile") ||
+      request.nextUrl.pathname == "/discussion/new") &&
     !user
     // !request.nextUrl.pathname.startsWith("/login") &&
     // !request.nextUrl.pathname.startsWith("/auth")

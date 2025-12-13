@@ -4,22 +4,34 @@ import GameSearch from "./GameSearch";
 import { genres, genreNames } from "../mockData/genreTags";
 import { themes, themeNames } from "../mockData/themeTags";
 import restrictedTags from "../mockData/restrictedTags";
+import { getPopularTags } from "../api/supabase-api/tag-api";
 import { Tag } from "../types/models";
 import { searchTags } from "../api/supabase-api/tag-api";
+import { useAuth } from "../auth/auth-context";
 const TagSection: React.FC<{
   canSearchGame?: boolean;
   recommendedTags?: string[];
   tags: string[];
   setTags: Function;
 }> = ({ canSearchGame = false, recommendedTags = [], tags, setTags }) => {
+  const [popularTags, setPopularTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [searchResults, setSearchResults] = useState<Tag[]>([]);
+  const [error, setError] = useState(false);
+  const { profile } = useAuth();
 
   // const [tags, setTags] = useState<string[]>(recommendedTags);
   const [expandedGroups, setExpandedGroups] = useState<{
     [key: string]: boolean;
   }>({});
 
+  useEffect(() => {
+    const fetchPopularTags = async () => {
+      const response = await getPopularTags(5, "usage", "desc");
+      setPopularTags(response.map((tag) => tag.name));
+    };
+    fetchPopularTags();
+  }, []);
   const toggleExpand = (group: string) => {
     setExpandedGroups((prev) => ({
       ...prev,
@@ -35,13 +47,17 @@ const TagSection: React.FC<{
           Recommended: recommendedTags,
         }
       : {
-          "Popular Tags": ["Hot takes", "Hidden gems", "Controversial"],
+          "Popular Tags": popularTags,
           "Give Back": ["player-feedback", "bug-report"],
           Genres: genreNames,
           Themes: themeNames,
         };
+
   const addTag = (tag: string) => {
-    console.log(tag);
+    if (restrictedTags.includes(tag) && !profile?.is_admin) {
+      setError(true);
+      return;
+    }
     const trimmed = tag.trim();
     if (trimmed && !tags.includes(trimmed)) {
       setTags([...tags, trimmed]);
@@ -69,6 +85,7 @@ const TagSection: React.FC<{
     }
   };
   useEffect(() => {
+    setError(false);
     const delay = setTimeout(() => {
       if (tagInput.length > 0) updateSearch();
     }, 400); // wait 400ms after typing stops
@@ -81,11 +98,17 @@ const TagSection: React.FC<{
       {canSearchGame && (
         <GameSearch onClickFunction={addTag} argumentType={"string"} />
       )}
+      {error && <p className="text-error">This is restricted tag</p>}
+
       <div className="join mb-4 mt-2  ">
         <div className="group relative w-full">
           <input
             value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
+            onChange={(e) =>
+              setTagInput(
+                e.target.value.replace(/[^a-zA-Z0-9_-]/g, "-") // remove disallowed chars - make it slug safe
+              )
+            }
             onKeyDown={(e) =>
               e.key === "Enter" && (e.preventDefault(), addTag(tagInput))
             }
@@ -125,7 +148,7 @@ const TagSection: React.FC<{
                           <path d="m21 21-4.3-4.3"></path>
                         </g>
                       </svg>
-                      <span>{tag.name}</span>
+                      <span className="capitalize">{tag.name}</span>
                     </button>
                   </li>
                 ))
@@ -163,7 +186,7 @@ const TagSection: React.FC<{
                   key={tag}
                   type="button"
                   className={`badge badge-outline ${
-                    tags.includes(tag)
+                    tags.includes(tag || genres[tag])
                       ? "badge-accent"
                       : "hover:bg-base-300 hover:cursor-pointer"
                   }`}

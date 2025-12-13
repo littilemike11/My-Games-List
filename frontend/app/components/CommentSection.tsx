@@ -16,11 +16,13 @@ export default function CommentSection({
   parentID,
 }: CommentSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchComments = async () => {
     const response = await getCommentsFromPost(parentType, parentID);
     console.log(response);
     setComments(response);
+    setLoading(false);
   };
   useEffect(() => {
     fetchComments();
@@ -37,12 +39,20 @@ export default function CommentSection({
         onComment={fetchComments}
       />
       <ul className=" space-y-4 ">
-        {comments.length > 0 &&
+        {loading ? (
+          <div className="flex w-52 flex-col gap-4">
+            <div className="skeleton h-40 w-full"></div>
+            <div className="skeleton h-40 w-full"></div>
+            <div className="skeleton h-40 w-full"></div>
+          </div>
+        ) : (
+          comments.length > 0 &&
           comments.map((c) => (
             <li key={c.id} className="p-4 ">
               <CommentItem onComment={fetchComments} comment={c} />
             </li>
-          ))}
+          ))
+        )}
       </ul>
       {comments.length > 0 && (
         <CreateComment

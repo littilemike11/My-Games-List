@@ -11,6 +11,7 @@ import { IGDBgenres } from "../mockData/genreTags";
 import { IGDBthemes } from "../mockData/themeTags";
 import { platforms } from "../mockData/platforms";
 import getGames from "../api/igdb-api";
+import Footer from "./Footer";
 export default function DrawerLayout({
   children,
 }: {
@@ -155,7 +156,7 @@ export default function DrawerLayout({
     <>
       <div className="drawer xl:drawer-open">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content pt-16 ">
+        <div className="drawer-content pt-16 min-h-screen">
           {/* Page content here */}
           {/* <label
             htmlFor="my-drawer-2"
@@ -166,14 +167,14 @@ export default function DrawerLayout({
           {children}
         </div>
         {/* drawer side */}
-        <div className="drawer-side pt-16 ">
+        <div className="drawer-side z-40 pt-16 ">
           <label
             htmlFor="my-drawer-2"
             aria-label="close sidebar"
             className="drawer-overlay"
           ></label>
 
-          <nav className="menu bg-base-200 text-base-content min-h-full w-80 p-4 space-y-4">
+          <nav className="menu bg-base-200 text-base-content min-h-full w-64 p-4 space-y-4">
             <ul className=" bg-base-200 rounded-box text-lg space-y-2 w-full">
               <li>
                 <Link href={"/"}>🏠 Home</Link>
@@ -197,56 +198,67 @@ export default function DrawerLayout({
                 <Link href={"/popular/players"}>👥 Players</Link>
               </li>
               <li>
-                <Link href={"/news"}>📰 News</Link>
+                <Link href={"/popular/tags"}>🏷️ Tags</Link>
               </li>
               <li>
+                <Link href={"/news"}>📰 News</Link>
+              </li>
+
+              {/* recently visited */}
+              {/* <li>
                 <details>
                   <summary>Recently Visited</summary>
                 </details>
-              </li>
-              <li>
-                <details>
-                  <summary>Tags</summary>
-                  <ul>
-                    {favTags.length > 0 &&
-                      favTags.map((tag) => (
-                        <li key={tag.id}>
-                          <TagItem tag={tag} />
-                        </li>
-                      ))}
-                  </ul>
-                </details>
-              </li>
-              <li>
-                <details>
-                  <summary>Following</summary>
-                  <ul>
-                    {following.length > 0 &&
-                      following.map((user) => (
-                        <li key={user.id}>
-                          <div className="flex gap-2 items-center">
-                            <figure>
-                              <div className="avatar avatar-placeholder">
-                                <div className="bg-neutral text-neutral-content w-8 rounded-full">
-                                  <span className="text-sm">
-                                    {user.username[0].toUpperCase()}
-                                  </span>
+              </li> */}
+              {userID && (
+                <li>
+                  <details>
+                    <summary>Followed Tags</summary>
+                    <ul>
+                      {favTags.length > 0 &&
+                        favTags.map((tag) => (
+                          <li key={tag.id}>
+                            <TagItem tag={tag} />
+                          </li>
+                        ))}
+                    </ul>
+                  </details>
+                </li>
+              )}
+              {/* following */}
+              {userID && (
+                <li>
+                  <details>
+                    <summary>Following</summary>
+                    <ul>
+                      {following.length > 0 &&
+                        following.map((user) => (
+                          <li key={user.id}>
+                            <div className="flex gap-2 items-center">
+                              <figure>
+                                <div className="avatar avatar-placeholder">
+                                  <div className="bg-neutral text-neutral-content w-8 rounded-full">
+                                    <span className="text-sm">
+                                      {user.username[0].toUpperCase()}
+                                    </span>
+                                  </div>
                                 </div>
-                              </div>
-                            </figure>
-                            <Link
-                              className="italic link link-hover"
-                              href={`/user/${user.username}`}
-                            >
-                              {user.username}
-                            </Link>
-                          </div>
-                        </li>
-                      ))}
-                  </ul>
-                </details>
-              </li>
-              <li>
+                              </figure>
+                              <Link
+                                className="italic link link-hover"
+                                href={`/user/${user.username}`}
+                              >
+                                {user.username}
+                              </Link>
+                            </div>
+                          </li>
+                        ))}
+                    </ul>
+                  </details>
+                </li>
+              )}
+              {/* personalize */}
+              {/* <li>
                 <details open>
                   <summary>Personalize</summary>
                   <ul>
@@ -281,7 +293,7 @@ export default function DrawerLayout({
                     ))}
                   </ul>
                 </details>
-              </li>
+              </li> */}
             </ul>
           </nav>
         </div>

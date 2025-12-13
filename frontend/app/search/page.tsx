@@ -23,14 +23,13 @@ import { searchLists } from "../api/supabase-api/list-api";
 import { ProfileItem } from "../components/ProfileItem";
 import DiscussionItem from "../components/DiscussionItem";
 import ListItem from "../components/ListItem";
+import { searchQuotes } from "../mockData/quotes";
 const Page = () => {
   const searchParams = useSearchParams();
-  const query = searchParams
-    .get("q")
-    ?.trim()
-    .toLowerCase()
-    .replace(/[\s+/]+/g, "-") // turn spaces, +, / into -
-    .replace(/-+/g, "-"); // collapse multiple - into one
+  const query = searchParams.get("q")?.trim();
+  // .toLowerCase()
+  // .replace(/[\s+/]+/g, "-") // turn spaces, +, / into -
+  // .replace(/-+/g, "-"); // collapse multiple - into one
 
   const [games, setGames] = useState<GamePreview[]>([]);
   const [players, setPlayers] = useState<Profile[]>([]);
@@ -75,7 +74,7 @@ const Page = () => {
             {/* Map your results here */}
             <p>Games matching "{query}"...</p>
             {games.length > 0 ? (
-              <div>
+              <div className="my-4">
                 <Carousel
                   games={games.map((game: any) => ({
                     id: game.id,
@@ -103,13 +102,11 @@ const Page = () => {
             <p>Players matching "{query}"...</p>
             {players.length > 0 ? (
               <div>
-                <ul className="list space-y-2">
+                <div className="my-4 grid grid-cols-1 md:grid-cols-2 gap-6 place-items-center">
                   {players.map((p) => (
-                    <li className="list-item" key={p.id}>
-                      <ProfileItem profile={p} />
-                    </li>
+                    <ProfileItem key={p.id} profile={p} />
                   ))}
-                </ul>
+                </div>
                 <Link
                   className="link link:hover"
                   href={`/search/players?q=${query}`}
@@ -127,7 +124,7 @@ const Page = () => {
             <p>Discussions matching "{query}"...</p>
             {discussions.length > 0 ? (
               <div>
-                <ul className="list space-y-2">
+                <ul className="my-4 list space-y-5">
                   {discussions.map((d) => (
                     <li className="list-item" key={d.id}>
                       <DiscussionItem discussion={d} />
@@ -151,7 +148,7 @@ const Page = () => {
             <p>Reviews matching "{query}"...</p>
             {reviews.length > 0 ? (
               <div>
-                <ul className="list space-y-2">
+                <ul className="my-4 list space-y-5">
                   {reviews.map((r) => (
                     <li className="list-item" key={r.id}>
                       <ReviewItem review={r} />
@@ -175,13 +172,11 @@ const Page = () => {
             <p>Lists matching "{query}"...</p>
             {lists.length > 0 ? (
               <div>
-                <ul className="list space-y-2">
+                <div className=" my-4 grid grid-cols-1 md:grid-cols-2 gap-6 ">
                   {lists.map((l) => (
-                    <li className="list-item" key={l.id}>
-                      <ListItem list={l} />
-                    </li>
+                    <ListItem key={l.id} list={l} />
                   ))}
-                </ul>
+                </div>
                 <Link
                   className="link link:hover"
                   href={`/search/lists?q=${query}`}
@@ -199,13 +194,11 @@ const Page = () => {
             <p>Tags matching "{query}"...</p>
             {tags.length > 0 ? (
               <div>
-                <ul className="list space-y-2">
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                   {tags.map((t) => (
-                    <li className="list-item" key={t.id}>
-                      <TagItem tag={t} />
-                    </li>
+                    <TagItem key={t.id} tag={t} />
                   ))}
-                </ul>
+                </div>
                 <Link
                   className="link link:hover"
                   href={`/search/tags?q=${query}`}
@@ -222,26 +215,26 @@ const Page = () => {
     );
   }
 
+  let randomQuote =
+    searchQuotes[Math.floor(Math.random() * searchQuotes.length)];
+
   // Default welcome content when no query
   return (
     <main>
       <div className="flex flex-col space-y-12 pt-4 p-4 items-center w-full">
         <div>
-          <Quote
-            content="It's dangerous to go alone! Take this."
-            origin="The Legend of Zelda"
-          />
+          <Quote content={randomQuote.text} origin={randomQuote.origin} />
         </div>
         <div className="bg-base-300 p-4">
           <p>Search for games, tags, players, discussions, reviews and lists</p>
-          <span>Ex. </span>
+          {/* <span>Ex. </span>
           <ul className="inline-flex">
             <li>
               <a className="link link-hover" href="">
                 popular link
               </a>
             </li>
-          </ul>
+          </ul> */}
         </div>
       </div>
     </main>

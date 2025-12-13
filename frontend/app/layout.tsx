@@ -27,20 +27,45 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="night">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex min-h-screen flex-col`} // ensures footer stays at the bottom of the page weven when the cntent is short
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
         <AuthProvider>
           <Navbar />
+
+          {/* Make the layout stretch */}
           <DrawerLayout>
-            <div className="mx-auto w-full sm:max-w-5/6 overflow-x-hidden">
-              {children}
+            {/* Make content expand to fill space */}
+            <div className="flex flex-col items-stretch flex-1 h-full ">
+              <div className="mx-auto w-full sm:max-w-5/6 overflow-x-hidden  flex flex-col flex-1 ">
+                {children}
+              </div>
+              <Footer />
             </div>
-            <Footer />
           </DrawerLayout>
         </AuthProvider>
       </body>
     </html>
   );
 }
+/*
+dark
+bumblebee
+emerald
+corporate*
+
+fantasy
+
+dracula
+acid
+
+night
+
+winter
+dim
+
+caramellatte
+
+silk
+*/

@@ -39,19 +39,16 @@ const Search = () => {
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
       params.set(name, value);
+      console.log(params);
       return params.toString();
     },
     [searchParams]
   );
 
   const handleSearch = (term?: string) => {
-    const validSearchInput =
-      term ??
-      searchInput
-        ?.trim()
-        .toLowerCase()
-        .replace(/[\s+/]+/g, "-") // turn spaces, +, / into -
-        .replace(/-+/g, "-"); // collapse multiple - into one
+    const validSearchInput = term ?? searchInput?.trim().toLowerCase();
+    // .replace(/[\s+/]+/g, "-") // turn spaces, +, / into -
+    // .replace(/-+/g, "-"); // collapse multiple - into one
 
     if (!validSearchInput) return;
     saveRecentSearch(validSearchInput);

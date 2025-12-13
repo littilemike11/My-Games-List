@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/auth/auth-context";
+import { useRouter } from "next/navigation";
 import {
   batchAddGamesToList,
   createList,
@@ -22,9 +23,11 @@ const page = () => {
   const [description, setDescription] = useState("");
   const [visibility, setVisibility] = useState<ListVisibility>("public");
   const userID = session?.user.id;
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // 🚫 stop page refresh
+
     try {
       if (!title || !list || !session) {
         console.log("missing something");
@@ -43,9 +46,10 @@ const page = () => {
         if (newList && list.length > 0) {
           const insertedGames = await batchAddGamesToList(list, newList.id);
           console.log("Inserted games:", insertedGames);
+          router.push(`/list/${newList.id}`);
         }
       }
-      refreshList();
+      // refreshList();
       // maybe close modal or reset form here
     } catch (error) {
       console.error("Error in handleSubmit:", error);

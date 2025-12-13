@@ -17,7 +17,14 @@ export default async function ListsPage({
         <h1 className="text-4xl text-pretty text-center font-bold">Lists</h1>
         <Tabs />
         <CreateList />
-        <div>
+        {/* <ul className="list mt-4 space-y-5">
+          {lists.map((list, index) => (
+            <li className="list-item" key={index}>
+              <ListItem list={list} />
+            </li>
+          ))}
+        </ul> */}
+        <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6 ">
           {lists.map((list, index) => (
             <ListItem key={index} list={list} />
           ))}

@@ -21,7 +21,7 @@ const Info: React.FC<InfoProps> = ({
           </h2>
           <ul className="flex flex-wrap gap-2">
             {genres.map((genre, index) => (
-              <li className="badge badge-info" key={index}>
+              <li className="badge badge-info h-fit" key={index}>
                 {genre}
               </li>
             ))}
@@ -34,7 +34,7 @@ const Info: React.FC<InfoProps> = ({
           </h2>
           <ul className="flex flex-wrap gap-2">
             {platforms.map((platform, index) => (
-              <li className="badge badge-secondary " key={index}>
+              <li className="badge badge-secondary h-fit " key={index}>
                 {platform}
               </li>
             ))}
@@ -47,7 +47,7 @@ const Info: React.FC<InfoProps> = ({
           </h2>
           <ul className="flex flex-wrap gap-2">
             {themes.map((theme, index) => (
-              <li className="badge badge-accent" key={index}>
+              <li className="badge badge-accent h-fit" key={index}>
                 {theme}
               </li>
             ))}
@@ -59,7 +59,7 @@ const Info: React.FC<InfoProps> = ({
           </h2>
           <ul className="flex flex-wrap gap-2">
             {developers.map((developer, index) => (
-              <li className="badge badge-outline" key={index}>
+              <li className="badge badge-outline h-fit" key={index}>
                 {developer}
               </li>
             ))}
@@ -72,7 +72,7 @@ const Info: React.FC<InfoProps> = ({
             </h2>
             <ul className="flex flex-wrap gap-2">
               {publishers.map((publisher, index) => (
-                <li className="badge" key={index}>
+                <li className="badge h-fit" key={index}>
                   {publisher}
                 </li>
               ))}

@@ -20,7 +20,7 @@ const TagItem: React.FC<{ tag: Tag }> = ({ tag }) => {
       <div>
         <Link
           data-tip={tag?.description}
-          className={`tooltip tooltip-right capitalize cursor-pointer h-fit badge ${badgeStyle}`}
+          className={`tooltip badge-sm tooltip-right capitalize cursor-pointer h-fit badge ${badgeStyle}`}
           href={`/tag/${tag.name}`}
         >
           {tag.name}

@@ -1,5 +1,17 @@
 import supabase from "@/app/utils/supabase/client";
 
+export const checkUsername = async (inputName: string) => {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("username", inputName)
+    .maybeSingle();
+  if (data) {
+    return true;
+  }
+  return false;
+};
+
 //get all users
 export const getPlayers = async (
   limit: number = 5,
@@ -47,6 +59,19 @@ export const searchPlayers = async (query: string, limit: number = 5) => {
 };
 
 // get a single user
+export const getPlayerByID = async (userID: string) => {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id,created_at,username,avatar,bio,total_xp")
+    .eq("id", userID)
+    .single();
+  if (error) {
+    console.error("Error getting user", error);
+    throw error;
+  }
+  return data ?? null;
+};
+// get a single user
 export const getPlayerByName = async (username: string) => {
   const { data, error } = await supabase
     .from("profiles")
@@ -57,7 +82,7 @@ export const getPlayerByName = async (username: string) => {
     console.error("Error getting user", error);
     throw error;
   }
-  return data;
+  return data ?? null;
 };
 export const getPlayerIdByName = async (username: string) => {
   const { data, error } = await supabase
@@ -77,14 +102,14 @@ export const getPlayerIdByName = async (username: string) => {
 export const updateProfile = async (
   user_id: string,
   updates: {
-    avatar: string;
+    // avatar: string;
     bio: string;
   }
 ) => {
   const { data, error } = await supabase
     .from("profiles")
     .update(updates)
-    .eq("user_id", user_id)
+    .eq("id", user_id)
     .select()
     .single();
   if (error) {
@@ -100,7 +125,7 @@ export const getFollowers = async (user_id: string) => {
   const { data, error } = await supabase
     .from("user_follows")
     .select(
-      "follower:profiles!user_follows_follower_id_fkey(id, username, avatar)"
+      "follower:profiles!user_follows_follower_id_fkey(id, username, avatar, total_xp)"
     )
     .eq("following_id", user_id);
 
@@ -108,7 +133,7 @@ export const getFollowers = async (user_id: string) => {
     console.error("Error getting followers", error);
     throw error;
   }
-  return data?.map((row) => row.follower);
+  return data?.flatMap((row) => row.follower);
 };
 
 // all who user_id is following
@@ -116,7 +141,7 @@ export const getFollowing = async (user_id: string) => {
   const { data, error } = await supabase
     .from("user_follows")
     .select(
-      "following:profiles!user_follows_following_id_fkey(id, username, avatar)"
+      "following:profiles!user_follows_following_id_fkey(id, username, avatar, total_xp)"
     )
     .eq("follower_id", user_id);
 
@@ -139,6 +164,20 @@ export const getFollowingIDs = async (user_id: string) => {
     throw error;
   }
   return data?.map((row) => row.following_id);
+};
+
+export const getPlayerStats = async (user_id: string) => {
+  const { data, error } = await supabase
+    .from("profile_stats")
+    .select("follower_count, following_count")
+    .eq("user_id", user_id)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error getting following", error);
+    throw error;
+  }
+  return data;
 };
 
 export const checkFollowing = async (

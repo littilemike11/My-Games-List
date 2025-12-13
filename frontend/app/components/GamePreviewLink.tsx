@@ -7,27 +7,26 @@ type Props = {
   isRound?: boolean;
 };
 
-const GamePreviewLink: React.FC<Props> = ({
-  game,
-  height = 56,
-  isRound = true,
-}) => {
+const GamePreviewLink: React.FC<Props> = ({ game, isRound = true }) => {
   return (
-    <div
-      className={`overflow-hidden ${isRound && "rounded-2xl "} h-${height} `}
-    >
+    <>
       <Link
-        className="block w-full h-full hover:scale-105 transition-transform duration-200"
+        className={`overflow-hidden block w-full h-full hover:scale-105 transition-transform duration-200 relative ${
+          isRound && "rounded-2xl "
+        }`}
         title={game?.name}
         href={`/game/${game?.slug}`}
       >
         <img
-          className="w-full h-full object-cover"
+          className="w-full h-full "
           src={game?.cover}
           alt={`${game?.name} cover`}
         />
+        <p className="absolute bottom-0 z-10 left-0 right-0 bg-black text-xs text-white text-center truncate px-1 py-0.5">
+          {game?.name}
+        </p>
       </Link>
-    </div>
+    </>
   );
 };
 
