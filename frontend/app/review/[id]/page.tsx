@@ -6,10 +6,12 @@ import CommentSection from "@/app/components/CommentSection";
 export default async function ReviewPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   //   get review id
-  const reviewID = Number(params.id);
+  const { id } = await params;
+
+  const reviewID = Number(id);
   if (isNaN(reviewID)) return notFound();
   //   get review info
   const review: Review | null = await getReviewByID(reviewID);

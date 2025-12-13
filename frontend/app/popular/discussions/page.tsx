@@ -5,10 +5,15 @@ import DiscussionItem from "@/app/components/DiscussionItem";
 export default async function DiscussionsPage({
   searchParams,
 }: {
-  searchParams: { sort?: string; order?: string };
+  searchParams: Promise<{ sort?: string; order?: string }>;
 }) {
-  const sort = (searchParams.sort as "likes" | "comments" | "date") || "likes";
-  const order = (searchParams.order as "asc" | "desc") || "desc";
+  const resolvedSearchParams = await searchParams;
+
+  const sort =
+    (resolvedSearchParams.sort as "likes" | "comments" | "date") ?? "likes";
+
+  const order = (resolvedSearchParams.order as "asc" | "desc") ?? "desc";
+
   const discussions = await getDiscussions(50, sort, order);
 
   return (

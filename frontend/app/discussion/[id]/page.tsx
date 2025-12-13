@@ -6,10 +6,12 @@ import CommentSection from "@/app/components/CommentSection";
 export default async function DiscussionPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
+
   //   get discussion id
-  const discussionID = Number(params.id);
+  const discussionID = Number(id);
   if (isNaN(discussionID)) return notFound();
   //   get discussion info
   const discussion: Discussion | null = await getDiscussionByID(discussionID);

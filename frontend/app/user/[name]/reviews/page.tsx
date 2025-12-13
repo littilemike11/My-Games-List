@@ -3,11 +3,12 @@ import { Review } from "@/app/types/models";
 import { getPlayerByName } from "@/app/api/supabase-api/profile-api";
 import ReviewItem from "@/app/components/ReviewItem";
 interface ReviewsPageProps {
-  params: { name: string };
+  params: Promise<{ name: string }>;
 }
 
 export default async function ReviewsPage({ params }: ReviewsPageProps) {
-  const username = params.name; // 👈 comes from /user/[name]/reviews
+  const { name } = await params;
+  const username = name; // 👈 comes from /user/[name]/reviews
   const userID = await getPlayerByName(username);
   // if you want to fetch by userId instead of username, you’ll need a lookup here
   const reviews: Review[] = await getReviewsByUser(userID.id);

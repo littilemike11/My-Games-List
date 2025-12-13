@@ -5,11 +5,15 @@ import FollowTagButton from "@/app/components/FollowTagButton";
 import PostList from "@/app/components/PostList";
 import { notFound } from "next/navigation";
 interface Props {
-  params: { name: string };
+  params: Promise<{ name: string }>;
 }
+
 export default async function TagPage({ params }: Props) {
-  const tag: Tag | null = await getTag(params.name);
+  const { name } = await params;
+
+  const tag: Tag | null = await getTag(name);
   if (!tag) notFound();
+
   const posts = await getPostsByTag(tag.id);
 
   return (
@@ -33,7 +37,7 @@ export default async function TagPage({ params }: Props) {
             <PostList posts={posts} />
           </div>
         ) : (
-          <p>nothing tagged with "{params.name}"</p>
+          <p>nothing tagged with "{name}"</p>
         )}
       </div>
     </>

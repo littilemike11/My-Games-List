@@ -190,8 +190,9 @@ import { getOwnReviewByID } from "@/app/api/supabase-api/review-api";
 export default async function EditReviewPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const supabase = await createClient();
 
   // Get logged-in user
@@ -203,7 +204,7 @@ export default async function EditReviewPage({
     return <Custom404 title="You must be logged in to edit this post." />;
   }
 
-  const reviewId = Number(params.id);
+  const reviewId = Number(id);
 
   if (isNaN(reviewId)) return notFound();
 

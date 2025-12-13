@@ -5,10 +5,14 @@ import { getReviews } from "@/app/api/supabase-api/review-api";
 export default async function ReviewsPage({
   searchParams,
 }: {
-  searchParams: { sort?: string; order?: string };
+  searchParams: Promise<{ sort?: string; order?: string }>;
 }) {
-  const sort = (searchParams.sort as "likes" | "comments" | "date") || "likes";
-  const order = (searchParams.order as "asc" | "desc") || "desc";
+  const resolvedSearchParams = await searchParams;
+
+  const sort =
+    (resolvedSearchParams.sort as "likes" | "comments" | "date") ?? "likes";
+
+  const order = (resolvedSearchParams.order as "asc" | "desc") ?? "desc";
 
   const reviews: Review[] = await getReviews(50, sort, order);
 

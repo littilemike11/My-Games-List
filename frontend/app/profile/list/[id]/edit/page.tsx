@@ -8,8 +8,9 @@ import Custom404 from "@/app/components/Custom404";
 export default async function EditListPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const supabase = await createClient();
 
   // Get logged-in user
@@ -20,7 +21,7 @@ export default async function EditListPage({
   if (!user) {
     return <Custom404 title="You must be logged in to edit this post." />;
   }
-  const listID = Number(params.id);
+  const listID = Number(id);
 
   if (isNaN(listID)) return notFound();
 

@@ -4,12 +4,15 @@ import { ProfileItem } from "@/app/components/ProfileItem";
 export default async function PlayersPage({
   searchParams,
 }: {
-  searchParams: { sort?: string; order?: string };
+  searchParams: Promise<{ sort?: string; order?: string }>;
 }) {
-  const sort = (searchParams.sort as "level" | "followers" | "name") || "level";
-  const order = (searchParams.order as "asc" | "desc") || "desc";
+  const { sort = "level", order = "desc" } = await searchParams;
 
-  const players = await getPlayers(50, sort, order);
+  const players = await getPlayers(
+    50,
+    sort as "level" | "followers" | "name",
+    order as "asc" | "desc"
+  );
 
   return (
     <>

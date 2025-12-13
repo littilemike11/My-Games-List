@@ -159,8 +159,10 @@ import { Discussion, Tag } from "@/app/types/models";
 export default async function EditDiscussionPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
+
   const supabase = await createClient();
 
   // Get logged-in user
@@ -172,7 +174,7 @@ export default async function EditDiscussionPage({
     return <Custom404 title="You must be logged in to edit this post." />;
   }
 
-  const discussionId = Number(params.id);
+  const discussionId = Number(id);
 
   if (isNaN(discussionId)) return notFound();
 

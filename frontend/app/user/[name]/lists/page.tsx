@@ -3,11 +3,12 @@ import { getPlayerIdByName } from "@/app/api/supabase-api/profile-api";
 import ListItem from "@/app/components/ListItem";
 import { List } from "@/app/types/models";
 interface ListsPageProps {
-  params: { name: string };
+  params: Promise<{ name: string }>;
 }
 
 export default async function ListsPage({ params }: ListsPageProps) {
-  const username = params.name; // 👈 comes from /user/[name]/Lists
+  const { name } = await params;
+  const username = name; // 👈 comes from /user/[name]/Lists
   const player = await getPlayerIdByName(username);
   // const lists = await getUserGameLists();
   const lists: List[] = await getListsByUser(player?.id);

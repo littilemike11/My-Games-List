@@ -6,12 +6,17 @@ import { getPosts } from "@/app/api/supabase-api/post-api";
 export default async function PostsPage({
   searchParams,
 }: {
-  searchParams: { sort?: string; order?: string };
+  searchParams: Promise<{ sort?: string; order?: string }>;
 }) {
-  const sort = (searchParams.sort as "likes" | "comments" | "date") || "likes";
-  const order = (searchParams.order as "asc" | "desc") || "desc";
+  const resolvedSearchParams = await searchParams;
+
+  const sort =
+    (resolvedSearchParams.sort as "likes" | "comments" | "date") ?? "likes";
+
+  const order = (resolvedSearchParams.order as "asc" | "desc") ?? "desc";
 
   const posts = await getPosts(50, sort, order);
+
   return (
     <>
       <div>

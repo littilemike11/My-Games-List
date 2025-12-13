@@ -34,7 +34,7 @@ export const getPlayers = async (
   }
   const { data, error } = await supabase
     .from("profile_with_followers")
-    .select("id,created_at,username,avatar, total_xp, follower_count")
+    .select("id,created_at,username,avatar, total_xp, follower_count, is_admin")
     .order(column, { ascending: orderBy === "asc" })
     .limit(limit);
   if (error) {
@@ -48,7 +48,7 @@ export const getPlayers = async (
 export const searchPlayers = async (query: string, limit: number = 5) => {
   const { data, error } = await supabase
     .from("profiles")
-    .select("id,created_at,username,avatar,bio,total_xp")
+    .select("id,created_at,username,avatar,bio,total_xp,is_admin")
     .ilike("username", `%${query}%`)
     .limit(limit);
   if (error) {
@@ -125,7 +125,7 @@ export const getFollowers = async (user_id: string) => {
   const { data, error } = await supabase
     .from("user_follows")
     .select(
-      "follower:profiles!user_follows_follower_id_fkey(id, username, avatar, total_xp)"
+      "follower:profiles!user_follows_follower_id_fkey(id, username, avatar, total_xp,is_admin)"
     )
     .eq("following_id", user_id);
 
@@ -141,7 +141,7 @@ export const getFollowing = async (user_id: string) => {
   const { data, error } = await supabase
     .from("user_follows")
     .select(
-      "following:profiles!user_follows_following_id_fkey(id, username, avatar, total_xp)"
+      "following:profiles!user_follows_following_id_fkey(id, username, avatar, total_xp,is_admin)"
     )
     .eq("follower_id", user_id);
 

@@ -5,11 +5,12 @@ import {
 import { ProfileItem } from "@/app/components/ProfileItem";
 import { ProfilePreview, Profile } from "@/app/types/models";
 interface followersPageProps {
-  params: { name: string };
+  params: Promise<{ name: string }>;
 }
 
 export default async function followersPage({ params }: followersPageProps) {
-  const username = params.name; // 👈 comes from /user/[name]/followers
+  const { name } = await params;
+  const username = name; // 👈 comes from /user/[name]/followers
   const player = await getPlayerIdByName(username);
   const followers: Profile[] = await getFollowers(player?.id);
   console.log("custom list", followers);

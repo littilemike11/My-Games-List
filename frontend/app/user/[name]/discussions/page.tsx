@@ -3,13 +3,14 @@ import { Discussion } from "@/app/types/models";
 import { getPlayerByName } from "@/app/api/supabase-api/profile-api";
 import DiscussionItem from "@/app/components/DiscussionItem";
 interface DiscussionsPageProps {
-  params: { name: string };
+  params: Promise<{ name: string }>;
 }
 
 export default async function DiscussionsPage({
   params,
 }: DiscussionsPageProps) {
-  const username = params.name; // 👈 comes from /user/[name]/Discussions
+  const { name } = await params;
+  const username = name; // 👈 comes from /user/[name]/Discussions
   const userID = await getPlayerByName(username);
   // if you want to fetch by userId instead of username, you’ll need a lookup here
   const discussions: Discussion[] = await getDiscussionsByUser(userID.id);

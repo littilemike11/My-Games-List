@@ -16,7 +16,7 @@ const DiscussionResultsPage = () => {
     .replace(/-+/g, "-");
 
   useEffect(() => {
-    const fetchdiscussions = async () => {
+    const fetchDiscussions = async () => {
       if (!query) return;
       try {
         const response = await searchDiscussions(query);
@@ -25,7 +25,7 @@ const DiscussionResultsPage = () => {
         console.error(`error fetching discussions with ${query}`, error);
       }
     };
-    fetchdiscussions();
+    fetchDiscussions();
   }, [query]);
 
   return (

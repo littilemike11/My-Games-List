@@ -5,13 +5,15 @@ import TagItem from "@/app/components/TagItem";
 export default async function TagsPage({
   searchParams,
 }: {
-  searchParams: { sort?: string; order?: string };
+  searchParams: Promise<{ sort?: string; order?: string }>;
 }) {
-  const sort = (searchParams.sort as "usage" | "followers" | "name") || "usage";
-  const order = (searchParams.order as "asc" | "desc") || "desc";
+  const resolvedSearchParams = await searchParams;
+
+  const sort =
+    (resolvedSearchParams.sort as "usage" | "followers" | "name") || "usage";
+  const order = (resolvedSearchParams.order as "asc" | "desc") || "desc";
 
   const tags = await getPopularTags(50, sort, order);
-  console.log(tags);
 
   return (
     <>

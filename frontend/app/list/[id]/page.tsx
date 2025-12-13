@@ -7,9 +7,15 @@ import GamePreviewLink from "@/app/components/GamePreviewLink";
 import TagItem from "@/app/components/TagItem";
 import PostOptions from "@/app/components/PostOptions";
 import Link from "next/link";
-export default async function ListPage({ params }: { params: { id: string } }) {
+export default async function ListPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+
   //   get list id
-  const listID = Number(params.id);
+  const listID = Number(id);
   if (isNaN(listID)) return notFound();
   //   get list info
   const list: List | null = await getListByID(listID);
@@ -26,6 +32,7 @@ export default async function ListPage({ params }: { params: { id: string } }) {
             postType="list"
             postID={listID}
             ownerID={list.profile.id}
+            ownerName={list.profile.username}
           />
         </div>
         <Link className="w-fit" href={`/user/${list.profile.username}`}>
