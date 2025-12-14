@@ -23,7 +23,7 @@ import { Game } from "../types/models";
 const CLIENT_ID = process.env.IGDB_CLIENT_ID!;
 const ACCESS_TOKEN = process.env.IGDB_ACCESS_TOKEN!;
 
-export const getGames = async (body: string): Promise<Game[]> => {
+const getGames = async (body: string): Promise<Game[]> => {
   try {
     const response = await axios.post("https://api.igdb.com/v4/games", body, {
       headers: {
@@ -38,3 +38,5 @@ export const getGames = async (body: string): Promise<Game[]> => {
     return [];
   }
 };
+
+export default getGames;
