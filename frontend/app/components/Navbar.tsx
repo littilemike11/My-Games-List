@@ -77,8 +77,8 @@ const Navbar = () => {
         <div className="navbar-end gap-2">
           <ul className="menu menu-horizontal items-center sm:gap-2">
             {/* search */}
-            <li>
-              <Link className="lg:hidden" href={"/search"}>
+            <li className="lg:hidden">
+              <Link href={"/search"}>
                 <svg
                   className="h-[1em] opacity-50"
                   xmlns="http://www.w3.org/2000/svg"

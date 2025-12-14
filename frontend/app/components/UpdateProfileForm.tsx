@@ -7,7 +7,8 @@ const UpdateProfileForm: React.FC<{ userID: string; bio: string }> = ({
 }) => {
   const [updatedBio, setUpdatedBio] = useState(bio);
   const [loading, setLoading] = useState(false);
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); // 🚫 prevent page reload
     setLoading(true);
     await updateProfile(userID, { bio: updatedBio });
     setLoading(false);
