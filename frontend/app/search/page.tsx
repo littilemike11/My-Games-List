@@ -243,6 +243,12 @@
 
 // export default Page;
 import SearchResults from "./SearchResults";
+import getGames from "../api/igdb-api";
+import { searchDiscussions } from "../api/supabase-api/discussion-api";
+import { searchLists } from "../api/supabase-api/list-api";
+import { searchPlayers } from "../api/supabase-api/profile-api";
+import { searchReviews } from "../api/supabase-api/review-api";
+import { searchTags } from "../api/supabase-api/tag-api";
 
 export default async function SearchPage({
   searchParams,
@@ -252,5 +258,37 @@ export default async function SearchPage({
   const { q } = await searchParams;
   const query = q?.trim();
 
-  return <SearchResults query={query} />;
+  if (!query) {
+    return <SearchResults query={query} />;
+  }
+
+  const gameQuery = `
+    fields id, name, slug, cover.url;
+    search "${query}";
+    where version_parent = null;
+    limit 10;
+  `;
+
+  const [games, players, discussions, reviews, lists, tags] = await Promise.all(
+    [
+      getGames(gameQuery), // ✅ server → IGDB
+      searchPlayers(query),
+      searchDiscussions(query),
+      searchReviews(query),
+      searchLists(query),
+      searchTags(query, true),
+    ]
+  );
+
+  return (
+    <SearchResults
+      query={query}
+      games={games}
+      players={players}
+      discussions={discussions}
+      reviews={reviews}
+      lists={lists}
+      tags={tags}
+    />
+  );
 }

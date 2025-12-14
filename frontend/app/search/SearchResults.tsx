@@ -25,41 +25,57 @@ import {
   Tag,
 } from "../types/models";
 
-type Props = { query?: string };
+type Props = {
+  query?: string;
+  games?: GamePreview[];
+  players?: Profile[];
+  discussions?: Discussion[];
+  reviews?: Review[];
+  lists?: List[];
+  tags?: Tag[];
+};
 
-const SearchResults = ({ query }: Props) => {
-  const [games, setGames] = useState<GamePreview[]>([]);
-  const [players, setPlayers] = useState<Profile[]>([]);
-  const [discussions, setDiscussions] = useState<Discussion[]>([]);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [lists, setLists] = useState<List[]>([]);
-  const [tags, setTags] = useState<Tag[]>([]);
+export default function SearchResults({
+  query,
+  games = [],
+  players = [],
+  discussions = [],
+  reviews = [],
+  lists = [],
+  tags = [],
+}: Props) {
+  // const [games, setGames] = useState<GamePreview[]>([]);
+  // const [players, setPlayers] = useState<Profile[]>([]);
+  // const [discussions, setDiscussions] = useState<Discussion[]>([]);
+  // const [reviews, setReviews] = useState<Review[]>([]);
+  // const [lists, setLists] = useState<List[]>([]);
+  // const [tags, setTags] = useState<Tag[]>([]);
 
-  useEffect(() => {
-    if (!query) return;
+  // useEffect(() => {
+  //   if (!query) return;
 
-    const fetchResults = async () => {
-      const gameQuery = `fields id, name, slug, cover.url ; search "${query}"; limit 10;`;
-      const [games, players, discussions, reviews, lists, tags] =
-        await Promise.all([
-          getGames(gameQuery),
-          searchPlayers(query),
-          searchDiscussions(query),
-          searchReviews(query),
-          searchLists(query),
-          searchTags(query, true),
-        ]);
+  //   const fetchResults = async () => {
+  //     const gameQuery = `fields id, name, slug, cover.url ; search "${query}"; limit 10;`;
+  //     const [games, players, discussions, reviews, lists, tags] =
+  //       await Promise.all([
+  //         getGames(gameQuery),
+  //         searchPlayers(query),
+  //         searchDiscussions(query),
+  //         searchReviews(query),
+  //         searchLists(query),
+  //         searchTags(query, true),
+  //       ]);
 
-      setGames(games);
-      setPlayers(players);
-      setDiscussions(discussions);
-      setReviews(reviews);
-      setLists(lists);
-      setTags(tags);
-    };
+  //     setGames(games);
+  //     setPlayers(players);
+  //     setDiscussions(discussions);
+  //     setReviews(reviews);
+  //     setLists(lists);
+  //     setTags(tags);
+  //   };
 
-    fetchResults();
-  }, [query]);
+  //   fetchResults();
+  // }, [query]);
 
   let randomQuote =
     searchQuotes[Math.floor(Math.random() * searchQuotes.length)];
@@ -242,6 +258,4 @@ const SearchResults = ({ query }: Props) => {
       </div>
     </main>
   );
-};
-
-export default SearchResults;
+}
