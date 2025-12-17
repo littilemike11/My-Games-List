@@ -60,7 +60,7 @@ const TagSection: React.FC<{
     }
     const trimmed = tag.trim();
     if (trimmed && !tags.includes(trimmed)) {
-      setTags([...tags, trimmed]);
+      setTags([...tags, trimmed.toLocaleLowerCase()]);
     }
     setTagInput("");
     setSearchResults([]);

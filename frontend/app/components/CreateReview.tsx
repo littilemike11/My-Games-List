@@ -18,7 +18,7 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
   const { session, profile, loading } = useAuth();
   const [title, setTitle] = useState("");
   const [platform, setPlatform] = useState("");
-  const [hoursPlayed, setHoursPlayed] = useState(0);
+  const [hoursPlayed, setHoursPlayed] = useState(1);
   const [summary, setSummary] = useState("");
   const [rating, setRating] = useState(0);
   const recommendedTags = [game.slug]
@@ -150,8 +150,8 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
                 type="number"
                 className="input validator"
                 required
+                min="1"
                 placeholder="Must have played"
-                min={1}
                 title="must be greater than 0 hrs"
                 value={hoursPlayed}
                 onChange={(e) => setHoursPlayed(Number(e.target.value))}

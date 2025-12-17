@@ -52,9 +52,9 @@ limit 10;`,
     const [gameResponses, reviewsRes, discussionsRes, listsRes] =
       await Promise.all([
         Promise.all(queries.map((q) => getGames(q))), // array of game arrays
-        getReviews(),
-        getDiscussions(),
-        getLists(),
+        getReviews(5, "date"),
+        getDiscussions(5, "date"),
+        getLists(5, "date"),
       ]);
 
     // Parse game groups

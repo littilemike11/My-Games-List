@@ -6,13 +6,14 @@ export default async function PlayersPage({
 }: {
   searchParams: Promise<{ sort?: string; order?: string }>;
 }) {
-  const { sort = "level", order = "desc" } = await searchParams;
+  // const { sort = "level", order = "desc" } = await searchParams;
+  const resolvedSearchParams = await searchParams;
 
-  const players = await getPlayers(
-    50,
-    sort as "level" | "followers" | "name",
-    order as "asc" | "desc"
-  );
+  const sort =
+    (resolvedSearchParams.sort as "level" | "followers" | "name") ?? "level";
+
+  const order = (resolvedSearchParams.order as "asc" | "desc") ?? "desc";
+  const players = await getPlayers(50, sort, order);
 
   return (
     <>
