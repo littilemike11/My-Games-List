@@ -58,9 +58,7 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
           </div>
 
           {/* Content preview */}
-          <div className="font-medium">
-            <Paragraph text={discussion.content} />
-          </div>
+          <Paragraph text={discussion.content} />
 
           {/* Tags */}
           <div className="flex flex-wrap gap-2">

@@ -9,6 +9,7 @@ import { upsertGame } from "../api/supabase-api/game-api";
 import TagSection from "./TagSection";
 import { genres } from "../mockData/genreTags";
 import { themes } from "../mockData/themeTags";
+import MarkdownText from "./MarkdownText";
 type ReviewProps = {
   game: Game;
 };
@@ -157,12 +158,13 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
                 onChange={(e) => setHoursPlayed(Number(e.target.value))}
               />
               <label className="label">Summary</label>
-              <textarea
+              {/* <textarea
                 className="textarea"
                 placeholder="What are your thoughts? Pros and Cons?"
                 value={summary}
                 onChange={(e) => setSummary(e.target.value)}
-              />
+              /> */}
+              <MarkdownText text={summary} setText={setSummary} />
               <label>Rating</label>
               <RatingInput value={rating} onChange={setRating} />
               <TagSection

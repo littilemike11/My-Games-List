@@ -8,7 +8,7 @@ import {
   getUserGames,
 } from "@/app/api/supabase-api/list-api";
 import { GamePreview, ListVisibility, StatusKey } from "@/app/types/models";
-import GamePreviewLink from "@/app/components/GamePreviewLink";
+import MarkdownText from "@/app/components/MarkdownText";
 import Link from "next/link";
 import TagSection from "@/app/components/TagSection";
 import GameSearch from "@/app/components/GameSearch";
@@ -140,12 +140,14 @@ const page = () => {
             </div>
             <div className="flex flex-col gap-1 ">
               <label className="label">Description</label>
-              <textarea
+              {/* <textarea
                 className="textarea w-full h-40"
                 placeholder="What is this list about"
                 onChange={(e) => setDescription(e.target.value)}
                 value={description}
-              />
+              /> */}
+              <MarkdownText text={description} setText={setDescription} />
+
               {/* game status */}
               {session && (
                 <div className="flex flex-col gap-2">
