@@ -1,10 +1,12 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const Paragraph: React.FC<{ text: string }> = ({ text }) => {
   const [showMore, setShowMore] = useState(false);
   const [shouldShowButton, setShouldShowButton] = useState(false);
-  const textRef = useRef<HTMLParagraphElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = textRef.current;
@@ -26,20 +28,49 @@ const Paragraph: React.FC<{ text: string }> = ({ text }) => {
 
   return (
     <section>
-      <div className="flex flex-col">
-        <p
+      <div className="grid grid-cols-1 ">
+        {/* <div
           ref={textRef}
-          className={`text-base leading-relaxed text-pretty transition-all ${
+          className={`prose prose-sm sm:prose lg:prose-lg max-w-none  text-base leading-relaxed text-pretty transition-all ${
             showMore ? "line-clamp-none" : "line-clamp-6"
           }`}
         >
-          {text}
-        </p>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{text}</ReactMarkdown>
+        </div> */}
+
+        <article
+          ref={textRef}
+          className={`prose prose-sm sm:prose w-fit
+                   break-words overflow-wrap-anywhere
+                   prose-p:my-2 prose-h1:my-3 prose-h2:my-3 prose-h3:my-2
+                   prose-ul:my-2 prose-ol:my-2
+                   prose-pre:whitespace-pre-wrap prose-pre:break-words
+                   prose-code:break-words
+                   prose-img:max-w-full prose-img:h-auto
+                   ${showMore ? "line-clamp-none" : "line-clamp-6"}`}
+        >
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              img: ({ ...props }) => (
+                <img {...props} className="max-w-full h-auto rounded-md" />
+              ),
+              pre: ({ ...props }) => (
+                <pre
+                  {...props}
+                  className="max-w-full rounded-md bg-base-200  p-2 sm:p-3 w-80whitespace-pre    break-words       "
+                />
+              ),
+            }}
+          >
+            {text}
+          </ReactMarkdown>
+        </article>
 
         {shouldShowButton && (
           <button
             type="button"
-            className="btn btn-ghost btn-sm mt-2 self-start"
+            className="btn  btn-sm mt-2 w-fit self-start"
             onClick={toggleExpand}
           >
             {showMore ? "Hide" : "See More ..."}

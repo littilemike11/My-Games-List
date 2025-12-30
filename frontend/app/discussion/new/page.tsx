@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createDiscussion } from "@/app/api/supabase-api/discussion-api";
 import { useAuth } from "@/app/auth/auth-context";
 import { useRouter } from "next/navigation";
+import MarkdownText from "@/app/components/MarkdownText";
 
 import TagSection from "@/app/components/TagSection";
 const CreateDiscussion = () => {
@@ -63,13 +64,15 @@ const CreateDiscussion = () => {
                 placeholder="What's this post about?"
               />
               <label className="label">Content</label>
-              <textarea
+              {/* <textarea
                 className="textarea"
                 placeholder="What's on your mind?"
                 onChange={(e) => setContent(e.target.value)}
                 value={content}
                 required
-              />
+              /> */}
+              <MarkdownText text={content} setText={setContent} />
+
               <TagSection
                 // canSearchGame={true}
                 recommendedTags={[]}

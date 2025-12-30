@@ -1,12 +1,13 @@
-@import "tailwindcss";
+  @import "tailwindcss";
+  @plugin "@tailwindcss/typography";
 
-@plugin "daisyui" {
-  themes: all
-}
+  @plugin "daisyui" {
+    themes: all
+  }
 
-;
+  ;
 
-/* :root {
+  /* :root {
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -25,13 +26,13 @@
   }
 } */
 
-/* body {
+  /* body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 } */
 
-.quote {
-  /* font-family: "Courier New", Courier, monospace; */
-  font-family: monospace;
-}
+  .quote {
+    /* font-family: "Courier New", Courier, monospace; */
+    font-family: monospace;
+  }

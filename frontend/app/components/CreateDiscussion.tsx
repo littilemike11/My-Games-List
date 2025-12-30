@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import AuthModal from "./AuthModal";
 import { useAuth } from "../auth/auth-context";
 import TagSection from "./TagSection";
+import MarkdownText from "./MarkdownText";
 const CreateDiscussion: React.FC<{ ctaType?: "input" | "button" }> = ({
   ctaType = "input",
 }) => {
@@ -111,13 +112,15 @@ const CreateDiscussion: React.FC<{ ctaType?: "input" | "button" }> = ({
                 placeholder="What's this post about?"
               />
               <label className="label">Content</label>
-              <textarea
+              {/* <textarea
                 className="textarea"
                 placeholder="What's on your mind?"
                 onChange={(e) => setContent(e.target.value)}
                 value={content}
                 required
-              />
+              /> */}
+              <MarkdownText text={content} setText={setContent} />
+
               <TagSection
                 // canSearchGame={true}
                 recommendedTags={recommendedTags}
