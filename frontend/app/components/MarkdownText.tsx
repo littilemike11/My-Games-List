@@ -201,7 +201,7 @@ const MarkdownText: React.FC<{ text: string; setText: any }> = ({
           </ReactMarkdown>
         </article> */}
         <article
-          className="prose prose-sm sm:prose w-full
+          className="prose prose-sm sm:prose !max-w-full !mx-0 w-full
                            break-words overflow-wrap-anywhere
                            prose-p:my-2 prose-h1:my-3 prose-h2:my-3 prose-h3:my-2
                            prose-ul:my-2 prose-ol:my-2

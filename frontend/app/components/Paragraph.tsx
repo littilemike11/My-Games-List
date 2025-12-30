@@ -40,14 +40,15 @@ const Paragraph: React.FC<{ text: string }> = ({ text }) => {
 
         <article
           ref={textRef}
-          className={`prose prose-sm sm:prose w-fit
-                   break-words overflow-wrap-anywhere
-                   prose-p:my-2 prose-h1:my-3 prose-h2:my-3 prose-h3:my-2
-                   prose-ul:my-2 prose-ol:my-2
-                   prose-pre:whitespace-pre-wrap prose-pre:break-words
-                   prose-code:break-words
-                   prose-img:max-w-full prose-img:h-auto
-                   ${showMore ? "line-clamp-none" : "line-clamp-6"}`}
+          className={`prose-sm sm:prose !max-w-full !mx-0 w-full
+             break-words overflow-wrap-anywhere
+             prose-p:my-2 prose-h1:my-3 prose-h2:my-3 prose-h3:my-2
+             prose-ul:my-2 prose-ol:my-2
+             prose-pre:whitespace-pre-wrap prose-pre:break-words
+             prose-code:break-words
+             prose-img:max-w-full prose-img:h-auto
+             
+             ${showMore ? "line-clamp-none" : "line-clamp-6"}`}
         >
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
@@ -58,7 +59,7 @@ const Paragraph: React.FC<{ text: string }> = ({ text }) => {
               pre: ({ ...props }) => (
                 <pre
                   {...props}
-                  className="max-w-full rounded-md bg-base-200  p-2 sm:p-3 w-80whitespace-pre    break-words       "
+                  className="max-w-full !bg-base-200 rounded-md p-2 sm:p-3 w-full whitespace-pre  break-words       "
                 />
               ),
             }}
