@@ -31,11 +31,18 @@ fields cover.url, name, slug;
 where first_release_date > ${todayTimestamp} & version_parent = null & hypes>50;
 sort first_release_date asc;
 limit 10;`,
+    `
+fields cover.url, name, slug, artworks.url;
+where first_release_date < ${todayTimestamp} & version_parent = null & rating > 75;
+sort first_release_date desc;
+limit 10;`,
   ];
 
   let popularGames: GamePreview[] = [];
-  let recentGames: GamePreview[] = [];
+  let trendingGames: GamePreview[] = [];
   let anticipatedGames: GamePreview[] = [];
+  let recentGames: GamePreview[] = [];
+
   let reviews: Review[] = [];
   let discussions: Discussion[] = [];
   let lists: List[] = [];
@@ -59,8 +66,9 @@ limit 10;`,
 
     // Parse game groups
     popularGames = gameResponses[0].map(parseGamePreview);
-    recentGames = gameResponses[1].map(parseGamePreview);
+    trendingGames = gameResponses[1].map(parseGamePreview);
     anticipatedGames = gameResponses[2].map(parseGamePreview);
+    recentGames = gameResponses[3].map(parseGamePreview);
 
     gameResponses[1].forEach((game: any) => {
       if (game.artworks) {
@@ -89,7 +97,7 @@ limit 10;`,
       <Quote content={randomQuote.text} origin={randomQuote.origin} />
       <Tabs />
       {/* shows popular lists and members */}
-      <Carousel title="What's the Meta?" games={recentGames} />
+      <Carousel title="What's the Meta?" games={trendingGames} />
       <WhyUsSection />
       {/* popular reviews */}
       <section className="mb-4">
@@ -144,6 +152,8 @@ limit 10;`,
           </Link>
         </div>
       </section>
+      <Carousel title="Most Recent" games={recentGames} />
+
       {/* possibly add top players/tags + add recent games carousel */}
     </div>
   );

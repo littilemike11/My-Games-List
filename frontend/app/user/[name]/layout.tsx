@@ -142,7 +142,7 @@ export default function UserLayout({
         <p className="text-sm text-base-content/70">{userProfile?.bio}</p>
 
         {/* Top-level tabs */}
-        <nav className="flex gap-6 border-b border-base-300">
+        <nav className="flex overflow-x-auto max-w-full gap-6 border-b border-base-300">
           {profileTabs.map((tab) => {
             const isActive =
               (tab.key === "games" && pathname === `/user/${name}`) ||
