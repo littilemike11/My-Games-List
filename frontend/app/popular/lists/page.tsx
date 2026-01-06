@@ -29,7 +29,7 @@ export default async function ListsPage({
             </li>
           ))}
         </ul> */}
-        <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6 ">
+        <div className="mt-4 flex flex-col space-y-6 ">
           {lists.map((list, index) => (
             <ListItem key={index} list={list} />
           ))}

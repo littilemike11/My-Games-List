@@ -217,7 +217,7 @@ export default function SearchResults({
           <p>Lists matching "{query}"...</p>
           {lists.length > 0 ? (
             <div>
-              <div className=" my-4 grid grid-cols-1 md:grid-cols-2 gap-6 ">
+              <div className=" my-4 flex flex-col space-y-6 ">
                 {lists.map((l) => (
                   <ListItem key={l.id} list={l} />
                 ))}

@@ -37,14 +37,12 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
                 {review.title}
               </h2>
             </Link>
-            <div>
-              <PostOptions
-                postType="review"
-                postID={review.id}
-                ownerID={review.profile?.id}
-                ownerName={review.profile?.username}
-              />
-            </div>
+            <PostOptions
+              postType="review"
+              postID={review.id}
+              ownerID={review.profile.id}
+              ownerName={review.profile.username}
+            />
           </div>
 
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 ">

@@ -24,7 +24,7 @@ export default function ListResults({
 
         {/* Results */}
         {lists.length > 0 ? (
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6 place-items-center">
+          <div className="mt-4 flex flex-col space-y-6">
             {lists.map((list) => (
               <ListItem key={list.id} list={list} />
             ))}

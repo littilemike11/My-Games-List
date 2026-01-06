@@ -4,30 +4,31 @@ import Link from "next/link";
 import Reactions from "./Reactions";
 import TagItem from "./TagItem";
 import PostOptions from "./PostOptions";
+import Carousel from "./Carousel";
 const ListItem: React.FC<{
   list: List;
 }> = ({ list }) => {
   console.log(list);
   return (
     <>
-      <div className="bg-base-100 max-w-[26rem] w-full h-full rounded-lg border border-base-200 hover:shadow-lg shadow-sm transition-all duration-200 p-2">
-        <div className="flex flex-col space-y-2 w-full">
-          <div className="flex justify-between">
-            <Link
-              className="link link-hover decoration-primary"
-              href={`/list/${list.id}`}
-            >
-              <h3 className="text-xl font-bold text-primary">{list.title}</h3>
-            </Link>
-            <PostOptions
-              postType="list"
-              postID={list.id}
-              ownerID={list.profile.id}
-              ownerName={list.profile.username}
-            />
-          </div>
+      <div className="grid grid-cols-1 space-y-2 bg-base-100 w-full h-full rounded-lg border border-base-200 hover:shadow-lg shadow-sm transition-all duration-200 p-2">
+        <div className="flex justify-between">
+          <Link
+            className="link link-hover decoration-primary"
+            href={`/list/${list.id}`}
+          >
+            <h3 className="text-xl font-bold text-primary">{list.title}</h3>
+          </Link>
+          <PostOptions
+            postType="list"
+            postID={list.id}
+            ownerID={list.profile.id}
+            ownerName={list.profile.username}
+          />
+        </div>
+        <Carousel games={list.games} />
 
-          <div className="flex border h-40 group overflow-hidden">
+        {/* <div className="flex border h-40 group overflow-hidden">
             {list.games.map((game) => (
               <div
                 key={game.id}
@@ -40,41 +41,40 @@ const ListItem: React.FC<{
                 <GamePreviewLink game={game} isRound={false} />
               </div>
             ))}
-          </div>
-          <div className="flex gap-2 items-center">
-            <figure>
-              <div className="avatar avatar-placeholder">
-                <div className="bg-neutral text-neutral-content w-8 rounded-full">
-                  <span className="text-sm">
-                    {list.profile.username[0].toUpperCase()}
-                  </span>
-                </div>
+          </div> */}
+        <div className="flex gap-2 items-center">
+          <figure>
+            <div className="avatar avatar-placeholder">
+              <div className="bg-neutral text-neutral-content w-8 rounded-full">
+                <span className="text-sm">
+                  {list.profile.username[0].toUpperCase()}
+                </span>
               </div>
-            </figure>
-            <p>Created by</p>
-            <Link
-              className="italic capitalize link link-hover"
-              href={`/user/${list.profile.username}`}
-            >
-              {list.profile.username}
-            </Link>
-          </div>
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2">
-            {list.tags?.map((tag) => (
-              <TagItem key={tag.id} tag={tag} />
-            ))}
-          </div>
-          {/* CTAs */}
-          <div className=" card-actions items-center">
-            <Reactions
-              likeCount={list.likes ?? 0}
-              dislikeCount={list.dislikes ?? 0}
-              commentCount={list.comment_count ?? 0}
-              parent_type="list"
-              parent_id={list.id}
-            />
-          </div>
+            </div>
+          </figure>
+          <p>Created by</p>
+          <Link
+            className="italic capitalize link link-hover"
+            href={`/user/${list.profile.username}`}
+          >
+            {list.profile.username}
+          </Link>
+        </div>
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2">
+          {list.tags?.map((tag) => (
+            <TagItem key={tag.id} tag={tag} />
+          ))}
+        </div>
+        {/* CTAs */}
+        <div className=" card-actions items-center">
+          <Reactions
+            likeCount={list.likes ?? 0}
+            dislikeCount={list.dislikes ?? 0}
+            commentCount={list.comment_count ?? 0}
+            parent_type="list"
+            parent_id={list.id}
+          />
         </div>
       </div>
     </>

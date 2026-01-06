@@ -53,32 +53,41 @@ export default function Feed() {
       <h1 className="text-4xl text-pretty text-center font-bold mb-6">
         Welcome <span className="italic capitalize">{profile?.username}</span>
       </h1>
+      {/* name of each tab group should be unique */}
+      <div className="tabs tabs-lift">
+        <input
+          type="radio"
+          name="my_tabs_3"
+          className="tab text-2xl sm:text-3xl text-primary hover:text-primary/80 text-pretty font-semibold"
+          aria-label="Followed Tags"
+          defaultChecked
+        />
+        <div className="tab-content bg-base-100 border-base-300 p-6">
+          {loading ? (
+            <div className="flex w-52 flex-col gap-4">
+              <div className="skeleton h-40 w-full"></div>
+              <div className="skeleton h-40 w-full"></div>
+              <div className="skeleton h-40 w-full"></div>
+            </div>
+          ) : postsByTags.length > 0 ? (
+            <PostList posts={postsByTags} />
+          ) : (
+            <p>
+              You aren't following any Tags. Explore some Tags{" "}
+              <Link className="link link:hover" href={"/popular/tags"}>
+                Here
+              </Link>
+            </p>
+          )}
+        </div>
 
-      <div className="flex flex-col items-center space-y-6">
-        <h2 className="text-2xl sm:text-3xl text-pretty font-semibold">
-          Posts from your Favorite Tags
-        </h2>
-        {loading ? (
-          <div className="flex w-52 flex-col gap-4">
-            <div className="skeleton h-40 w-full"></div>
-            <div className="skeleton h-40 w-full"></div>
-            <div className="skeleton h-40 w-full"></div>
-          </div>
-        ) : postsByTags.length > 0 ? (
-          <PostList posts={postsByTags} />
-        ) : (
-          <p>
-            You aren't following any Tags. Explore some Tags{" "}
-            <Link className="link link:hover" href={"/popular/tags"}>
-              Here
-            </Link>
-          </p>
-        )}
-
-        <h2 className="text-2xl sm:text-3xl text-pretty font-semibold">
-          Posts from your Followers
-        </h2>
-        <div>
+        <input
+          type="radio"
+          name="my_tabs_3"
+          className="tab text-2xl sm:text-3xl text-primary hover:text-primary/80 text-pretty font-semibold"
+          aria-label="Following"
+        />
+        <div className="tab-content bg-base-100 border-base-300 p-6">
           {loading ? (
             <div className="flex w-52 flex-col gap-4">
               <div className="skeleton h-40 w-full"></div>
@@ -96,11 +105,11 @@ export default function Feed() {
             </p>
           )}
         </div>
+      </div>
 
-        {/* <h2 className="text-2xl sm:text-3xl text-pretty font-semibold">
+      {/* <h2 className="text-2xl sm:text-3xl text-pretty font-semibold">
           Games you may like
         </h2> */}
-      </div>
     </>
   );
 }
