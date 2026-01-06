@@ -16,7 +16,7 @@ export default async function DiscussionsPage({
   const discussions: Discussion[] = await getDiscussionsByUser(userID.id);
   return (
     <div className="mx-4 sm:mx-[2rem]">
-      <h2 className="text-2xl mb-6 pb-2 border-b">
+      <h2 className="text-2xl mb-6 pb-2 border-b capitalize">
         {username}'s Discussions ({discussions.length}){" "}
       </h2>
       {discussions.length > 0 ? (

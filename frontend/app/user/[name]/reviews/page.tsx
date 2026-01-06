@@ -15,7 +15,7 @@ export default async function ReviewsPage({ params }: ReviewsPageProps) {
 
   return (
     <div className="mx-4 sm:mx-[2rem]">
-      <h2 className="text-2xl mb-6 pb-2 border-b">
+      <h2 className="text-2xl mb-6 pb-2 border-b capitalize">
         {username}'s Reviews ({reviews.length})
       </h2>
       <div className="divider"></div>

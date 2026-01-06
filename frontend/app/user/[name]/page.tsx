@@ -48,7 +48,9 @@ export default function UserGamesTabs() {
     <main className=" px-2 py-6 space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">{currentUser.username}'s Games</h1>
+        <h1 className="text-2xl font-bold capitalize">
+          {currentUser.username}'s Games
+        </h1>
       </div>
 
       {/* Tabs */}

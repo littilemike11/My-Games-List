@@ -185,7 +185,7 @@ const MarkdownText: React.FC<{ text: string; setText: any }> = ({
         <textarea
           ref={textareaRef}
           className="textarea w-full min-h-[160px] "
-          placeholder="What are your thoughts? Pros and Cons?"
+          placeholder="What are your thoughts?"
           value={text}
           onChange={(e) => setText(e.target.value)}
           required

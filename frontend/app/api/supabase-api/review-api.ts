@@ -166,7 +166,7 @@ export const getReviewsByUser = async (id: string) => {
   const { data, error } = await supabase
     .from("reviews")
     .select(
-      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(username,avatar),game:games(id,name,cover,slug)"
+      "id,created_at,title,content,rating,likes,dislikes, comment_count ,platform,hours_played, profile:profiles(id,username,avatar),game:games(id,name,cover,slug)"
     )
     .eq("user_id", id);
   if (error) {

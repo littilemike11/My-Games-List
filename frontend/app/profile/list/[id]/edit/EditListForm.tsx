@@ -17,6 +17,7 @@ import {
 import GamePreviewLink from "@/app/components/GamePreviewLink";
 import GameSearch from "@/app/components/GameSearch";
 import { profile } from "console";
+import MarkdownText from "@/app/components/MarkdownText";
 // import { redirect } from "next/navigation";
 export default function EditListForm({
   //   updatelist,
@@ -145,12 +146,8 @@ export default function EditListForm({
               </div>
               <div className="flex flex-col gap-1 ">
                 <label className="label">Description</label>
-                <textarea
-                  className="textarea w-full h-40"
-                  placeholder="What is this list about"
-                  onChange={(e) => setDescription(e.target.value)}
-                  value={description}
-                />
+                <MarkdownText text={description} setText={setDescription} />
+
                 {/* game status */}
                 {userID && (
                   <div className="flex flex-col gap-2">

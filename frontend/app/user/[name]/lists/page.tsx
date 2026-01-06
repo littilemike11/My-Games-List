@@ -17,13 +17,13 @@ export default async function ListsPage({ params }: ListsPageProps) {
   return (
     <>
       <div className="mx-4 sm:mx-[2rem]">
-        <h2 className="text-2xl mb-6 pb-2 border-b">
+        <h2 className="text-2xl mb-6 pb-2 border-b capitalize">
           {username}'s Lists ({lists.length})
         </h2>
         {/* <CreateList /> */}
         <div>
           {lists.length > 0 ? (
-            <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6 ">
+            <div className="mt-4 flex flex-col space-x-6 ">
               {lists.map((list, index) => (
                 <ListItem key={index} list={list} />
               ))}

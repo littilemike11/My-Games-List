@@ -44,6 +44,9 @@ const PostOptions: React.FC<{
   };
 
   const userID = session?.user.id;
+  const isOwner = userID === ownerID;
+  console.log(userID);
+  console.log("is ownder:", isOwner);
   return (
     <>
       <DeletePostModal
@@ -62,7 +65,7 @@ const PostOptions: React.FC<{
           tabIndex={-1}
           className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
         >
-          {userID == ownerID ? (
+          {isOwner ? (
             <>
               <li>
                 <Link href={`/profile/${postType}/${postID}/edit`}>Edit</Link>

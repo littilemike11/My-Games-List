@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import RatingInput from "@/app/components/RatingInput";
 import GamePreviewLink from "@/app/components/GamePreviewLink";
 import { GamePreview } from "@/app/types/models";
+import MarkdownText from "@/app/components/MarkdownText";
 // import { redirect } from "next/navigation";
 export default function EditReviewForm({
   //   updateReview,
@@ -120,14 +121,10 @@ export default function EditReviewForm({
               onChange={(e) => setHoursPlayed(Number(e.target.value))}
             />
             <label className="label">Summary</label>
-            <textarea
-              className="textarea"
-              placeholder="What are your thoughts? Pros and Cons?"
-              value={initialContent}
-              onChange={(e) => setContent(e.target.value)}
-            />
+            <MarkdownText text={content} setText={setContent} />
+
             <label>Rating</label>
-            <RatingInput value={initialRating} onChange={setRating} />
+            <RatingInput value={rating} onChange={setRating} />
             <TagSection recommendedTags={[]} tags={tags} setTags={setTags} />
           </fieldset>
           <div className="modal-action flex justify-between w-full">

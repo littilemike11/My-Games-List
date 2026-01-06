@@ -18,7 +18,7 @@ export default async function FollowingPage({ params }: FollowingPageProps) {
   return (
     <>
       <div className="mx-4 sm:mx-[2rem]">
-        <h2 className="text-2xl mb-6 pb-2 border-b">
+        <h2 className="text-2xl mb-6 pb-2 border-b capitalize">
           {username}'s Following ({following.length})
         </h2>
         <div>

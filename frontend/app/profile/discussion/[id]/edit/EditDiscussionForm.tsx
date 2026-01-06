@@ -5,6 +5,7 @@ import TagSection from "@/app/components/TagSection";
 import { updateDiscussionAction } from "./actions";
 import { updateDiscussion } from "@/app/api/supabase-api/discussion-api";
 import { useRouter } from "next/navigation";
+import MarkdownText from "@/app/components/MarkdownText";
 // import { redirect } from "next/navigation";
 export default function EditDiscussionForm({
   //   updateDiscussion,
@@ -138,13 +139,8 @@ export default function EditDiscussionForm({
               placeholder="What's this post about?"
             />
             <label className="label">Content</label>
-            <textarea
-              className="textarea"
-              placeholder="What's on your mind?"
-              onChange={(e) => setContent(e.target.value)}
-              value={content}
-              required
-            />
+            <MarkdownText text={content} setText={setContent} />
+
             <TagSection
               // canSearchGame={true}
               recommendedTags={[]}
