@@ -15,6 +15,7 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
   for (let i = 1; i <= 20; i++) {
     ratings.push(i / 2);
   }
+  console.log(review);
 
   return (
     <>

@@ -45,8 +45,7 @@ const PostOptions: React.FC<{
 
   const userID = session?.user.id;
   const isOwner = userID === ownerID;
-  console.log(userID);
-  console.log("is ownder:", isOwner);
+
   return (
     <>
       <DeletePostModal
