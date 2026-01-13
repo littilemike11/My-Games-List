@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"; // prevent caching so that reactions can be updated
+
 import Carousel from "../components/Carousel";
 import { getReviews } from "../api/supabase-api/review-api";
 import { getDiscussions } from "../api/supabase-api/discussion-api";
