@@ -29,6 +29,9 @@ const Reactions: React.FC<ReactionProps> = ({
   const [userReaction, setUserReaction] = useState<"like" | "dislike" | null>(
     null
   );
+  const [likes, setLikes] = useState(likeCount);
+  const [dislikes, setDislikes] = useState(dislikeCount);
+
   const [reactionId, setReactionId] = useState<number | null>(null); // needed for deletion
 
   const { session } = useAuth();
@@ -39,25 +42,39 @@ const Reactions: React.FC<ReactionProps> = ({
     try {
       if (!userID) {
         setShowAuth(true);
-      } // must be logged in
-      else {
-        if (userReaction === type && reactionId) {
-          // remove reaction
-          await removeReaction(userID, reactionId);
-          setUserReaction(null);
-          setReactionId(null);
-        } else {
-          // add or switch reaction
-          const newReaction = await addReaction(
-            userID,
-            parent_type,
-            parent_id,
-            type === "like"
-          );
-          setUserReaction(type);
-          setReactionId(newReaction.id);
-        }
+        return;
       }
+
+      // removing existing reaction
+      if (userReaction === type && reactionId) {
+        await removeReaction(userID, reactionId);
+
+        if (type === "like") setLikes((l) => l - 1);
+        if (type === "dislike") setDislikes((d) => d - 1);
+
+        setUserReaction(null);
+        setReactionId(null);
+        return;
+      }
+
+      // switching reaction
+      if (userReaction && userReaction !== type) {
+        if (userReaction === "like") setLikes((l) => l - 1);
+        if (userReaction === "dislike") setDislikes((d) => d - 1);
+      }
+
+      const newReaction = await addReaction(
+        userID,
+        parent_type,
+        parent_id,
+        type === "like"
+      );
+
+      if (type === "like") setLikes((l) => l + 1);
+      if (type === "dislike") setDislikes((d) => d + 1);
+
+      setUserReaction(type);
+      setReactionId(newReaction.id);
     } catch (err) {
       console.error("Failed to update reaction:", err);
     }
@@ -66,10 +83,6 @@ const Reactions: React.FC<ReactionProps> = ({
   useEffect(() => {
     const getReaction = async () => {
       if (userID) {
-        console.log("userid", userID);
-        console.log("parenttype", parent_type);
-        console.log("parentid", parent_id);
-
         const response = await getUserReactions(userID, parent_type, parent_id);
         if (response) {
           setUserReaction(response.is_like ? "like" : "dislike");
@@ -84,7 +97,7 @@ const Reactions: React.FC<ReactionProps> = ({
     <>
       <div className="flex gap-2 pr-4">
         <div className="flex items-center gap-1">
-          <span>{likeCount} </span>
+          <span>{likes} </span>
           <button
             className={`btn btn-ghost btn-square size-6 ${
               userReaction === "like" ? "bg-blue-600 text-blue-600" : ""
@@ -95,7 +108,7 @@ const Reactions: React.FC<ReactionProps> = ({
           </button>
         </div>
         <div className="flex items-center gap-1">
-          <span>{dislikeCount} </span>
+          <span>{dislikes} </span>
 
           <button
             className={`btn btn-ghost btn-square size-6 ${
