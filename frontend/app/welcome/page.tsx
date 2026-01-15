@@ -4,6 +4,7 @@ import FollowButton from "../components/FollowButton";
 import Link from "next/link";
 import FeatureSection from "../components/welcome/FeatureSection";
 import PagesSection from "../components/welcome/PagesSection";
+import FollowTagButton from "../components/FollowTagButton";
 export const metadata: Metadata = {
   title: "Welcome to The Save Room",
   description:
@@ -46,6 +47,59 @@ const page = () => {
               changes.
             </p>
             <FollowButton playerID={"ef42b46a-9215-467d-8f4d-b741b8fe9301"} />
+            <p>Follow these official tags:</p>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="card bg-base-100 shadow-md hover:shadow-lg transition rounded-xl p-4">
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <TagItem
+                    tag={{
+                      id: 86,
+                      name: "announcements",
+                      type: "restricted",
+                      description: "General site announcements",
+                    }}
+                  />
+                  <FollowTagButton TagID={86} />
+                </div>
+                <p className="text-sm line-clamp-3">
+                  General site announcements.
+                </p>
+              </div>
+              <div className="card bg-base-100 shadow-md hover:shadow-lg transition rounded-xl p-4">
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <TagItem
+                    tag={{
+                      id: 31,
+                      name: "patch-notes",
+                      type: "restricted",
+                      description:
+                        "The latest changes and updates on the Save Room website",
+                    }}
+                  />
+                  <FollowTagButton TagID={31} />
+                </div>
+                <p className="text-sm line-clamp-3">
+                  The latest changes and updates on the Save Room website.
+                </p>
+              </div>
+              <div className="card bg-base-100 shadow-md hover:shadow-lg transition rounded-xl p-4">
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <TagItem
+                    tag={{
+                      id: 84,
+                      name: "road-map",
+                      type: "restricted",
+                      description: "Changes that we plan to make",
+                    }}
+                  />
+                  <FollowTagButton TagID={84} />
+                </div>
+                <p className="text-sm line-clamp-3">
+                  Changes that we plan to make.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
         {/* What You Can Do */}

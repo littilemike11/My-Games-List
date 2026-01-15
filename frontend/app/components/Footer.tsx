@@ -7,28 +7,28 @@ const Footer = () => {
           <Link href={"/about-us"} className="link link-hover">
             About us
           </Link>
-          <Link href={""} className="link link-hover">
-            Contact
-          </Link>
           <Link href={"/welcome"} className="link link-hover">
             Welcome
           </Link>
-          <Link href={"/reviews"} className="link link-hover">
+          <Link href={"/popular/reviews"} className="link link-hover">
             Reviews
+          </Link>{" "}
+          <Link href={"/popular/discussions"} className="link link-hover">
+            Discussions
           </Link>
         </div>
         <div className="grid grid-flow-col gap-4">
-          <Link href={"/discussions"} className="link link-hover">
-            Discussions
-          </Link>
-          <Link href={"/lists"} className="link link-hover">
+          <Link href={"/popular/lists"} className="link link-hover">
             Lists
           </Link>
-          <Link href={"/players"} className="link link-hover">
+          <Link href={"/popular/players"} className="link link-hover">
             Players
           </Link>
-          <Link href={"/articles"} className="link link-hover">
-            Articles
+          <Link href={"/popular/tags"} className="link link-hover">
+            Tags
+          </Link>
+          <Link href={"/news"} className="link link-hover">
+            News
           </Link>
         </div>
 
