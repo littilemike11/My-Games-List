@@ -17,8 +17,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The Save Room",
-  description: "A community hub for gamers",
+  metadataBase: new URL("https://www.thesaveroom.co"),
+
+  title: { default: "The Save Room", template: "%s | The Save Room" },
+  description: "A community hub for gamers by gamers",
+  keywords: [
+    "gaming community",
+    "video game discussions",
+    "game reviews",
+    "gaming lists",
+    "The Save Room",
+    "gaming forums",
+    "game posts",
+  ],
 };
 
 export default function RootLayout({
