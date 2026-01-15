@@ -1,4 +1,10 @@
 // app/components/GoogleNewsFeed.tsx
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Gaming News",
+  description: "Keep up with the latest gaming news in accordance with Google",
+};
 import Parser from "rss-parser";
 
 type Article = {

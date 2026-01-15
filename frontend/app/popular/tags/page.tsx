@@ -2,6 +2,36 @@ import { getPopularTags } from "@/app/api/supabase-api/tag-api";
 import FollowTagButton from "@/app/components/FollowTagButton";
 import Tabs from "@/app/components/Tabs";
 import TagItem from "@/app/components/TagItem";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Tags", // no need to include site name because global template handles it
+  description: "Browse tags from the gaming community on The Save Room.",
+
+  openGraph: {
+    title: "Tags",
+    description: "Browse tags from the gaming community.",
+    url: "https://www.thesaveroom.co/popular/tags",
+    type: "website",
+    // images: [
+    //   {
+    //     url: "/og-Tags.png",
+    //     width: 1200,
+    //     height: 630,
+    //     alt: "Tags",
+    //   },
+    // ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Tags",
+    description: "Browse tags from the gaming community.",
+    // images: ["/og-Tags.png"],
+  },
+
+  robots: { index: true, follow: true },
+};
 export default async function TagsPage({
   searchParams,
 }: {

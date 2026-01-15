@@ -3,6 +3,45 @@ import { notFound } from "next/navigation";
 import { getDiscussionByID } from "@/app/api/supabase-api/discussion-api";
 import { Discussion } from "@/app/types/models";
 import CommentSection from "@/app/components/CommentSection";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+
+  //   get discussion id
+  const discussionID = Number(id);
+  const discussion = await getDiscussionByID(discussionID);
+  if (!discussion) return { title: "discussion not found" };
+
+  return {
+    title: discussion.title,
+    description: discussion.content.slice(0, 160),
+    openGraph: {
+      title: discussion.title,
+      description: discussion.content.slice(0, 160),
+      url: `https://www.thesaveroom.co/discussion/${discussionID}`,
+      type: "article",
+      // images: [
+      //   {
+      //     url: discussion.game.cover || "/default-discussion-og.png",
+      //     width: 1200,
+      //     height: 630,
+      //   },
+      // ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: discussion.title,
+      description: discussion.content.slice(0, 160),
+      // images: [discussion.game.cover || "/default-discussion-og.png"],
+    },
+    robots: { index: true, follow: true },
+  };
+}
 export default async function DiscussionPage({
   params,
 }: {

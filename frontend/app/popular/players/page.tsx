@@ -1,6 +1,36 @@
 import Tabs from "@/app/components/Tabs";
 import { getPlayers } from "@/app/api/supabase-api/profile-api";
 import { ProfileItem } from "@/app/components/ProfileItem";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Players", // no need to include site name because global template handles it
+  description: "Find other players from the gaming community on The Save Room.",
+
+  openGraph: {
+    title: "Players",
+    description: "Browse players from the gaming community.",
+    url: "https://www.thesaveroom.co/popular/players",
+    type: "website",
+    // images: [
+    //   {
+    //     url: "/og-Players.png",
+    //     width: 1200,
+    //     height: 630,
+    //     alt: "Players",
+    //   },
+    // ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Players",
+    description: "Browse other players from the gaming community.",
+    // images: ["/og-Players.png"],
+  },
+
+  robots: { index: true, follow: true },
+};
 export default async function PlayersPage({
   searchParams,
 }: {

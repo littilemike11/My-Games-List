@@ -1,4 +1,11 @@
 import { FAQS } from "../mockData/aboutFAQ";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description:
+    "Learn about The Save Room, as we answer any question you might have.",
+};
 const page = () => {
   return (
     <>

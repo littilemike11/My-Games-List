@@ -7,6 +7,44 @@ import GamePreviewLink from "@/app/components/GamePreviewLink";
 import TagItem from "@/app/components/TagItem";
 import PostOptions from "@/app/components/PostOptions";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  //   get list id
+  const listID = Number(id);
+  const list = await getListByID(listID);
+  if (!list) return { title: "list not found" };
+
+  return {
+    title: list.title,
+    description: list.description?.slice(0, 160) || "",
+    openGraph: {
+      title: list.title,
+      description: list.description?.slice(0, 160),
+      url: `https://www.thesaveroom.co/list/${listID}`,
+      type: "article",
+      // images: [
+      //   {
+      //     url: list.game.cover || "/default-list-og.png",
+      //     width: 1200,
+      //     height: 630,
+      //   },
+      // ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: list.title,
+      description: list.description?.slice(0, 160),
+      // images: [list.game.cover || "/default-list-og.png"],
+    },
+    robots: { index: true, follow: true },
+  };
+}
 export default async function ListPage({
   params,
 }: {

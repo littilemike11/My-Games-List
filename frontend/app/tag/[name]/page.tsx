@@ -4,10 +4,24 @@ import { getPostsByTag } from "@/app/api/supabase-api/post-api";
 import FollowTagButton from "@/app/components/FollowTagButton";
 import PostList from "@/app/components/PostList";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+
 interface Props {
   params: Promise<{ name: string }>;
 }
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  // read route params
+  const { name } = await params;
+  const tag = await getTag(name);
+  if (!tag) {
+    return {};
+  }
 
+  return {
+    title: tag.name,
+    description: `Explore all posts tagged with ${tag.name}.${tag.description}`,
+  };
+}
 export default async function TagPage({ params }: Props) {
   const { name } = await params;
 

@@ -1,8 +1,14 @@
 import TagItem from "../components/TagItem";
+import type { Metadata } from "next";
 import FollowButton from "../components/FollowButton";
 import Link from "next/link";
 import FeatureSection from "../components/welcome/FeatureSection";
 import PagesSection from "../components/welcome/PagesSection";
+export const metadata: Metadata = {
+  title: "Welcome to The Save Room",
+  description:
+    "The Save Room is a community hub for gamers by gamers. Your personal space to track, discuss and discover games.",
+};
 const page = () => {
   return (
     <>
@@ -14,7 +20,7 @@ const page = () => {
             <span className="italic text-primary">The Save Room</span>
           </h1>
           <p className="text-xl ">
-            Your personal space to log, reflect, and discover games.
+            Your personal space to track, discuss, and discover games.
           </p>
 
           <p>

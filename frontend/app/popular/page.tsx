@@ -16,6 +16,13 @@ import Quote from "../components/Quote";
 import { welcomeQuotes } from "../mockData/quotes";
 import WhyUsSection from "../components/WhyUsSection";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Popular",
+  description:
+    "Browse the most trending content in the community on The Save Room",
+};
 
 export default async function Home() {
   const todayTimestamp = Math.floor(Date.now() / 1000);

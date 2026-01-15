@@ -12,6 +12,7 @@ import MarkdownText from "@/app/components/MarkdownText";
 import Link from "next/link";
 import TagSection from "@/app/components/TagSection";
 import GameSearch from "@/app/components/GameSearch";
+
 const page = () => {
   const [tags, setTags] = useState<string[]>([]);
   const { session, profile, loading } = useAuth();
