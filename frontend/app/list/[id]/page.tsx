@@ -12,9 +12,12 @@ import type { Metadata } from "next";
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const list = await getListByID(Number(params.id));
+  const { id } = await params;
+  //   get list id
+  const listID = Number(id);
+  const list = await getListByID(listID);
   if (!list) return { title: "list not found" };
 
   return {
@@ -23,7 +26,7 @@ export async function generateMetadata({
     openGraph: {
       title: list.title,
       description: list.description?.slice(0, 160),
-      url: `https://www.thesaveroom.co/list/${params.id}`,
+      url: `https://www.thesaveroom.co/list/${listID}`,
       type: "article",
       // images: [
       //   {

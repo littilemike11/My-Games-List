@@ -8,9 +8,12 @@ import type { Metadata } from "next";
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const review = await getReviewByID(Number(params.id));
+  const { id } = await params;
+
+  const reviewID = Number(id);
+  const review = await getReviewByID(reviewID);
   if (!review) return { title: "Review not found" };
 
   return {
@@ -19,7 +22,7 @@ export async function generateMetadata({
     openGraph: {
       title: `${review.game.name} Review`,
       description: review.content.slice(0, 160),
-      url: `https://www.thesaveroom.co/review/${params.id}`,
+      url: `https://www.thesaveroom.co/review/${reviewID}`,
       type: "article",
       images: [
         {

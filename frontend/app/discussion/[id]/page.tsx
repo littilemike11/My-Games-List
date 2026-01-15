@@ -8,9 +8,13 @@ import type { Metadata } from "next";
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const discussion = await getDiscussionByID(Number(params.id));
+  const { id } = await params;
+
+  //   get discussion id
+  const discussionID = Number(id);
+  const discussion = await getDiscussionByID(discussionID);
   if (!discussion) return { title: "discussion not found" };
 
   return {
@@ -19,7 +23,7 @@ export async function generateMetadata({
     openGraph: {
       title: discussion.title,
       description: discussion.content.slice(0, 160),
-      url: `https://www.thesaveroom.co/discussion/${params.id}`,
+      url: `https://www.thesaveroom.co/discussion/${discussionID}`,
       type: "article",
       // images: [
       //   {
