@@ -5,6 +5,7 @@ import Link from "next/link";
 import FeatureSection from "../components/welcome/FeatureSection";
 import PagesSection from "../components/welcome/PagesSection";
 import FollowTagButton from "../components/FollowTagButton";
+import MarketTable from "../components/MarketTable";
 export const metadata: Metadata = {
   title: "Welcome to The Save Room",
   description:
@@ -142,6 +143,7 @@ const page = () => {
 
         {/* Main Sections */}
         <PagesSection />
+        <MarketTable />
 
         {/* Tips & Tricks */}
         {/* <section>
