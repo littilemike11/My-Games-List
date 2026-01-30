@@ -52,6 +52,7 @@ export default function AuthModal({
         password,
         options: {
           data: { username: validUserName }, // pass username in user metadata
+          emailRedirectTo: `${window.location.origin}/welcome`,
         },
       });
 
@@ -63,7 +64,7 @@ export default function AuthModal({
       setLoading(false);
       clear();
       onClose();
-      redirect("/welcome");
+      redirect("/auth/sign-up-success");
 
       // No need to manually insert into profiles or call createDefaultLists()
       // The trigger handles both automatically

@@ -49,6 +49,7 @@ export default function SignUpPage() {
         password,
         options: {
           data: { username: validUserName }, // pass username in user metadata
+          emailRedirectTo: `${window.location.origin}/welcome`,
         },
       });
 
@@ -58,7 +59,7 @@ export default function SignUpPage() {
         return;
       }
       setLoading(false);
-      redirect("/welcome");
+      redirect("/auth/sign-up-success");
 
       // No need to manually insert into profiles or call createDefaultLists()
       // The trigger handles both automatically
