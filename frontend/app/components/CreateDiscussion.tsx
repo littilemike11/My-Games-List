@@ -80,12 +80,9 @@ const CreateDiscussion: React.FC<{ ctaType?: "input" | "button" }> = ({
         open modal
       </button> */}
       {ctaType == "input" ? (
-        <input
-          className="input border-amber-100"
-          type="text"
-          placeholder="What's on your mind?"
-          onClick={openModal}
-        />
+        <button className="input border-amber-100" onClick={openModal}>
+          What's on your mind?
+        </button>
       ) : (
         <button type="button" onClick={openModal} className="btn btn-primary">
           Start a Discussion

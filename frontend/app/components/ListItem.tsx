@@ -5,6 +5,7 @@ import Reactions from "./Reactions";
 import TagItem from "./TagItem";
 import PostOptions from "./PostOptions";
 import Carousel from "./Carousel";
+import { formatDate } from "../utils/functions";
 const ListItem: React.FC<{
   list: List;
 }> = ({ list }) => {
@@ -26,7 +27,29 @@ const ListItem: React.FC<{
             ownerName={list.profile.username}
           />
         </div>
-        <Carousel games={list.games} />
+        {/* Author info and date */}
+        <div className="flex items-center justify-between text-sm ">
+          <div className="flex items-center gap-3">
+            <Link
+              className="link link-hover"
+              href={`/user/${list.profile?.username}`}
+            >
+              <figure>
+                <div className="avatar avatar-placeholder">
+                  <div className="bg-neutral text-neutral-content w-8 rounded-full">
+                    <span>{list.profile?.username[0].toUpperCase()}</span>
+                  </div>
+                </div>
+
+                <span className="ml-2 font-medium italic">
+                  {list.profile?.username || "(deleted)"}
+                </span>
+              </figure>
+            </Link>
+          </div>
+          <time className="opacity-50">{formatDate(list.created_at)}</time>
+        </div>
+        <Carousel isList={true} games={list.games} />
 
         {/* <div className="flex border h-40 group overflow-hidden">
             {list.games.map((game) => (
@@ -42,24 +65,7 @@ const ListItem: React.FC<{
               </div>
             ))}
           </div> */}
-        <div className="flex gap-2 items-center">
-          <figure>
-            <div className="avatar avatar-placeholder">
-              <div className="bg-neutral text-neutral-content w-8 rounded-full">
-                <span className="text-sm">
-                  {list.profile.username[0].toUpperCase()}
-                </span>
-              </div>
-            </div>
-          </figure>
-          <p>Created by</p>
-          <Link
-            className="italic capitalize link link-hover"
-            href={`/user/${list.profile.username}`}
-          >
-            {list.profile.username}
-          </Link>
-        </div>
+
         {/* Tags */}
         <div className="flex flex-wrap gap-2">
           {list.tags?.map((tag) => (

@@ -124,8 +124,8 @@ limit 10;`,
           </Link>
         </div>
       </section>
+      <Carousel title="Most Recent" games={recentGames} />
 
-      <Carousel title="Classic Gems" games={popularGames} />
       {/* popular discussions */}
       <section className="mb-4">
         <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-6">
@@ -150,7 +150,7 @@ limit 10;`,
         <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-6">
           Trending Lists
         </h2>
-        <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6 ">
+        <div className="mt-4 flex flex-col space-y-10 ">
           {lists.map((list, index) => (
             <ListItem key={index} list={list} />
           ))}
@@ -161,8 +161,7 @@ limit 10;`,
           </Link>
         </div>
       </section>
-      <Carousel title="Most Recent" games={recentGames} />
-
+      <Carousel title="Classic Gems" games={popularGames} />
       {/* possibly add top players/tags + add recent games carousel */}
     </div>
   );

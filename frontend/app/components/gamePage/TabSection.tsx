@@ -173,7 +173,7 @@ const TabSection: React.FC<TabProps> = ({
         return similarGames.length ? (
           <ul className=" pb-4 flex flex-wrap gap-6 place-content-around">
             {similarGames.map((simGame) => (
-              <li key={simGame.id} className="h-56">
+              <li key={simGame.id} className="h-56 w-44">
                 <GamePreviewLink game={simGame} />
               </li>
             ))}
@@ -185,7 +185,7 @@ const TabSection: React.FC<TabProps> = ({
         return franchise?.length ? (
           <ul className="pb-4 flex flex-wrap gap-6 place-content-around">
             {franchise.map((game) => (
-              <li key={game.id} className="h-56">
+              <li key={game.id} className="h-56 w-44">
                 <GamePreviewLink game={game} />
               </li>
             ))}

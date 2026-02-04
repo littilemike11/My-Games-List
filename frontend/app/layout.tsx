@@ -49,7 +49,7 @@ export default function RootLayout({
           <DrawerLayout>
             {/* Make content expand to fill space */}
             <div className="flex flex-col items-stretch flex-1 h-full ">
-              <div className="mx-auto w-full sm:max-w-5/6 overflow-x-hidden  flex flex-col flex-1 ">
+              <div className="mx-2 sm:mx-auto w-full sm:max-w-5/6 overflow-x-hidden  flex flex-col flex-1 ">
                 {children}
               </div>
               <Footer />

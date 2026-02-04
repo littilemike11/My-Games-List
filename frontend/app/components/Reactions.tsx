@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import CreateComment from "./CreateComment";
+import Link from "next/link";
 import { contentType } from "../types/models";
 import { useAuth } from "../auth/auth-context";
 
@@ -122,7 +122,13 @@ const Reactions: React.FC<ReactionProps> = ({
         {/* go to post's og page */}
         <div className="flex items-center gap-1">
           <span>{commentCount} </span>
-          <button className="btn btn-ghost btn-square size-6 ">💬</button>
+          {parent_type !== "comment" ? (
+            <Link href={`/${parent_type}/${parent_id}`}>
+              <button className="btn btn-ghost btn-square size-6 ">💬</button>
+            </Link>
+          ) : (
+            <div>💬</div>
+          )}
         </div>
         {/* only auth users can leave reactions */}
         <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
