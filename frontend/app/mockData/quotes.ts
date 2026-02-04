@@ -31,7 +31,7 @@ export const welcomeQuotes: quote[] = [
   //   origin: "",
   // },
   {
-    text: "Take a beak, you've earned it",
+    text: "Take a break, you've earned it",
     origin: "Animal Crossing (Isabelle)",
   },
   {

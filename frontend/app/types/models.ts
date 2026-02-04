@@ -120,7 +120,7 @@ export interface Comment {
 }
 export interface List {
   id: number;
-  created_at?: Date;
+  created_at: Date;
   title: string;
   tags?: Tag[];
   type?: ListType;

@@ -109,7 +109,9 @@ export default function UserLayout({
             )}
 
             <div>
-              <h1 className="text-3xl font-bold capitalize">{name}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold capitalize">
+                {name}
+              </h1>
               {/* <p className="text-sm text-base-content/70">{profile?.bio}</p> */}
             </div>
             <div>

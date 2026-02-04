@@ -10,6 +10,7 @@ import TagSection from "./TagSection";
 import { genres } from "../mockData/genreTags";
 import { themes } from "../mockData/themeTags";
 import MarkdownText from "./MarkdownText";
+import AuthModal from "./AuthModal";
 type ReviewProps = {
   game: Game;
 };
@@ -22,6 +23,8 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
   const [hoursPlayed, setHoursPlayed] = useState(1);
   const [summary, setSummary] = useState("");
   const [rating, setRating] = useState(0);
+  const [showAuth, setShowAuth] = useState(false);
+
   const recommendedTags = [game.slug]
     .concat(game.genres.map((g) => genres[g]))
     .concat(game.themes.map((t) => themes[t]));
@@ -82,6 +85,10 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
   };
 
   const openModal = () => {
+    if (!session) {
+      setShowAuth(true);
+      return;
+    }
     const modal = document.getElementById(
       "my_modal_5"
     ) as HTMLDialogElement | null;
@@ -110,10 +117,11 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
 
   return (
     <>
-      <button className="btn btn-primary btn-sm md:btn-md " onClick={openModal}>
+      <button className="btn btn-primary btn-sm md:btn-md" onClick={openModal}>
         <FaSquarePen />
         Write a Review
       </button>
+      <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
 
       <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">

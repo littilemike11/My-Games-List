@@ -7,11 +7,16 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 type CarouselProps = {
   title?: string;
   games: GamePreview[];
+  isList?: boolean;
 };
 
 const CARD_WIDTH = 160 + 16; // width + gap
 
-const Carousel: React.FC<CarouselProps> = ({ title, games }) => {
+const Carousel: React.FC<CarouselProps> = ({
+  title,
+  games,
+  isList = false,
+}) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: "left" | "right") => {
@@ -62,11 +67,11 @@ const Carousel: React.FC<CarouselProps> = ({ title, games }) => {
           {games.map((game) => (
             <div
               key={game.id}
-              className="
+              className={`
                 snap-start
                 flex-shrink-0
-                w-40 h-56
-              "
+                 ${isList ? "h-44" : "h-56"}
+              `}
             >
               <GamePreviewLink game={game} />
             </div>

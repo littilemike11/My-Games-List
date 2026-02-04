@@ -50,7 +50,7 @@ const MarketTable = () => {
     <section>
       <h2 className="text-2xl font-semibold mb-6">Where We Fit</h2>
       <div className="overflow-x-auto">
-        <table className="table">
+        <table className="table table-xs sm:table-md">
           {/* head */}
           <thead>
             <tr>

@@ -182,6 +182,9 @@ export default function DrawerLayout({
               <li>
                 <Link href={"/popular"}>✨ Popular</Link>
               </li>
+              <li>
+                <Link href={"/popular/posts"}>📚 All Posts</Link>
+              </li>
               {/* <li>
                 <Link href={"/games"}>🎮 Games</Link>
               </li> */}
@@ -192,7 +195,7 @@ export default function DrawerLayout({
                 <Link href={"/popular/discussions"}>💬 Discussions</Link>
               </li>
               <li>
-                <Link href={"/popular/lists"}>📜 lists</Link>
+                <Link href={"/popular/lists"}>📜 Lists</Link>
               </li>
               <li>
                 <Link href={"/popular/players"}>👥 Players</Link>
