@@ -20,7 +20,13 @@ const GameSearch: React.FC<{
   };
 
   const updateSearch = async () => {
-    const query = `fields id, name, slug, cover.url ; search "${searchInput}"; limit 10;`;
+    const query = `
+    fields id, name, slug, cover.url;
+    search "${searchInput}";
+    where version_parent = null;
+    limit 10;
+  `;
+
     const result = await getGames(query);
     console.log(result);
     const formattedResult = result.map((game: any) => ({

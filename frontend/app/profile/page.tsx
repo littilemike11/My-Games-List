@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getPlayerByID } from "../api/supabase-api/profile-api";
 import { Profile } from "../types/models";
 import UpdateProfileForm from "../components/UpdateProfileForm";
+import DeleteAccount from "../components/DeleteAccount";
 export default async function ProfilePage() {
   const supabase = await createClient();
 
@@ -32,6 +33,12 @@ export default async function ProfilePage() {
 
       {/* Settings / Edit Bio */}
       <UpdateProfileForm userID={profile.id} bio={profile.bio ?? ""} />
+      <div className="space-y-2">
+        <h2 className="text-2xl text-error font-bold">Danger Zone</h2>
+        <button onClick={DeleteAccount} className="btn btn-error">
+          Delete Account
+        </button>
+      </div>
     </div>
   );
 }

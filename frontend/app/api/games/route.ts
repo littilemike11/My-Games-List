@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
       headers: {
         "Client-ID": CLIENT_ID,
         Authorization: `Bearer ${ACCESS_TOKEN}`,
+        "Content-Type": "text/plain",
         Accept: "application/json",
       },
     });
