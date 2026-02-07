@@ -10,7 +10,7 @@ import TagItem from "./TagItem";
 import { IGDBgenres } from "../mockData/genreTags";
 import { IGDBthemes } from "../mockData/themeTags";
 import { platforms } from "../mockData/platforms";
-import getGames from "../api/igdb-api";
+import getGames from "../api/igdb-api-server";
 import Footer from "./Footer";
 export default function DrawerLayout({
   children,

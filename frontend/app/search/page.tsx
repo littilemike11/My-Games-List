@@ -243,7 +243,7 @@
 
 // export default Page;
 import SearchResults from "./SearchResults";
-import getGames from "../api/igdb-api";
+import getGames from "../api/igdb-api-server";
 import { searchDiscussions } from "../api/supabase-api/discussion-api";
 import { searchLists } from "../api/supabase-api/list-api";
 import { searchPlayers } from "../api/supabase-api/profile-api";
