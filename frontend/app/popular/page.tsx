@@ -4,7 +4,7 @@ import Carousel from "../components/Carousel";
 import { getReviews } from "../api/supabase-api/review-api";
 import { getDiscussions } from "../api/supabase-api/discussion-api";
 import { getLists } from "../api/supabase-api/list-api";
-import getGames from "../api/igdb-api";
+import getGames from "../api/igdb-api-server";
 import { parseGamePreview } from "../utils/functions";
 import { Discussion, GamePreview, List, Review } from "../types/models";
 import Tabs from "../components/Tabs";

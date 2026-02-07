@@ -79,7 +79,7 @@
 // export default GameResultsPage;
 
 import { notFound } from "next/navigation";
-import getGames from "@/app/api/igdb-api";
+import getGames from "@/app/api/igdb-api-server";
 import GameResults from "./GameResults";
 
 interface PageProps {

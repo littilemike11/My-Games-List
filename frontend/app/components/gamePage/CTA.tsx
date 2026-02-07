@@ -90,8 +90,8 @@ const CTA: React.FC<CTAProps> = ({ game, gameID }) => {
     },
     {
       key: "playing",
-      label: "Not Active",
-      activeLabel: "Actively Playing",
+      label: "Actively Playing",
+      activeLabel: "No longer playing",
       emoji: "🎮",
       color: "bg-blue-200 text-blue-800",
     },

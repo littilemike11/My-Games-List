@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { GamePreview } from "../types/models";
-import getGames from "../api/igdb-api";
+import getGames from "../api/igdb-api-client";
 const GameSearch: React.FC<{
   // game can either be a string for tags(discussion) or GamePreview for games(list)
   argumentType: "string" | "game";
@@ -20,8 +20,20 @@ const GameSearch: React.FC<{
   };
 
   const updateSearch = async () => {
-    const query = `fields id, name, slug, cover.url ; search "${searchInput}"; limit 10;`;
+    const query = `
+    fields id, name, slug, cover.url;
+    search "${searchInput}";
+    where version_parent = null;
+    limit 10;
+  `;
+
     const result = await getGames(query);
+    // const result = await fetch("/api/games", {
+    //   method: "POST",
+    //   body: query,
+    // });
+    // const games = await result.json();
+
     console.log(result);
     const formattedResult = result.map((game: any) => ({
       id: game.id,

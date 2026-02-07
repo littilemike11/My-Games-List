@@ -104,7 +104,7 @@ const page = () => {
       </button> */}
 
       <form onSubmit={handleSubmit}>
-        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full h-full border p-4">
           <legend className="fieldset-legend font-bold text-lg">
             New List
           </legend>
@@ -216,7 +216,7 @@ const page = () => {
           <GameSearch onClickFunction={addGameToList} argumentType={"game"} />
 
           {/* current list */}
-          <div className="bg-base-300 w-full h-full">
+          <div className="bg-base-300 w-full min-h-96 h-full">
             {list.map((game) => (
               <div
                 key={game.id}
