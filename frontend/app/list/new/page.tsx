@@ -81,6 +81,8 @@ const page = () => {
   }, [profile]);
 
   const addGameToList = (game: GamePreview) => {
+    const gameSlugs = list.map((game) => game.slug);
+    if (gameSlugs.includes(game.slug)) return;
     setList([...list, game]);
   };
 
