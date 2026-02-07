@@ -48,7 +48,8 @@ export const getPostsByTags = async (tagIds: number[]) => {
   const { data, error } = await supabase
     .from("posts_by_tag")
     .select("*")
-    .in("tag_id", tagIds);
+    .in("tag_id", tagIds)
+    .order("created_at", { ascending: false });
   if (error) {
     console.error("Error fetching posts: ", error);
     throw error;
@@ -59,7 +60,8 @@ export const getPostsByUserIds = async (user_ids: string[]) => {
   const { data, error } = await supabase
     .from("posts")
     .select("*")
-    .in("user_id", user_ids);
+    .in("user_id", user_ids)
+    .order("created_at", { ascending: false });
   if (error) {
     console.error("Error fetching posts: ", error);
     throw error;
