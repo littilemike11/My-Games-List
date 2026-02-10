@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import DrawerLayout from "./components/DrawerLayout";
 import { AuthProvider } from "./auth/auth-context";
+import { GoogleTagManager } from "@next/third-parties/google";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme="night">
+      <GoogleTagManager gtmId="G-QZJ4XTV4BJ" />
+
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
