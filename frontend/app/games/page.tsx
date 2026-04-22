@@ -26,17 +26,6 @@ const GamesPage = () => {
     where version_parent = null;
     limit 10;
   `;
-  let activeTab = "";
-  const tabs = [
-    { name: "Platform", slug: "platform" },
-    { name: "Year", slug: "year" },
-    // { name: "Games", slug: "games" },
-    { name: "Genre", slug: "genre" },
-    { name: "Theme", slug: "theme" },
-    { name: "Rating", slug: "rating" },
-    { name: "Company", slug: "company" },
-    { name: "Popularity", slug: "popularit" },
-  ];
   return (
     <>
       <GameFilters />

@@ -52,7 +52,7 @@ export const IGDBthemes = [
 ];
 
 // Array of names
-export const themeNames = [
+export const themeSlugs = [
   "action",
   "business",
   "comedy",
@@ -77,7 +77,7 @@ export const themeNames = [
   "4x-explore-expand-exploit-and-exterminate",
 ];
 
-export const themeSlugs: string[] = [
+export const themeNames: string[] = [
   "Action",
   "Business",
   "Comedy",
