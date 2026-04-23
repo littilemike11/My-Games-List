@@ -1,5 +1,6 @@
 import Link from "next/link";
 import GameFilters from "../components/GameFilters";
+import GameSortOptions from "../components/GameSortOptions";
 /*  FILTERS
     - Platform: can toggle / include multiple
         - potentially switch to a steam api for pc
@@ -29,6 +30,7 @@ const GamesPage = () => {
   return (
     <>
       <GameFilters />
+      <GameSortOptions />
     </>
   );
 };

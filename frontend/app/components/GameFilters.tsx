@@ -62,64 +62,82 @@ const GameFilters = () => {
   ];
 
   const removeFilterOfType = (type: FILTERS) => {
+    const clear = (
+      list: string[],
+      setList: React.Dispatch<React.SetStateAction<string[]>>,
+    ) => {
+      setfilters((prev) => prev.filter((f) => !list.includes(f)));
+      setList([]);
+    };
+
     switch (type) {
       case "Platform":
-        setfilters(
-          filters.filter((filter) => !filteredPlatforms.includes(filter)),
-        );
-        setPlatforms([]);
+        clear(filteredPlatforms, setPlatforms);
+        break;
 
+      case "Year":
+        clear(filteredYears, setYears);
+        break;
+
+      case "Genre":
+        clear(filteredGenres, setGenres);
+        break;
+
+      case "Theme":
+        clear(filteredThemes, setThemes);
+        break;
+
+      case "Company":
+        clear(filteredCompanies, setCompanies);
         break;
 
       default:
         break;
     }
   };
+
   const removeFilter = (filterName: string) => {
     setfilters(filters.filter((filter) => filter !== filterName));
   };
 
   const addFilter = (filterName: string, type: FILTERS) => {
+    const toggle = (
+      list: string[],
+      setList: React.Dispatch<React.SetStateAction<string[]>>,
+    ) => {
+      if (list.includes(filterName)) {
+        setList(list.filter((item) => item !== filterName));
+        setfilters((prev) => prev.filter((f) => f !== filterName));
+      } else {
+        setList([...list, filterName]);
+        setfilters((prev) => [...prev, filterName]);
+      }
+    };
+
     switch (type) {
       case "Platform":
-        if (filteredPlatforms.includes(filterName)) {
-          setPlatforms(filteredPlatforms.filter((p) => p !== filterName));
-          removeFilter(filterName);
-        } else {
-          setPlatforms([...filteredPlatforms, filterName]);
-        }
+        toggle(filteredPlatforms, setPlatforms);
         break;
+
       case "Year":
-        if (filteredYears.includes(filterName.toString())) {
-          removeFilter(filterName);
-        } else {
-          setYears([...filteredYears, filterName]);
-        }
+        toggle(filteredYears, setYears);
         break;
+
       case "Genre":
-        if (filteredGenres.includes(filterName)) {
-          removeFilter(filterName);
-        } else {
-          setGenres([...filteredGenres, filterName]);
-        }
+        toggle(filteredGenres, setGenres);
         break;
+
       case "Theme":
-        if (filteredThemes.includes(filterName.toString())) {
-          removeFilter(filterName);
-        } else {
-          setThemes([...filteredThemes, filterName]);
-        }
+        toggle(filteredThemes, setThemes);
+        break;
+
+      case "Company":
+        toggle(filteredCompanies, setCompanies);
         break;
 
       default:
         break;
     }
-    if (filters.includes(filterName)) {
-      removeFilter(filterName);
-    } else {
-      setfilters([...filters, filterName]);
-    }
-    console.log(filters);
   };
 
   const clearAllFilters = () => {
@@ -177,17 +195,27 @@ const GameFilters = () => {
             aria-label="Year"
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
-            <div className="grid grid-cols-10 gap-2">
+            <form className="grid grid-cols-10 gap-2">
               {YEARS.map((yr) => (
-                <button
-                  onClick={() => addFilter(yr.toString(), "Year")}
+                <input
                   key={yr}
-                  className="btn btn-outline focus:text-primary"
-                >
-                  {yr}
-                </button>
+                  onChange={() => addFilter(yr.toString(), "Year")}
+                  className="btn btn-outline"
+                  checked={filteredYears.includes(yr.toString())}
+                  aria-checked={filteredYears.includes(yr.toString())}
+                  type="checkbox"
+                  name="frameworks"
+                  aria-label={yr.toString()}
+                />
               ))}
-            </div>
+
+              <input
+                onClick={() => removeFilterOfType("Year")}
+                className="btn btn-square"
+                type="reset"
+                value="×"
+              />
+            </form>
             <p>up to present day</p>
           </div>
           {/* GENRE/THEMES */}
@@ -199,25 +227,49 @@ const GameFilters = () => {
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
             <p className="text-2xl">Genres</p>
-            {genreNames.map((g) => (
-              <button
-                onClick={() => addFilter(g, "Genre")}
-                key={g}
-                className="btn btn-outline my-1 mx-2 focus:text-primary"
-              >
-                {g}
-              </button>
-            ))}
+            <form className="flex flex-wrap gap-2">
+              {genreNames.map((g, index) => (
+                <input
+                  key={index}
+                  onChange={() => addFilter(g, "Genre")}
+                  className="btn btn-outline"
+                  checked={filteredGenres.includes(g)}
+                  aria-checked={filteredGenres.includes(g)}
+                  type="checkbox"
+                  name="frameworks"
+                  aria-label={g}
+                />
+              ))}
+
+              <input
+                onClick={() => removeFilterOfType("Genre")}
+                className="btn btn-square"
+                type="reset"
+                value="×"
+              />
+            </form>
             <p className="text-2xl">Themes</p>
-            {themeNames.map((t) => (
-              <button
-                onClick={() => addFilter(t, "Theme")}
-                key={t}
-                className="btn btn-outline my-1 mx-2 focus:text-primary"
-              >
-                {t}
-              </button>
-            ))}
+            <form className="flex flex-wrap gap-2">
+              {themeNames.map((t, index) => (
+                <input
+                  key={index}
+                  onChange={() => addFilter(t, "Theme")}
+                  className="btn btn-outline"
+                  checked={filteredThemes.includes(t)}
+                  aria-checked={filteredThemes.includes(t)}
+                  type="checkbox"
+                  name="frameworks"
+                  aria-label={t}
+                />
+              ))}
+
+              <input
+                onClick={() => removeFilterOfType("Theme")}
+                className="btn btn-square"
+                type="reset"
+                value="×"
+              />
+            </form>
           </div>
 
           {/* RATING */}
@@ -274,7 +326,25 @@ const GameFilters = () => {
             aria-label="Company"
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
-            <input type="search" name="" id="" />
+            <label className="input">
+              <svg
+                className="h-[1em] opacity-50"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+              >
+                <g
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  strokeWidth="2.5"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.3-4.3"></path>
+                </g>
+              </svg>
+              <input type="search" required placeholder="Search" />
+            </label>{" "}
           </div>
           {/* Popularity */}
           <input
