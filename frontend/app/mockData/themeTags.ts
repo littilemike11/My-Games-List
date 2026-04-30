@@ -27,29 +27,36 @@ export const themes: Record<string, string> = {
 };
 
 export const IGDBthemes = [
-  { name: "Action", id: 67 },
-  { name: "Business", id: 76 },
-  { name: "Comedy", id: 75 },
-  { name: "Drama", id: 56 },
-  { name: "Educational", id: 59 },
-  { name: "Erotic", id: 65 },
-  { name: "Fantasy", id: 68 },
-  { name: "Historical", id: 73 },
-  { name: "Horror", id: 70 },
-  { name: "Kids", id: 60 },
-  { name: "Mystery", id: 66 },
-  { name: "Non-fiction", id: 57 },
-  { name: "Open world", id: 61 },
-  { name: "Party", id: 63 },
-  { name: "Romance", id: 77 },
-  { name: "Sandbox", id: 58 },
-  { name: "Science fiction", id: 69 },
-  { name: "Stealth", id: 74 },
-  { name: "Survival", id: 72 },
-  { name: "Thriller", id: 71 },
-  { name: "Warfare", id: 62 },
-  { name: "4X (explore, expand, exploit, and exterminate)", id: 64 },
+  { slug: "action", name: "Action", id: 67 },
+  { slug: "business", name: "Business", id: 76 },
+  { slug: "comedy", name: "Comedy", id: 75 },
+  { slug: "drama", name: "Drama", id: 56 },
+  { slug: "educational", name: "Educational", id: 59 },
+  { slug: "erotic", name: "Erotic", id: 65 },
+  { slug: "fantasy", name: "Fantasy", id: 68 },
+  { slug: "historical", name: "Historical", id: 73 },
+  { slug: "horror", name: "Horror", id: 70 },
+  { slug: "kids", name: "Kids", id: 60 },
+  { slug: "mystery", name: "Mystery", id: 66 },
+  { slug: "non-fiction", name: "Non-fiction", id: 57 },
+  { slug: "open-world", name: "Open world", id: 61 },
+  { slug: "party", name: "Party", id: 63 },
+  { slug: "romance", name: "Romance", id: 77 },
+  { slug: "sandbox", name: "Sandbox", id: 58 },
+  { slug: "sci-fi", name: "Science fiction", id: 69 },
+  { slug: "stealth", name: "Stealth", id: 74 },
+  { slug: "survival", name: "Survival", id: 72 },
+  { slug: "thriller", name: "Thriller", id: 71 },
+  { slug: "warfare", name: "Warfare", id: 62 },
+  {
+    slug: "4x",
+    name: "4X (explore, expand, exploit, and exterminate)",
+    id: 64,
+  },
 ];
+export const themeMap = Object.fromEntries(
+  IGDBthemes.map((t) => [t.slug, t.id]),
+);
 
 // Array of names
 export const themeSlugs = [
