@@ -33,7 +33,7 @@ type Filters = {
   theme?: string[];
 };
 
-function parseFilters(segments: string[] = []): Filters {
+export function parseFilters(segments: string[] | string = []): Filters {
   const filters: Filters = {};
 
   for (let i = 0; i < segments.length; i += 2) {

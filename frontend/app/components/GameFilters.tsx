@@ -1,5 +1,10 @@
 "use client";
 import Link from "next/link";
+import { parseFilters } from "../games/[[...filters]]/page";
+import { useRouter, usePathname, useParams } from "next/navigation";
+import { platformSlugMap } from "../mockData/platforms";
+import { themeSlugMap } from "../mockData/themeTags";
+import { genreSlugMap } from "../mockData/genreTags";
 /*  FILTERS
     - Platform: can toggle / include multiple
         - potentially switch to a steam api for pc
@@ -18,18 +23,34 @@ import Link from "next/link";
     rating count
 */
 import { platforms } from "../mockData/platforms";
-import { genreNames } from "../mockData/genreTags";
-import { themeNames } from "../mockData/themeTags";
+import { IGDBgenres } from "../mockData/genreTags";
+import { IGDBthemes } from "../mockData/themeTags";
 import { useState } from "react";
 const GameFilters = () => {
-  const [filteredPlatforms, setPlatforms] = useState<string[]>([]);
-  const [filteredYears, setYears] = useState<string[]>([]);
-  const [filteredGenres, setGenres] = useState<string[]>([]);
-  const [filteredThemes, setThemes] = useState<string[]>([]);
-  const [filteredMinRating, setMinRatings] = useState(0);
-  const [filteredMaxRating, setMaxRatings] = useState(100);
-  const [filteredCompanies, setCompanies] = useState<string[]>([]);
+  const router = useRouter();
+  const params = useParams();
+  console.log("params:", params.filters);
 
+  // const [filteredPlatforms, setPlatforms] = useState<string[]>([]);
+  // const [filteredYears, setYears] = useState<string[]>([]);
+  // const [filteredGenres, setGenres] = useState<string[]>([]);
+  // const [filteredThemes, setThemes] = useState<string[]>([]);
+  // const [filteredMinRating, setMinRatings] = useState(0);
+  // const [filteredMaxRating, setMaxRatings] = useState(100);
+  // const [filteredCompanies, setCompanies] = useState<string[]>([]);
+  const segments = params.filters || [];
+
+  const parsed = parseFilters(segments);
+  // console.log(parsed);
+
+  const filteredPlatforms = parsed.platform || [];
+  console.log(filteredPlatforms);
+  const filteredGenres = parsed.genre || [];
+  console.log(filteredGenres);
+  const filteredThemes = parsed.theme || [];
+  console.log(filteredThemes);
+  const filteredYears = parsed.year || [];
+  console.log(filteredYears);
   // can initialize to other filters especiall when sent from a previous link with prerequisite filters
   const [filters, setfilters] = useState<string[]>([]);
   let activeFilter = "";
@@ -72,23 +93,23 @@ const GameFilters = () => {
 
     switch (type) {
       case "Platform":
-        clear(filteredPlatforms, setPlatforms);
+        // clear(filteredPlatforms, setPlatforms);
         break;
 
       case "Year":
-        clear(filteredYears, setYears);
+        // clear(filteredYears, setYears);
         break;
 
       case "Genre":
-        clear(filteredGenres, setGenres);
+        // clear(filteredGenres, setGenres);
         break;
 
       case "Theme":
-        clear(filteredThemes, setThemes);
+        // clear(filteredThemes, setThemes);
         break;
 
       case "Company":
-        clear(filteredCompanies, setCompanies);
+        // clear(filteredCompanies, setCompanies);
         break;
 
       default:
@@ -116,23 +137,23 @@ const GameFilters = () => {
 
     switch (type) {
       case "Platform":
-        toggle(filteredPlatforms, setPlatforms);
+        // toggle(filteredPlatforms, setPlatforms);
         break;
 
       case "Year":
-        toggle(filteredYears, setYears);
+        // toggle(filteredYears, setYears);
         break;
 
       case "Genre":
-        toggle(filteredGenres, setGenres);
+        // toggle(filteredGenres, setGenres);
         break;
 
       case "Theme":
-        toggle(filteredThemes, setThemes);
+        // toggle(filteredThemes, setThemes);
         break;
 
       case "Company":
-        toggle(filteredCompanies, setCompanies);
+        // toggle(filteredCompanies, setCompanies);
         break;
 
       default:
@@ -142,14 +163,64 @@ const GameFilters = () => {
 
   const clearAllFilters = () => {
     setfilters([]);
-    setPlatforms([]);
-    setYears([]);
-    setGenres([]);
-    setThemes([]);
-    setMinRatings(0);
-    setMaxRatings(100);
-    setCompanies([]);
+    // setPlatforms([]);
+    // setYears([]);
+    // setGenres([]);
+    // setThemes([]);
+    // setMinRatings(0);
+    // setMaxRatings(100);
+    // setCompanies([]);
   };
+  type Filters = {
+    platform?: string[];
+    year?: string[];
+    genre?: string[];
+    theme?: string[];
+  };
+  function toggleFilter(value: string, type: keyof Filters) {
+    const current =
+      {
+        platform: filteredPlatforms,
+        year: filteredYears,
+        genre: filteredGenres,
+        theme: filteredThemes,
+      }[type] || [];
+
+    const next = current.includes(value)
+      ? current.filter((v) => v !== value)
+      : [...current, value];
+
+    router.push(buildURL({ [type]: next }));
+  }
+
+  function buildURL(updated: any) {
+    const next = {
+      platform: updated.platform ?? filteredPlatforms,
+      year: updated.year ?? filteredYears,
+      genre: updated.genre ?? filteredGenres,
+      theme: updated.theme ?? filteredThemes,
+    };
+
+    const pathParts: string[] = [];
+    console.log(next);
+    if (next.platform?.length) {
+      pathParts.push(`platform/${next.platform.join("+")}`);
+    }
+
+    if (next.year?.length) {
+      pathParts.push(`year/${next.year.join("+")}`);
+    }
+
+    if (next.genre?.length) {
+      pathParts.push(`genre/${next.genre.join("+")}`);
+    }
+
+    if (next.theme?.length) {
+      pathParts.push(`theme/${next.theme.join("+")}`);
+    }
+
+    return `/games/${pathParts.join("/")}`;
+  }
 
   return (
     <>
@@ -169,9 +240,9 @@ const GameFilters = () => {
               {platforms.map((p, index) => (
                 <input
                   key={index}
-                  onChange={() => addFilter(p.name, "Platform")}
+                  onChange={() => toggleFilter(p.slug, "platform")}
                   className="btn btn-outline"
-                  checked={filteredPlatforms.includes(p.name)}
+                  checked={filteredPlatforms.includes(platformSlugMap[p.name])}
                   aria-checked={filteredPlatforms.includes(p.name)}
                   type="checkbox"
                   name="frameworks"
@@ -199,7 +270,7 @@ const GameFilters = () => {
               {YEARS.map((yr) => (
                 <input
                   key={yr}
-                  onChange={() => addFilter(yr.toString(), "Year")}
+                  onChange={() => toggleFilter(yr.toString(), "year")}
                   className="btn btn-outline"
                   checked={filteredYears.includes(yr.toString())}
                   aria-checked={filteredYears.includes(yr.toString())}
@@ -228,16 +299,16 @@ const GameFilters = () => {
           <div className="tab-content bg-base-100 border-base-300 p-6">
             <p className="text-2xl">Genres</p>
             <form className="flex flex-wrap gap-2">
-              {genreNames.map((g, index) => (
+              {IGDBgenres.map((g, index) => (
                 <input
                   key={index}
-                  onChange={() => addFilter(g, "Genre")}
+                  onChange={() => toggleFilter(g.slug, "genre")}
                   className="btn btn-outline"
-                  checked={filteredGenres.includes(g)}
-                  aria-checked={filteredGenres.includes(g)}
+                  checked={filteredGenres.includes(genreSlugMap[g.name])}
+                  aria-checked={filteredGenres.includes(genreSlugMap[g.name])}
                   type="checkbox"
                   name="frameworks"
-                  aria-label={g}
+                  aria-label={g.name}
                 />
               ))}
 
@@ -250,16 +321,16 @@ const GameFilters = () => {
             </form>
             <p className="text-2xl">Themes</p>
             <form className="flex flex-wrap gap-2">
-              {themeNames.map((t, index) => (
+              {IGDBthemes.map((t, index) => (
                 <input
                   key={index}
-                  onChange={() => addFilter(t, "Theme")}
+                  onChange={() => toggleFilter(t.slug, "theme")}
                   className="btn btn-outline"
-                  checked={filteredThemes.includes(t)}
-                  aria-checked={filteredThemes.includes(t)}
+                  checked={filteredThemes.includes(themeSlugMap[t.name])}
+                  aria-checked={filteredThemes.includes(themeSlugMap[t.name])}
                   type="checkbox"
                   name="frameworks"
-                  aria-label={t}
+                  aria-label={t.name}
                 />
               ))}
 

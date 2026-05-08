@@ -57,6 +57,9 @@ export const IGDBthemes = [
 export const themeMap = Object.fromEntries(
   IGDBthemes.map((t) => [t.slug, t.id]),
 );
+export const themeSlugMap = Object.fromEntries(
+  IGDBthemes.map((t) => [t.name, t.slug]),
+);
 
 // Array of names
 export const themeSlugs = [

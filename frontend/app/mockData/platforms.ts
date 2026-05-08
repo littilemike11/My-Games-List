@@ -15,3 +15,6 @@ export const platforms = [
 export const platformMap = Object.fromEntries(
   platforms.map((p) => [p.slug, p.id]),
 );
+export const platformSlugMap = Object.fromEntries(
+  platforms.map((p) => [p.name, p.slug]),
+);

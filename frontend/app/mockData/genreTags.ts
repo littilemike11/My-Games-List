@@ -27,6 +27,9 @@ export const IGDBgenres = [
 export const genreMap = Object.fromEntries(
   IGDBgenres.map((g) => [g.slug, g.id]),
 );
+export const genreSlugMap = Object.fromEntries(
+  IGDBgenres.map((g) => [g.name, g.slug]),
+);
 
 // Object: name → slug
 export const genres: Record<string, string> = {
