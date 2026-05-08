@@ -1,4 +1,5 @@
 // app/components/GoogleNewsFeed.tsx
+
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,6 +7,8 @@ export const metadata: Metadata = {
   description: "Keep up with the latest gaming news in accordance with Google",
 };
 import Parser from "rss-parser";
+
+export const revalidate = 3600; // revalidate at most every hour
 
 type Article = {
   title: string;
@@ -18,7 +21,7 @@ const parser = new Parser();
 
 async function fetchGoogleNews(): Promise<Article[]> {
   const feed = await parser.parseURL(
-    "https://news.google.com/rss/search?q=gaming&hl=en-US&gl=US&ceid=US:en"
+    "https://news.google.com/rss/search?q=gaming&hl=en-US&gl=US&ceid=US:en",
   );
 
   console.log(feed);
