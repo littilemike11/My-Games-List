@@ -31,16 +31,20 @@ const GameFilters = () => {
   const params = useParams();
   console.log("params:", params.filters);
 
-  // const [filteredPlatforms, setPlatforms] = useState<string[]>([]);
-  // const [filteredYears, setYears] = useState<string[]>([]);
-  // const [filteredGenres, setGenres] = useState<string[]>([]);
-  // const [filteredThemes, setThemes] = useState<string[]>([]);
-  // const [filteredMinRating, setMinRatings] = useState(0);
-  // const [filteredMaxRating, setMaxRatings] = useState(100);
-  // const [filteredCompanies, setCompanies] = useState<string[]>([]);
   const segments = params.filters || [];
 
   const parsed = parseFilters(segments);
+
+  // const [filteredPlatforms, setPlatforms] = useState<string[]>(
+  //   parsed.platform || [],
+  // );
+  // const [filteredYears, setYears] = useState<string[]>(parsed.year || []);
+  // const [filteredGenres, setGenres] = useState<string[]>(parsed.genre || []);
+  // const [filteredThemes, setThemes] = useState<string[]>(parsed.theme || []);
+  // const [filteredMinRating, setMinRatings] = useState(0);
+  // const [filteredMaxRating, setMaxRatings] = useState(100);
+  // const [filteredCompanies, setCompanies] = useState<string[]>([]);
+
   // console.log(parsed);
 
   const filteredPlatforms = parsed.platform || [];
@@ -51,28 +55,33 @@ const GameFilters = () => {
   console.log(filteredThemes);
   const filteredYears = parsed.year || [];
   console.log(filteredYears);
-  // can initialize to other filters especiall when sent from a previous link with prerequisite filters
-  const [filters, setfilters] = useState<string[]>([]);
-  let activeFilter = "";
-  type FILTERS =
-    | "Platform"
-    | "Year"
-    | "Genre"
-    | "Theme"
-    | "Rating"
-    | "Company"
-    | "Popularity";
 
-  /*
-  { name: "Platform", slug: "platform" },
-    { name: "Year", slug: "year" },
-    // { name: "Games", slug: "games" },
-    { name: "Genre", slug: "genre" },
-    { name: "Theme", slug: "theme" },
-    { name: "Rating", slug: "rating" },
-    { name: "Company", slug: "company" },
-    { name: "Popularity", slug: "popularit" },
-  */
+  interface filterType {
+    filterType: keyof Filters;
+    name: string;
+  }
+  let filters: filterType[] = [];
+  if (filteredPlatforms)
+    filteredPlatforms.map((p) =>
+      filters.push({ filterType: "platform", name: p }),
+    );
+  // if (filteredGenres)
+  //   if (filteredThemes)
+  // filteredGenres.map((g) => filters.push({ filter: "Genre", name: g }));
+  // if (filteredYears)
+  // filteredThemes.map((t) => filters.push({ filter: "Theme", name: t }));
+  // filteredYears.map((yr) => filters.push({ filter: "Year", name: yr }));
+
+  console.log(filters);
+  // can initialize to other filters especiall when sent from a previous link with prerequisite filters
+  // const [filters, setfilters] = useState<string[]>(
+  //   filteredPlatforms
+  //     .concat(filteredGenres)
+  //     .concat(filteredThemes)
+  //     .concat(filteredYears),
+  // );
+  let activeFilter = "";
+  type FILTERS = "Platform" | "Year" | "Genre" | "Theme" | "Rating" | "Hype";
 
   const start = 1972;
   const end = new Date().getFullYear() + 2;
@@ -82,87 +91,75 @@ const GameFilters = () => {
     1958,
   ];
 
-  const removeFilterOfType = (type: FILTERS) => {
-    const clear = (
-      list: string[],
-      setList: React.Dispatch<React.SetStateAction<string[]>>,
-    ) => {
-      setfilters((prev) => prev.filter((f) => !list.includes(f)));
-      setList([]);
-    };
+  const removeFilterOfType = (type: keyof Filters) => {
+    const current =
+      {
+        platform: filteredPlatforms,
+        year: filteredYears,
+        genre: filteredGenres,
+        theme: filteredThemes,
+      }[type] || [];
 
-    switch (type) {
-      case "Platform":
-        // clear(filteredPlatforms, setPlatforms);
-        break;
-
-      case "Year":
-        // clear(filteredYears, setYears);
-        break;
-
-      case "Genre":
-        // clear(filteredGenres, setGenres);
-        break;
-
-      case "Theme":
-        // clear(filteredThemes, setThemes);
-        break;
-
-      case "Company":
-        // clear(filteredCompanies, setCompanies);
-        break;
-
-      default:
-        break;
+    if (current.includes(type)) {
+      const next = current.filter((f) => f !== type);
+      router.push(buildURL({ [type]: next }));
     }
+    return;
   };
 
-  const removeFilter = (filterName: string) => {
-    setfilters(filters.filter((filter) => filter !== filterName));
+  const removeFilter = (filter: filterType) => {
+    filters.filter((f) => f.name == filter.name);
+    // toggleFilter(filter.name, filter.filter);
   };
 
-  const addFilter = (filterName: string, type: FILTERS) => {
-    const toggle = (
-      list: string[],
-      setList: React.Dispatch<React.SetStateAction<string[]>>,
-    ) => {
-      if (list.includes(filterName)) {
-        setList(list.filter((item) => item !== filterName));
-        setfilters((prev) => prev.filter((f) => f !== filterName));
-      } else {
-        setList([...list, filterName]);
-        setfilters((prev) => [...prev, filterName]);
-      }
-    };
+  // const removeFilter = (filterName: string) => {
+  //   setfilters(filters.filter((filter) => filter !== filterName));
+  // };
 
-    switch (type) {
-      case "Platform":
-        // toggle(filteredPlatforms, setPlatforms);
-        break;
+  // const addFilter = (filterName: string, type: FILTERS) => {
+  //   const toggle = (
+  //     list: string[],
+  //     setList: React.Dispatch<React.SetStateAction<string[]>>,
+  //   ) => {
+  //     if (list.includes(filterName)) {
+  //       setList(list.filter((item) => item !== filterName));
+  //       setfilters((prev) => prev.filter((f) => f !== filterName));
+  //     } else {
+  //       setList([...list, filterName]);
+  //       setfilters((prev) => [...prev, filterName]);
+  //     }
+  //   };
 
-      case "Year":
-        // toggle(filteredYears, setYears);
-        break;
+  //   switch (type) {
+  //     case "Platform":
+  //       // toggle(filteredPlatforms, setPlatforms);
+  //       break;
 
-      case "Genre":
-        // toggle(filteredGenres, setGenres);
-        break;
+  //     case "Year":
+  //       // toggle(filteredYears, setYears);
+  //       break;
 
-      case "Theme":
-        // toggle(filteredThemes, setThemes);
-        break;
+  //     case "Genre":
+  //       // toggle(filteredGenres, setGenres);
+  //       break;
 
-      case "Company":
-        // toggle(filteredCompanies, setCompanies);
-        break;
+  //     case "Theme":
+  //       // toggle(filteredThemes, setThemes);
+  //       break;
 
-      default:
-        break;
-    }
-  };
+  //     case "Company":
+  //       // toggle(filteredCompanies, setCompanies);
+  //       break;
+
+  //     default:
+  //       break;
+  //   }
+  // };
+
+  const applyFilters = () => {};
 
   const clearAllFilters = () => {
-    setfilters([]);
+    // setfilters([]);
     // setPlatforms([]);
     // setYears([]);
     // setGenres([]);
@@ -251,8 +248,8 @@ const GameFilters = () => {
               ))}
 
               <input
-                onClick={() => removeFilterOfType("Platform")}
-                className="btn btn-square"
+                onClick={() => removeFilterOfType("platform")}
+                className="btn btn-square text-error"
                 type="reset"
                 value="×"
               />
@@ -281,7 +278,7 @@ const GameFilters = () => {
               ))}
 
               <input
-                onClick={() => removeFilterOfType("Year")}
+                onClick={() => removeFilterOfType("year")}
                 className="btn btn-square"
                 type="reset"
                 value="×"
@@ -313,8 +310,8 @@ const GameFilters = () => {
               ))}
 
               <input
-                onClick={() => removeFilterOfType("Genre")}
-                className="btn btn-square"
+                onClick={() => removeFilterOfType("genre")}
+                className="btn btn-square btn-error"
                 type="reset"
                 value="×"
               />
@@ -335,7 +332,7 @@ const GameFilters = () => {
               ))}
 
               <input
-                onClick={() => removeFilterOfType("Theme")}
+                onClick={() => removeFilterOfType("theme")}
                 className="btn btn-square"
                 type="reset"
                 value="×"
@@ -350,45 +347,7 @@ const GameFilters = () => {
             className="tab active:text-primary/70 focus:text-primary"
             aria-label="Rating"
           />
-          <div className="tab-content bg-base-100 border-base-300 p-6">
-            <div className="flex flex-col justify-center border">
-              <input
-                type="range"
-                min={0}
-                max="100"
-                defaultValue="40"
-                className="range text-blue-300 [--range-bg:orange] [--range-thumb:blue] [--range-fill:0]"
-              />
-              <div className="w-full max-w-xs">
-                <input
-                  type="range"
-                  min={0}
-                  max="100"
-                  defaultValue="25"
-                  className="range"
-                  step="25"
-                />
-                <div className="flex justify-between px-2.5 mt-2 text-xs">
-                  <span>|</span>
-                  <span>|</span>
-                  <span>|</span>
-                  <span>|</span>
-                  <span>|</span>
-                </div>
-                <div className="flex justify-between px-2.5 mt-2 text-xs">
-                  <span>1</span>
-                  <span>2</span>
-                  <span>3</span>
-                  <span>4</span>
-                  <span>5</span>
-                </div>
-              </div>
-              <div className="flex justify-between">
-                <input type="number" name="" id="" />
-                <input type="number" name="" id="" />
-              </div>
-            </div>
-          </div>
+
           {/* COMPANY */}
           <input
             type="radio"
@@ -428,30 +387,37 @@ const GameFilters = () => {
             <input type="search" name="" id="" />
           </div>
         </div>
+        {/*Active Filters list */}
         <div className="flex flex-wrap gap-2">
           {filters.length > 0 &&
             filters.map((filter, index) => (
-              <div key={index} className="badge badge-outline badge-secondary">
-                {filter}
-                <button
-                  onClick={() => removeFilter(filter)}
-                  className="btn btn-xs btn-circle btn-ghost text-error active:text-black btn-error"
-                >
-                  x
-                </button>
-              </div>
+              <button
+                key={index}
+                className="btn btn-secondary btn-sm rounded-4xl"
+                onClick={() => toggleFilter(filter.name, filter.filterType)}
+              >
+                {filter.name}
+                <div className="text-red-500">x</div>
+              </button>
             ))}
         </div>
-        <div>
-          {filters.length > 0 && (
+
+        {filters.length > 0 && (
+          <div className="flex justify-between">
             <button
               onClick={() => clearAllFilters()}
               className="btn btn-sm btn-ghost"
             >
               Clear Filters
             </button>
-          )}
-        </div>
+            <button
+              onClick={() => applyFilters()}
+              className="btn btn-primary border-2 border-black"
+            >
+              Apply Filters
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
