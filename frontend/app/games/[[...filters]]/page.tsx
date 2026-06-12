@@ -31,6 +31,8 @@ type Filters = {
   year?: string[];
   genre?: string[];
   theme?: string[];
+  rating?: string[];
+  hype?: string[];
 };
 
 export function parseFilters(segments: string[] | string = []): Filters {
@@ -55,7 +57,11 @@ export function parseFilters(segments: string[] | string = []): Filters {
         break;
       case "theme":
         filters.theme = value.split("+");
-
+      case "rating":
+        filters.rating = value.split(" ");
+        break;
+      case "hype":
+        filters.hype = value.split(" ");
         break;
     }
   }
@@ -75,8 +81,8 @@ function generateQuery(filters: any): string {
   const fields =
     "fields cover.url, name, slug, first_release_date, rating, rating_count;";
   let whereClause = `where version_parent=null`;
-  let sortClause = `;sort rating desc`;
-  let limitClause = ";limit 50;";
+  let sortClause = `; sort rating desc`;
+  let limitClause = "; limit 50;";
 
   //  add filters in where clause
   // Platforms
@@ -109,7 +115,17 @@ function generateQuery(filters: any): string {
       whereClause += ` & themes = (${ids}) `;
     }
   }
+  // rating
+  if (filters.rating?.length) {
+    console.log(filters.rating);
+    whereClause += ` & rating >= ${filters.rating} `;
+  }
 
+  // hypes
+  if (filters.hype?.length) {
+    console.log(filters.hype);
+    whereClause += ` & hypes >= ${filters.hype} `;
+  }
   query = fields + whereClause + sortClause + limitClause;
   return query;
 }
