@@ -25,7 +25,7 @@ import { genreSlugMap } from "../mockData/genreTags";
 import { platforms } from "../mockData/platforms";
 import { IGDBgenres } from "../mockData/genreTags";
 import { IGDBthemes } from "../mockData/themeTags";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 const GameFilters = () => {
   const router = useRouter();
   const params = useParams();
@@ -45,7 +45,9 @@ const GameFilters = () => {
   console.log(filteredYears);
   const filteredRating = parsed.rating || [];
   const filteredHypes = parsed.hype || [];
-
+  // console.log(filteredRating[0]);
+  const [minRating, setMinRating] = useState(filteredRating[0]);
+  const [minHypes, setMinHypes] = useState(filteredHypes[0]);
   type Filters = {
     platform?: string[];
     year?: string[];
@@ -70,7 +72,7 @@ const GameFilters = () => {
     filteredYears.map((yr) => filters.push({ filterType: "year", name: yr }));
   if (filteredThemes)
     filteredThemes.map((t) => filters.push({ filterType: "theme", name: t }));
-  if (filteredRating)
+  if (filteredRating[0])
     filteredRating.map((r) => filters.push({ filterType: "rating", name: r }));
   if (filteredHypes)
     filteredHypes.map((p) => filters.push({ filterType: "hype", name: p }));
@@ -92,6 +94,28 @@ const GameFilters = () => {
     router.push("/games/");
   };
 
+  useEffect(() => {
+    if (!minRating) return;
+    if (minRating === filteredRating[0]) return;
+
+    const delay = setTimeout(() => {
+      toggleFilter(minRating, "rating");
+    }, 500);
+
+    return () => clearTimeout(delay);
+  }, [minRating, filteredRating]);
+
+  useEffect(() => {
+    if (!minHypes) return;
+    if (minHypes === filteredHypes[0]) return;
+
+    const delay = setTimeout(() => {
+      toggleFilter(minHypes, "hype");
+    }, 500);
+
+    return () => clearTimeout(delay);
+  }, [minHypes, filteredHypes]);
+
   function toggleFilter(value: string, type: keyof Filters) {
     const current =
       {
@@ -103,9 +127,10 @@ const GameFilters = () => {
         hype: filteredHypes,
       }[type] || [];
 
-    let next;
+    let next = current;
+    console.log("next:", next);
     if (type == "rating" || type == "hype") {
-      next = current.includes(value) ? [] : (next = [value]);
+      next = value != next[0] ? [value] : [];
     } else {
       next = current.includes(value)
         ? current.filter((v) => v !== value)
@@ -294,11 +319,12 @@ const GameFilters = () => {
               className="flex flex-wrap gap-2"
             >
               <input
-                onChange={(e) => toggleFilter(e.target.value, "rating")}
+                onChange={(e) => setMinRating(e.target.value)}
                 type="range"
                 min={0}
                 max="100"
-                defaultValue="0"
+                // defaultValue={filteredRating[0] ?? 0}
+                value={minRating ?? 0}
                 className="range range-secondary"
               />
               <input
@@ -307,8 +333,10 @@ const GameFilters = () => {
                 placeholder="Type a number between 1 to 100"
                 min="0"
                 max="100"
+                // defaultValue={filteredRating[0] ?? 0}
+                value={minRating}
                 title="Must be between be 1 to 100"
-                onChange={(e) => toggleFilter(e.target.value, "rating")}
+                onChange={(e) => setMinRating(e.target.value)}
               />
               <p className="validator-hint">Min Rating</p>
 
@@ -334,7 +362,7 @@ const GameFilters = () => {
               className="flex flex-wrap gap-2"
             >
               <input
-                onChange={(e) => toggleFilter(e.target.value, "hype")}
+                onChange={(e) => setMinHypes(e.target.value)}
                 type="number"
                 className="input validator"
                 placeholder="choose # of hypes"
