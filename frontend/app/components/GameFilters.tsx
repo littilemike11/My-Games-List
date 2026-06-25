@@ -128,7 +128,6 @@ const GameFilters = () => {
       }[type] || [];
 
     let next = current;
-    console.log("next:", next);
     if (type == "rating" || type == "hype") {
       next = value != next[0] ? [value] : [];
     } else {
@@ -367,6 +366,7 @@ const GameFilters = () => {
                 className="input validator"
                 placeholder="choose # of hypes"
                 min="0"
+                value={minHypes}
               />
               <input
                 className="btn btn-square btn-error"

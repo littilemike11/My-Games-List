@@ -33,6 +33,7 @@ type Filters = {
   theme?: string[];
   rating?: string[];
   hype?: string[];
+  sort?: string[];
 };
 
 export function parseFilters(segments: string[] | string = []): Filters {
@@ -63,6 +64,8 @@ export function parseFilters(segments: string[] | string = []): Filters {
       case "hype":
         filters.hype = value.split(" ");
         break;
+      case "sort":
+        filters.sort = value.split(" ");
     }
   }
 
@@ -76,12 +79,55 @@ function getYearTimestamps(year: number) {
   return { start, end };
 }
 
+type SORT_OPTIONS =
+  | "rating_desc"
+  | "rating_asc"
+  | "title_desc"
+  | "title_asc"
+  | "date_asc"
+  | "date_desc"
+  | "hypes_asc"
+  | "hypes_desc";
+
+const manageSortOptions = (sortOption: SORT_OPTIONS) => {
+  let sortQuery = "; sort ";
+  switch (sortOption) {
+    case "rating_desc":
+      sortQuery += "rating desc";
+      break;
+    case "rating_asc":
+      sortQuery += "rating asc";
+      break;
+    case "title_desc":
+      sortQuery += "name desc";
+      break;
+    case "title_asc":
+      sortQuery += "name asc";
+      break;
+    case "hypes_desc":
+      sortQuery += "hypes desc";
+      break;
+    case "hypes_asc":
+      sortQuery += "hypes asc";
+      break;
+    case "date_desc":
+      sortQuery += "first_release_date desc";
+      break;
+    case "date_asc":
+      sortQuery += "first_release_date asc";
+      break;
+    default:
+      sortQuery += "rating desc";
+  }
+  return sortQuery;
+};
+
 function generateQuery(filters: any): string {
   let query = "";
   const fields =
     "fields cover.url, name, slug, first_release_date, rating, rating_count;";
   let whereClause = `where version_parent=null`;
-  let sortClause = `; sort rating desc`;
+  let sortClause = "; sort rating desc";
   let limitClause = "; limit 50;";
 
   //  add filters in where clause
@@ -126,6 +172,12 @@ function generateQuery(filters: any): string {
     console.log(filters.hype);
     whereClause += ` & hypes >= ${filters.hype} `;
   }
+
+  if (filters.sort?.length) {
+    console.log(filters.sort);
+    sortClause = manageSortOptions(filters.sort[0]);
+  }
+
   query = fields + whereClause + sortClause + limitClause;
   return query;
 }
@@ -142,12 +194,6 @@ export default async function GamePage({
 
   console.log(parsedFilters);
 
-  //   const gameQuery = `
-  //     fields cover.url, name, slug, first_release_date, rating, rating_count;
-  // where version_parent=null & platforms={48,6} ;
-  // sort rating desc;
-  // limit 10;
-  //   `;
   const gameQuery = generateQuery(parsedFilters);
   console.log(gameQuery);
   const games = await getGames(gameQuery);
