@@ -2,8 +2,6 @@
 import Link from "next/link";
 import getGames from "@/app/api/igdb-api-server";
 import GameFilters from "../../components/GameFilters";
-import GameSortOptions from "../../components/GameSortOptions";
-import FilteredReults from "./FilteredResults";
 import { platformMap } from "@/app/mockData/platforms";
 import { genreMap } from "@/app/mockData/genreTags";
 import { themeMap } from "@/app/mockData/themeTags";
@@ -201,7 +199,7 @@ export default async function GamePage({
   return (
     <>
       <GameFilters />
-      <GameSortOptions />
+      {/* <GameSortOptions /> */}
       {/* <FilteredReults /> */}
       <div className="flex flex-wrap gap-4">
         {games.map((game: any) => (

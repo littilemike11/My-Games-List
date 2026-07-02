@@ -5,6 +5,13 @@ import { useRouter, usePathname, useParams } from "next/navigation";
 import { platformSlugMap } from "../mockData/platforms";
 import { themeSlugMap } from "../mockData/themeTags";
 import { genreSlugMap } from "../mockData/genreTags";
+import { FaSortAlphaUpAlt, FaSortAmountDownAlt } from "react-icons/fa";
+import { FaSortAlphaDown } from "react-icons/fa";
+import { FaSortAmountDown } from "react-icons/fa";
+import { FaSortAmountUpAlt } from "react-icons/fa";
+import { FaSortAlphaDownAlt } from "react-icons/fa";
+import { FaSort } from "react-icons/fa";
+
 /*  FILTERS
     - Platform: can toggle / include multiple
         - potentially switch to a steam api for pc
@@ -45,6 +52,9 @@ const GameFilters = () => {
   console.log(filteredYears);
   const filteredRating = parsed.rating || [];
   const filteredHypes = parsed.hype || [];
+  const sortOption = parsed.sort || [];
+  // let sortOption = parsed.sort?.length ? parsed.sort[0] : "rating_desc";
+
   // console.log(filteredRating[0]);
   const [minRating, setMinRating] = useState(filteredRating[0]);
   const [minHypes, setMinHypes] = useState(filteredHypes[0]);
@@ -55,6 +65,7 @@ const GameFilters = () => {
     theme?: string[];
     rating?: string[];
     hype?: string[];
+    sort?: string[];
   };
 
   interface filterType {
@@ -74,8 +85,10 @@ const GameFilters = () => {
     filteredThemes.map((t) => filters.push({ filterType: "theme", name: t }));
   if (filteredRating[0])
     filteredRating.map((r) => filters.push({ filterType: "rating", name: r }));
-  if (filteredHypes)
+  if (filteredHypes[0])
     filteredHypes.map((p) => filters.push({ filterType: "hype", name: p }));
+  if (sortOption[0])
+    sortOption.map((s) => filters.push({ filterType: "sort", name: s }));
   console.log(filters);
 
   const start = 1972;
@@ -125,10 +138,11 @@ const GameFilters = () => {
         theme: filteredThemes,
         rating: filteredRating,
         hype: filteredHypes,
+        sort: sortOption,
       }[type] || [];
 
     let next = current;
-    if (type == "rating" || type == "hype") {
+    if (type == "rating" || type == "hype" || type == "sort") {
       next = value != next[0] ? [value] : [];
     } else {
       next = current.includes(value)
@@ -146,6 +160,7 @@ const GameFilters = () => {
       theme: updated.theme ?? filteredThemes,
       rating: updated.rating ?? filteredRating,
       hype: updated.hype ?? filteredHypes,
+      sort: updated.sort ?? sortOption,
     };
 
     const pathParts: string[] = [];
@@ -173,7 +188,9 @@ const GameFilters = () => {
     if (next.hype?.length) {
       pathParts.push(`hype/${next.hype}`);
     }
-
+    if (next.sort?.length) {
+      pathParts.push(`sort/${next.sort}`);
+    }
     return `/games/${pathParts.join("/")}`;
   }
 
@@ -405,6 +422,93 @@ const GameFilters = () => {
             </button>
           </div>
         )}
+      </div>
+      {/* SORT OPTIONS */}
+      <div className="flex justify-between border-b-2">
+        <button
+          onClick={
+            sortOption[0] == "title_asc"
+              ? () => toggleFilter("title_desc", "sort")
+              : () => toggleFilter("title_asc", "sort")
+          }
+          className={`btn btn-md ${
+            (sortOption[0] === "title_desc" || sortOption[0] === "title_asc") &&
+            "font-bold text-primary"
+          }`}
+        >
+          Title
+          {sortOption[0] === "title_desc" ? (
+            <FaSortAlphaDownAlt />
+          ) : sortOption[0] === "title_asc" ? (
+            <FaSortAlphaDown />
+          ) : (
+            <FaSort />
+          )}
+        </button>
+        <div className="flex gap-1">
+          <button
+            onClick={
+              sortOption[0] == "rating_desc"
+                ? () => toggleFilter("rating_asc", "sort")
+                : () => toggleFilter("rating_desc", "sort")
+            }
+            className={`btn btn-md ${
+              (sortOption[0] === "rating_desc" ||
+                sortOption[0] === "rating_asc") &&
+              "font-bold text-primary"
+            }`}
+          >
+            Rating
+            {sortOption[0] === "rating_desc" ? (
+              <FaSortAmountDown />
+            ) : sortOption[0] === "rating_asc" ? (
+              <FaSortAmountDownAlt />
+            ) : (
+              <FaSort />
+            )}
+          </button>
+          <button
+            onClick={
+              sortOption[0] == "hypes_desc"
+                ? () => toggleFilter("hypes_asc", "sort")
+                : () => toggleFilter("hypes_desc", "sort")
+            }
+            className={`btn btn-md ${
+              (sortOption[0] === "hypes_desc" ||
+                sortOption[0] === "hypes_asc") &&
+              "font-bold text-primary"
+            }`}
+          >
+            Hypes
+            {sortOption[0] === "hypes_desc" ? (
+              <FaSortAmountDown />
+            ) : sortOption[0] === "hypes_asc" ? (
+              <FaSortAmountDownAlt />
+            ) : (
+              <FaSort />
+            )}
+          </button>
+          <button
+            onClick={
+              sortOption[0] == "date_desc"
+                ? () => toggleFilter("date_asc", "sort")
+                : () => toggleFilter("date_desc", "sort")
+            }
+            className={`btn btn-md ${
+              (sortOption[0] === "date_desc" || sortOption[0] === "date_asc") &&
+              "font-bold text-primary"
+            }`}
+          >
+            Date
+            {sortOption[0] === "date_desc" ? (
+              <FaSortAmountDown />
+            ) : sortOption[0] === "date_asc" ? (
+              <FaSortAmountDownAlt />
+            ) : (
+              <FaSort />
+            )}
+          </button>
+        </div>
       </div>
     </>
   );
