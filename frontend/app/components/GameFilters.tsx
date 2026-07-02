@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { parseFilters } from "../games/[[...filters]]/page";
-import { useRouter, usePathname, useParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { platformSlugMap } from "../mockData/platforms";
 import { themeSlugMap } from "../mockData/themeTags";
 import { genreSlugMap } from "../mockData/genreTags";
@@ -339,22 +339,20 @@ const GameFilters = () => {
                 type="range"
                 min={0}
                 max="100"
-                // defaultValue={filteredRating[0] ?? 0}
                 value={minRating ?? 0}
                 className="range range-secondary"
               />
               <input
                 type="number"
                 className="input validator"
-                placeholder="Type a number between 1 to 100"
+                placeholder="Enter a ratting between 0 to 100"
                 min="0"
                 max="100"
-                // defaultValue={filteredRating[0] ?? 0}
                 value={minRating}
-                title="Must be between be 1 to 100"
+                title="Must be between be 0 to 100"
                 onChange={(e) => setMinRating(e.target.value)}
               />
-              <p className="validator-hint">Min Rating</p>
+              <p className="validator-hint">Rating must be between 0-100</p>
 
               <input
                 onClick={() => removeFilterOfType("rating")}
