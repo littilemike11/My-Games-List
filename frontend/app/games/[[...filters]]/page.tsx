@@ -27,6 +27,7 @@ import GamePreviewLink from "@/app/components/GamePreviewLink";
 type Filters = {
   platform?: string[];
   year?: string[];
+  decade?: string[];
   genre?: string[];
   theme?: string[];
   rating?: string[];
@@ -50,6 +51,9 @@ export function parseFilters(segments: string[] | string = []): Filters {
         break;
       case "year":
         filters.year = value.split("+");
+        break;
+      case "decade":
+        filters.decade = value.split("+");
         break;
       case "genre":
         filters.genre = value.split("+");
