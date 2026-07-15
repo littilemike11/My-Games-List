@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { parseFilters } from "../games/[[...filters]]/page";
+import { parseFilters } from "../utils/functions";
 import { useRouter, useParams } from "next/navigation";
 import { platformSlugMap } from "../mockData/platforms";
 import { themeSlugMap } from "../mockData/themeTags";
@@ -10,6 +10,7 @@ import { FaSortAlphaDown } from "react-icons/fa";
 import { FaSortAmountDown } from "react-icons/fa";
 import { FaSortAlphaDownAlt } from "react-icons/fa";
 import { FaSort } from "react-icons/fa";
+import { Filters } from "../types/models";
 
 /*  FILTERS
     - Platform: can toggle / include multiple
@@ -67,16 +68,6 @@ const GameFilters = () => {
       (_, i) => currentYear - i,
     ),
   ];
-  type Filters = {
-    platform?: string[];
-    year?: string[];
-    decade?: string[];
-    genre?: string[];
-    theme?: string[];
-    rating?: string[];
-    hype?: string[];
-    sort?: string[];
-  };
 
   interface filterType {
     filterType: keyof Filters;

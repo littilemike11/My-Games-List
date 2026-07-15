@@ -6,6 +6,7 @@ import { platformMap } from "@/app/mockData/platforms";
 import { genreMap } from "@/app/mockData/genreTags";
 import { themeMap } from "@/app/mockData/themeTags";
 import GamePreviewLink from "@/app/components/GamePreviewLink";
+import { parseFilters } from "@/app/utils/functions";
 
 /*  FILTERS
     - Platform: can toggle / include multiple
@@ -24,55 +25,6 @@ import GamePreviewLink from "@/app/components/GamePreviewLink";
     Release date
     rating count
 */
-type Filters = {
-  platform?: string[];
-  year?: string[];
-  decade?: string[];
-  genre?: string[];
-  theme?: string[];
-  rating?: string[];
-  hype?: string[];
-  sort?: string[];
-};
-
-export function parseFilters(segments: string[] | string = []): Filters {
-  const filters: Filters = {};
-
-  for (let i = 0; i < segments.length; i += 2) {
-    const key = segments[i];
-    let value = segments[i + 1];
-
-    if (!value) continue;
-    value = decodeURIComponent(value); // see + in uri
-
-    switch (key) {
-      case "platform":
-        filters.platform = value.split("+");
-        break;
-      case "year":
-        filters.year = value.split("+");
-        break;
-      case "decade":
-        filters.decade = value.split("+");
-        break;
-      case "genre":
-        filters.genre = value.split("+");
-        break;
-      case "theme":
-        filters.theme = value.split("+");
-      case "rating":
-        filters.rating = value.split(" ");
-        break;
-      case "hype":
-        filters.hype = value.split(" ");
-        break;
-      case "sort":
-        filters.sort = value.split(" ");
-    }
-  }
-
-  return filters;
-}
 
 function getYearTimestamps(year: number) {
   const start = new Date(`${year}-01-01T00:00:00Z`).getTime() / 1000;
