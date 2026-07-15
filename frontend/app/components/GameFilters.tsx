@@ -201,7 +201,7 @@ const GameFilters = () => {
     } else if (type === "decade") {
       router.push(
         buildURL({
-          decade: [value],
+          decade: value != next[0] ? [value] : [],
           year: [],
         }),
       );
@@ -210,7 +210,7 @@ const GameFilters = () => {
       router.push(
         buildURL({
           decade: [],
-          year: [value],
+          year: value != next[0] ? [value] : [],
         }),
       );
       return;
@@ -487,7 +487,7 @@ const GameFilters = () => {
           </div>
         </div>
         {/*Active Filters list */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 mt-4">
           {filters.length > 0 &&
             filters.map((filter, index) => (
               <button
@@ -506,10 +506,10 @@ const GameFilters = () => {
         </div>
 
         {filters.length > 0 && (
-          <div className="flex justify-between">
+          <div className="flex mt-2 justify-between">
             <button
               onClick={() => clearAllFilters()}
-              className="btn btn-sm btn-ghost"
+              className="btn btn-sm btn-error"
             >
               Clear Filters
             </button>
@@ -517,7 +517,7 @@ const GameFilters = () => {
         )}
       </div>
       {/* SORT OPTIONS */}
-      <div className="flex justify-between border-b-2">
+      <div className="flex mt-4 mb-2 pb-1 justify-between border-b-2">
         <button
           onClick={
             sortOption[0] == "title_asc"

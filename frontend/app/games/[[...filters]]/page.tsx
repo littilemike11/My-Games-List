@@ -129,7 +129,7 @@ function generateQuery(filters: any): string {
   const fields =
     "fields cover.url, name, slug, first_release_date, rating, rating_count;";
   let whereClause = `where version_parent=null`;
-  let sortClause = "; sort rating desc";
+  let sortClause = "";
   let limitClause = "; limit 50;";
 
   //  add filters in where clause
@@ -206,19 +206,23 @@ export default async function GamePage({
       {/* <GameSortOptions /> */}
       {/* <FilteredReults /> */}
       <div className="flex flex-wrap gap-4">
-        {games.map((game: any) => (
-          <div className="h-44" key={game.id}>
-            <GamePreviewLink
-              game={{
-                id: game.id,
-                slug: game.slug,
-                cover:
-                  game.cover?.url?.replace("t_thumb", "t_cover_big") || null,
-                name: game.name,
-              }}
-            />
-          </div>
-        ))}
+        {games.length > 0 ? (
+          games.map((game: any) => (
+            <div className="h-44" key={game.id}>
+              <GamePreviewLink
+                game={{
+                  id: game.id,
+                  slug: game.slug,
+                  cover:
+                    game.cover?.url?.replace("t_thumb", "t_cover_big") || null,
+                  name: game.name,
+                }}
+              />
+            </div>
+          ))
+        ) : (
+          <p className="text-error">No Games Found</p>
+        )}
       </div>
     </>
   );
