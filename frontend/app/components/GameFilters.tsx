@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { parseFilters } from "../utils/functions";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, usePathname } from "next/navigation";
 import { platformSlugMap } from "../mockData/platforms";
 import { themeSlugMap } from "../mockData/themeTags";
 import { genreSlugMap } from "../mockData/genreTags";
@@ -9,6 +9,8 @@ import { FaSortAmountDownAlt } from "react-icons/fa";
 import { FaSortAlphaDown } from "react-icons/fa";
 import { FaSortAmountDown } from "react-icons/fa";
 import { FaSortAlphaDownAlt } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
+
 import { FaSort } from "react-icons/fa";
 import { Filters } from "../types/models";
 
@@ -35,12 +37,14 @@ import { IGDBthemes } from "../mockData/themeTags";
 import { useState, useEffect } from "react";
 const GameFilters = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const params = useParams();
   console.log("params:", params.filters);
 
   const segments = params.filters || [];
 
   const parsed = parseFilters(segments);
+  const STORAGE_KEY = "favoriteFilters";
 
   const filteredPlatforms = parsed.platform || [];
   console.log(filteredPlatforms);
@@ -60,6 +64,18 @@ const GameFilters = () => {
   // console.log(filteredRating[0]);
   const [minRating, setMinRating] = useState(filteredRating[0]);
   const [minHypes, setMinHypes] = useState(filteredHypes[0]);
+  const [favoriteFilters, setFavoriteFilters] = useState<string[]>(() => {
+    if (typeof window === "undefined") return [];
+
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? JSON.parse(stored) : [];
+    } catch (err) {
+      console.error("Error parsing preferences:", err);
+      return [];
+    }
+  });
+
   let currentDec = Math.floor(new Date().getFullYear() / 10) * 10;
   let currentYear = new Date().getFullYear();
   let years = [
@@ -257,6 +273,27 @@ const GameFilters = () => {
     }
     return `/games/${pathParts.join("/")}`;
   }
+
+  // Favorites setting/getting
+  // ✅ Load from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try {
+        setFavoriteFilters(JSON.parse(stored));
+      } catch (err) {
+        console.error("Error parsing preferences:", err);
+      }
+    } else {
+      // current empty
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+    }
+  }, []);
+
+  // ✅ Save to localStorage whenever preferences change
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(favoriteFilters));
+  }, [favoriteFilters]);
 
   return (
     <>
@@ -476,6 +513,81 @@ const GameFilters = () => {
               />
             </form>
           </div>
+          {/* Favorites */}
+          <input
+            type="radio"
+            name="filters"
+            className="tab active:text-primary/70 focus:text-primary"
+            aria-label="Favorites"
+          />
+          <div className="tab-content bg-base-100 border-base-300 p-6">
+            <ul>
+              {favoriteFilters.length > 0 ? (
+                <>
+                  {favoriteFilters.map((f) => (
+                    <li key={f}>
+                      <div className="flex items-center gap-3 group">
+                        <Link className="hover:link" href={f}>
+                          - {f}
+                        </Link>
+
+                        <button
+                          type="button"
+                          aria-label={`Remove ${f} from favorites`}
+                          title="Remove favorite"
+                          onClick={() => {
+                            setFavoriteFilters((favorites) =>
+                              favorites.filter((favorite) => favorite !== f),
+                            );
+                          }}
+                          className="
+                          hidden
+                group-hover:inline-flex items-center justify-center
+                p-1
+                rounded
+                cursor-pointer
+                text-base-content/60
+                hover:text-error
+                hover:bg-base-200
+                focus-visible:outline-2
+                focus-visible:outline-offset-2
+                focus-visible:outline-current
+                transition-colors
+              "
+                        >
+                          <FaTrash aria-hidden="true" />
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+
+                  {/* Remove all */}
+                  <li className="mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setFavoriteFilters([])}
+                      className="
+            inline-flex items-center gap-1
+            cursor-pointer
+            text-sm
+            text-base-content/60
+            hover:text-error
+            focus-visible:outline-2
+            focus-visible:outline-offset-2
+            focus-visible:outline-current
+            transition-colors
+          "
+                    >
+                      <FaTrash aria-hidden="true" />
+                      Remove all
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <li>No Filters Saved</li>
+              )}
+            </ul>
+          </div>
         </div>
         {/*Active Filters list */}
         <div className="flex flex-wrap gap-2 mt-4">
@@ -495,9 +607,45 @@ const GameFilters = () => {
               </button>
             ))}
         </div>
-
+        {/* favorite button */}
         {filters.length > 0 && (
           <div className="flex mt-2 justify-between">
+            {favoriteFilters.includes(pathname) ? (
+              <button
+                title="Remove search from Favorites"
+                className="btn btn-circle btn-ghost group"
+                onClick={() => {
+                  setFavoriteFilters((favorites) =>
+                    favorites.filter((f) => f !== pathname),
+                  );
+                }}
+              >
+                ❤️
+              </button>
+            ) : (
+              <button
+                title="Add search to Favorites"
+                className="btn btn-circle btn-ghost group"
+                onClick={() => {
+                  setFavoriteFilters((favorites) => [...favorites, pathname]);
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2.5"
+                  stroke="red"
+                  className="size-[1.2em] group-hover:fill-red-500 transition-colors"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                  />
+                </svg>
+              </button>
+            )}
             <button
               onClick={() => clearAllFilters()}
               className="btn btn-sm btn-error"

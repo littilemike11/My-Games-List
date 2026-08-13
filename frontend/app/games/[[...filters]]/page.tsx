@@ -97,7 +97,7 @@ function generateQuery(filters: any): string {
   if (filters.year?.length) {
     const { start, end } = getYearTimestamps(Number(filters.year));
 
-    whereClause += `& first_release_date >= ${start} & first_release_date <= ${end}`;
+    whereClause += ` & first_release_date >= ${start} & first_release_date <= ${end}`;
   }
   // Genre
   if (filters.genre?.length) {

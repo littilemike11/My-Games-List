@@ -29,17 +29,22 @@ export default async function Home() {
   console.log(todayTimestamp);
 
   const queries = [
+    // classic
     "fields cover.url, name, slug;where version_parent=null & rating > 85 ;sort rating_count desc; limit 10;",
+    // trending/popular
     `
+    
 fields cover.url, name, slug, artworks.url;
 where first_release_date < ${todayTimestamp} & version_parent = null & hypes > 75;
 sort first_release_date desc;
 limit 10;`,
+    // most antipated
     `
 fields cover.url, name, slug;
 where first_release_date > ${todayTimestamp} & version_parent = null & hypes>50;
 sort first_release_date asc;
 limit 10;`,
+    // recent
     `
 fields cover.url, name, slug, artworks.url;
 where first_release_date < ${todayTimestamp} & version_parent = null & rating > 75;
@@ -98,7 +103,7 @@ limit 10;`,
       <GameHero
         bgImage={artworks[Math.floor(Math.random() * artworks.length)].replace(
           "t_thumb",
-          "t_original"
+          "t_original",
         )}
         heading={heading}
         subHeading="A Community Hub for Gamers by Gamers"
@@ -106,7 +111,11 @@ limit 10;`,
       <Quote content={randomQuote.text} origin={randomQuote.origin} />
       <Tabs />
       {/* shows popular lists and members */}
-      <Carousel title="What's the Meta?" games={trendingGames} />
+      <Carousel
+        title="What's the Meta?"
+        link="/games/rating/85/hype/75/sort/date_desc"
+        games={trendingGames}
+      />
       <WhyUsSection />
       {/* popular reviews */}
       <section className="mb-4">
