@@ -227,5 +227,6 @@ export type Filters = {
   theme?: string[];
   rating?: string[];
   hype?: string[];
+  rating_count?: string[];
   sort?: string[];
 };

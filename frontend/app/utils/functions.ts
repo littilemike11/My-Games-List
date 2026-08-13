@@ -120,6 +120,9 @@ export function parseFilters(segments: string[] | string = []): Filters {
       case "hype":
         filters.hype = value.split(" ");
         break;
+      case "rating_count":
+        filters.rating_count = value.split(" ");
+        break;
       case "sort":
         filters.sort = value.split(" ");
     }

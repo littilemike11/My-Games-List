@@ -47,7 +47,9 @@ type SORT_OPTIONS =
   | "date_asc"
   | "date_desc"
   | "hypes_asc"
-  | "hypes_desc";
+  | "hypes_desc"
+  | "rating_count_asc"
+  | "rating_count_desc";
 
 const manageSortOptions = (sortOption: SORT_OPTIONS) => {
   let sortQuery = "; sort ";
@@ -70,6 +72,12 @@ const manageSortOptions = (sortOption: SORT_OPTIONS) => {
     case "hypes_asc":
       sortQuery += "hypes asc";
       break;
+    case "rating_count_desc":
+      sortQuery += "rating_count desc";
+      break;
+    case "rating_count_asc":
+      sortQuery += "rating_count asc";
+      break;
     case "date_desc":
       sortQuery += "first_release_date desc";
       break;
@@ -77,10 +85,12 @@ const manageSortOptions = (sortOption: SORT_OPTIONS) => {
       sortQuery += "first_release_date asc";
       break;
     default:
-      sortQuery += "rating desc";
+      sortQuery = "";
   }
   return sortQuery;
 };
+const TODAY = Math.floor(Date.now() / 1000);
+
 type DECADES =
   | "upcoming"
   | "2020s"
@@ -98,8 +108,7 @@ const manageDecadeOptions = (decade: DECADES) => {
       dateQuery = ` & first_release_date < 283996800`;
       break;
     case "upcoming":
-      const today = Math.floor(Date.now() / 1000);
-      dateQuery = `& first_release_date > ${today}`;
+      dateQuery = `& first_release_date > ${TODAY}`;
       break;
     default:
       let formatDecade = Number(decade.slice(0, -1));
@@ -133,11 +142,13 @@ function generateQuery(filters: any): string {
     const { start, end } = getYearTimestamps(Number(filters.year));
 
     whereClause += ` & first_release_date >= ${start} & first_release_date <= ${end}`;
-  }
-  // Decade
-  if (filters.decade?.length) {
+  } else if (filters.decade?.length) {
+    //Decade
     whereClause += manageDecadeOptions(filters.decade[0]);
     console.log(whereClause);
+  } else {
+    // Default if not given ( released games)
+    whereClause += ` & first_release_date < ${TODAY}`;
   }
   // Genre
   if (filters.genre?.length) {
@@ -160,13 +171,17 @@ function generateQuery(filters: any): string {
     console.log(filters.rating);
     whereClause += ` & rating >= ${filters.rating} `;
   }
-
+  // rating_count
+  if (filters.rating_count?.length) {
+    console.log(filters.rating_count);
+    whereClause += ` & rating_count >= ${filters.rating_count} `;
+  }
   // hypes
   if (filters.hype?.length) {
     console.log(filters.hype);
     whereClause += ` & hypes >= ${filters.hype} `;
   }
-
+  // sort
   if (filters.sort?.length) {
     console.log(filters.sort);
     sortClause = manageSortOptions(filters.sort[0]);

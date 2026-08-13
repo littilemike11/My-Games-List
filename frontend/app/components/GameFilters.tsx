@@ -58,12 +58,15 @@ const GameFilters = () => {
 
   const filteredRating = parsed.rating || [];
   const filteredHypes = parsed.hype || [];
+  const filteredRatingCount = parsed.rating_count || [];
   const sortOption = parsed.sort || [];
   // let sortOption = parsed.sort?.length ? parsed.sort[0] : "rating_desc";
 
   // console.log(filteredRating[0]);
   const [minRating, setMinRating] = useState(filteredRating[0]);
   const [minHypes, setMinHypes] = useState(filteredHypes[0]);
+  const [minRatingCount, setMinRatingCount] = useState(filteredRatingCount[0]);
+
   const [favoriteFilters, setFavoriteFilters] = useState<string[]>(() => {
     if (typeof window === "undefined") return [];
 
@@ -138,6 +141,10 @@ const GameFilters = () => {
     filteredRating.map((r) => filters.push({ filterType: "rating", name: r }));
   if (filteredHypes[0])
     filteredHypes.map((p) => filters.push({ filterType: "hype", name: p }));
+  if (filteredRatingCount[0])
+    filteredRatingCount.map((rc) =>
+      filters.push({ filterType: "rating_count", name: rc }),
+    );
   if (sortOption[0])
     sortOption.map((s) => filters.push({ filterType: "sort", name: s }));
   console.log(filters);
@@ -158,8 +165,9 @@ const GameFilters = () => {
     "1980s",
     "early",
   ];
-  const removeFilterOfType = (type: keyof Filters) => {
-    router.push(buildURL({ [type]: [] }));
+  const removeFilterOfType = (...types: (keyof Filters)[]) => {
+    const updates = Object.fromEntries(types.map((type) => [type, []]));
+    router.push(buildURL(updates));
   };
 
   const clearAllFilters = () => {
@@ -188,6 +196,17 @@ const GameFilters = () => {
     return () => clearTimeout(delay);
   }, [minHypes, filteredHypes]);
 
+  useEffect(() => {
+    if (!minRatingCount) return;
+    if (minRatingCount === filteredRatingCount[0]) return;
+
+    const delay = setTimeout(() => {
+      toggleFilter(minRatingCount, "rating_count");
+    }, 500);
+
+    return () => clearTimeout(delay);
+  }, [minRatingCount, filteredRatingCount]);
+
   function toggleFilter(value: string, type: keyof Filters) {
     const current =
       {
@@ -198,12 +217,18 @@ const GameFilters = () => {
         theme: filteredThemes,
         rating: filteredRating,
         hype: filteredHypes,
+        rating_count: filteredRatingCount,
         sort: sortOption,
       }[type] || [];
 
     let next = current;
     console.log(next);
-    if (type == "rating" || type == "hype" || type == "sort") {
+    if (
+      type == "rating" ||
+      type == "rating_count" ||
+      type == "hype" ||
+      type == "sort"
+    ) {
       next = value != next[0] ? [value] : [];
     } else if (type === "decade") {
       router.push(
@@ -238,6 +263,7 @@ const GameFilters = () => {
       theme: updated.theme ?? filteredThemes,
       rating: updated.rating ?? filteredRating,
       hype: updated.hype ?? filteredHypes,
+      rating_count: updated.rating_count ?? filteredRatingCount,
       sort: updated.sort ?? sortOption,
     };
 
@@ -267,6 +293,9 @@ const GameFilters = () => {
 
     if (next.hype?.length) {
       pathParts.push(`hype/${next.hype}`);
+    }
+    if (next.rating_count?.length) {
+      pathParts.push(`rating_count/${next.rating_count}`);
     }
     if (next.sort?.length) {
       pathParts.push(`sort/${next.sort}`);
@@ -309,6 +338,7 @@ const GameFilters = () => {
             defaultChecked
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
+            <p className="text-2xl">Platforms</p>
             <form
               onReset={() => removeFilterOfType("platform")}
               className="flex flex-wrap gap-2"
@@ -326,6 +356,7 @@ const GameFilters = () => {
                 />
               ))}
               <input
+                title="Reset Platform Filters"
                 className="btn btn-square btn-error"
                 type="reset"
                 value="×"
@@ -340,7 +371,10 @@ const GameFilters = () => {
             aria-label="Year"
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
-            <form onReset={() => removeFilterOfType("year")} className="s">
+            <form
+              className="flex flex-wrap gap-2"
+              onReset={() => removeFilterOfType("year", "decade")}
+            >
               <p className="text-2xl">Decades</p>
               <div className="flex">
                 {DECADES.map((decade) => (
@@ -372,6 +406,7 @@ const GameFilters = () => {
               ))}
 
               <input
+                title="Reset Date Filters"
                 className="btn btn-square btn-error"
                 type="reset"
                 value="×"
@@ -405,6 +440,7 @@ const GameFilters = () => {
               ))}
 
               <input
+                title="Reset Genre Filters"
                 className="btn btn-square btn-error"
                 type="reset"
                 value="×"
@@ -429,6 +465,7 @@ const GameFilters = () => {
               ))}
 
               <input
+                title="Reset Theme Filters"
                 onClick={() => removeFilterOfType("theme")}
                 className="btn btn-square btn-error"
                 type="reset"
@@ -446,10 +483,11 @@ const GameFilters = () => {
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
             <form
-              onReset={() => removeFilterOfType("rating")}
+              onReset={() => removeFilterOfType("rating", "rating_count")}
               className="flex flex-wrap gap-2"
             >
               <div className="flex flex-col gap-4 w-full">
+                <p className="text-2xl">Rating</p>
                 <input
                   onChange={(e) => setMinRating(e.target.value)}
                   type="range"
@@ -474,13 +512,22 @@ const GameFilters = () => {
                       Rating must be between 0-100
                     </p>
                   </div>
-                  <input
-                    onClick={() => removeFilterOfType("rating")}
-                    className="btn btn-square btn-error"
-                    type="reset"
-                    value="×"
-                  />{" "}
                 </div>
+                <p className="text-2xl">Rating Count</p>
+                <input
+                  onChange={(e) => setMinRatingCount(e.target.value)}
+                  type="number"
+                  className="input validator"
+                  placeholder="choose # of ratings"
+                  min="0"
+                  value={minRatingCount}
+                />
+                <input
+                  title="Reset Rating Filters"
+                  className="btn btn-square btn-error"
+                  type="reset"
+                  value="×"
+                />{" "}
               </div>
             </form>
           </div>
@@ -493,6 +540,7 @@ const GameFilters = () => {
             aria-label="Popularity"
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
+            <p className="text-2xl">Hypes</p>
             <form
               onReset={() => removeFilterOfType("hype")}
               className="flex flex-wrap gap-2"
@@ -506,6 +554,7 @@ const GameFilters = () => {
                 value={minHypes}
               />
               <input
+                title="Reset Hype Filter"
                 className="btn btn-square btn-error"
                 type="reset"
                 value="×"
@@ -601,7 +650,9 @@ const GameFilters = () => {
                   ? `Min Rating: ${filter.name} `
                   : filter.filterType === "hype"
                     ? `Hypes >= ${filter.name} `
-                    : filter.name}
+                    : filter.filterType === "rating_count"
+                      ? `Rating Count >= ${filter.name} `
+                      : filter.name}
                 <div className="text-red-500">x</div>
               </button>
             ))}
@@ -693,6 +744,27 @@ const GameFilters = () => {
             {sortOption[0] === "rating_desc" ? (
               <FaSortAmountDown />
             ) : sortOption[0] === "rating_asc" ? (
+              <FaSortAmountDownAlt />
+            ) : (
+              <FaSort />
+            )}
+          </button>
+          <button
+            onClick={
+              sortOption[0] == "rating_count_desc"
+                ? () => toggleFilter("rating_count_asc", "sort")
+                : () => toggleFilter("rating_count_desc", "sort")
+            }
+            className={`btn btn-md ${
+              (sortOption[0] === "rating_count_desc" ||
+                sortOption[0] === "rating_count_asc") &&
+              "font-bold text-primary"
+            }`}
+          >
+            Rating Count
+            {sortOption[0] === "rating_count_desc" ? (
+              <FaSortAmountDown />
+            ) : sortOption[0] === "rating_count_asc" ? (
               <FaSortAmountDownAlt />
             ) : (
               <FaSort />
