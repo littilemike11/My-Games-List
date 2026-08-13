@@ -377,7 +377,6 @@ const GameFilters = () => {
                 value="×"
               />
             </form>
-            <p>up to present day</p>
           </div>
           {/* GENRE/THEMES */}
           <input

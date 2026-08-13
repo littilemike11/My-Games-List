@@ -32,6 +32,12 @@ function getYearTimestamps(year: number) {
 
   return { start, end };
 }
+function getDecadeTimestamps(year: number) {
+  const start = new Date(`${year}-01-01T00:00:00Z`).getTime() / 1000;
+  const end = new Date(`${year + 9}-12-31T23:59:59Z`).getTime() / 1000;
+
+  return { start, end };
+}
 
 type SORT_OPTIONS =
   | "rating_desc"
@@ -75,6 +81,35 @@ const manageSortOptions = (sortOption: SORT_OPTIONS) => {
   }
   return sortQuery;
 };
+type DECADES =
+  | "upcoming"
+  | "2020s"
+  | "2010s"
+  | "2000s"
+  | "1990s"
+  | "1980s"
+  | "early";
+
+const manageDecadeOptions = (decade: DECADES) => {
+  let dateQuery = "";
+  switch (decade) {
+    case "early":
+      // const earlyDate = Math.floor(new Date("1979-01-01").getTime() / 1000); 283996800
+      dateQuery = ` & first_release_date < 283996800`;
+      break;
+    case "upcoming":
+      const today = Math.floor(Date.now() / 1000);
+      dateQuery = `& first_release_date > ${today}`;
+      break;
+    default:
+      let formatDecade = Number(decade.slice(0, -1));
+      console.log(decade.slice(0, -1));
+      const { start, end } = getDecadeTimestamps(formatDecade);
+      dateQuery = ` & first_release_date >= ${start} & first_release_date <= ${end}`;
+      break;
+  }
+  return dateQuery;
+};
 
 function generateQuery(filters: any): string {
   let query = "";
@@ -98,6 +133,11 @@ function generateQuery(filters: any): string {
     const { start, end } = getYearTimestamps(Number(filters.year));
 
     whereClause += ` & first_release_date >= ${start} & first_release_date <= ${end}`;
+  }
+  // Decade
+  if (filters.decade?.length) {
+    whereClause += manageDecadeOptions(filters.decade[0]);
+    console.log(whereClause);
   }
   // Genre
   if (filters.genre?.length) {
