@@ -1,18 +1,22 @@
 "use client";
 import Link from "next/link";
-import { parseFilters } from "../utils/functions";
+import { convertDate, parseFilters } from "../../utils/functions";
 import { useRouter, useParams, usePathname } from "next/navigation";
-import { platformSlugMap } from "../mockData/platforms";
-import { themeSlugMap } from "../mockData/themeTags";
-import { genreSlugMap } from "../mockData/genreTags";
+import { platformSlugMap } from "../../mockData/platforms";
+import { themeSlugMap } from "../../mockData/themeTags";
+import { genreSlugMap } from "../../mockData/genreTags";
 import { FaSortAmountDownAlt } from "react-icons/fa";
 import { FaSortAlphaDown } from "react-icons/fa";
 import { FaSortAmountDown } from "react-icons/fa";
 import { FaSortAlphaDownAlt } from "react-icons/fa";
+import { FaList } from "react-icons/fa";
+import { FaSquare } from "react-icons/fa";
+import { BsFillGrid3X3GapFill } from "react-icons/bs";
+
 import { FaTrash } from "react-icons/fa";
 
 import { FaSort } from "react-icons/fa";
-import { Filters } from "../types/models";
+import { Filters, Game } from "../../types/models";
 
 /*  FILTERS
     - Platform: can toggle / include multiple
@@ -31,11 +35,14 @@ import { Filters } from "../types/models";
     Release date
     rating count
 */
-import { platforms } from "../mockData/platforms";
-import { IGDBgenres } from "../mockData/genreTags";
-import { IGDBthemes } from "../mockData/themeTags";
+import { platforms } from "../../mockData/platforms";
+import { IGDBgenres } from "../../mockData/genreTags";
+import { IGDBthemes } from "../../mockData/themeTags";
 import { useState, useEffect } from "react";
-const GameFilters = () => {
+import GamePreviewLink from "../../components/GamePreviewLink";
+const GameFilterResults: React.FC<{
+  games: Game[];
+}> = ({ games }) => {
   const router = useRouter();
   const pathname = usePathname();
   const params = useParams();
@@ -66,6 +73,8 @@ const GameFilters = () => {
   const [minRating, setMinRating] = useState(filteredRating[0]);
   const [minHypes, setMinHypes] = useState(filteredHypes[0]);
   const [minRatingCount, setMinRatingCount] = useState(filteredRatingCount[0]);
+
+  const [isGridLayout, setIsGridLayout] = useState(true);
 
   const [favoriteFilters, setFavoriteFilters] = useState<string[]>(() => {
     if (typeof window === "undefined") return [];
@@ -338,7 +347,7 @@ const GameFilters = () => {
             defaultChecked
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
-            <p className="text-2xl">Platforms</p>
+            <p className="text-2xl mb-2">Platforms</p>
             <form
               onReset={() => removeFilterOfType("platform")}
               className="flex flex-wrap gap-2"
@@ -371,11 +380,11 @@ const GameFilters = () => {
             aria-label="Year"
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
+            <p className="text-2xl mb-2 ">Decades</p>
             <form
-              className="flex flex-wrap gap-2"
+              className="flex flex-col gap-2"
               onReset={() => removeFilterOfType("year", "decade")}
             >
-              <p className="text-2xl">Decades</p>
               <div className="flex">
                 {DECADES.map((decade) => (
                   <input
@@ -390,20 +399,21 @@ const GameFilters = () => {
                   />
                 ))}
               </div>
-              <p className="text-2xl">Years</p>
-
-              {years.map((yr) => (
-                <input
-                  key={yr}
-                  onChange={() => toggleFilter(yr.toString(), "year")}
-                  className="btn btn-outline"
-                  checked={filteredYears.includes(yr.toString())}
-                  aria-checked={filteredYears.includes(yr.toString())}
-                  type="checkbox"
-                  name="frameworks"
-                  aria-label={yr.toString()}
-                />
-              ))}
+              <p className="text-2xl mb-2 block">Years</p>
+              <div className="flex flex-wrap space-y-2">
+                {years.map((yr) => (
+                  <input
+                    key={yr}
+                    onChange={() => toggleFilter(yr.toString(), "year")}
+                    className="btn btn-outline"
+                    checked={filteredYears.includes(yr.toString())}
+                    aria-checked={filteredYears.includes(yr.toString())}
+                    type="checkbox"
+                    name="frameworks"
+                    aria-label={yr.toString()}
+                  />
+                ))}
+              </div>
 
               <input
                 title="Reset Date Filters"
@@ -421,7 +431,7 @@ const GameFilters = () => {
             aria-label="Genre & Theme"
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
-            <p className="text-2xl">Genres</p>
+            <p className="text-2xl mb-2">Genres</p>
             <form
               onReset={() => removeFilterOfType("genre")}
               className="flex flex-wrap gap-2"
@@ -446,7 +456,7 @@ const GameFilters = () => {
                 value="×"
               />
             </form>
-            <p className="text-2xl">Themes</p>
+            <p className="text-2xl mb-2">Themes</p>
             <form
               onReset={() => removeFilterOfType("theme")}
               className="flex flex-wrap gap-2"
@@ -486,8 +496,8 @@ const GameFilters = () => {
               onReset={() => removeFilterOfType("rating", "rating_count")}
               className="flex flex-wrap gap-2"
             >
-              <div className="flex flex-col gap-4 w-full">
-                <p className="text-2xl">Rating</p>
+              <div className="flex flex-col gap-2 w-full">
+                <p className="text-2xl mb-2">Rating</p>
                 <input
                   onChange={(e) => setMinRating(e.target.value)}
                   type="range"
@@ -513,7 +523,7 @@ const GameFilters = () => {
                     </p>
                   </div>
                 </div>
-                <p className="text-2xl">Rating Count</p>
+                <p className="text-2xl mb-2">Rating Count</p>
                 <input
                   onChange={(e) => setMinRatingCount(e.target.value)}
                   type="number"
@@ -540,7 +550,7 @@ const GameFilters = () => {
             aria-label="Popularity"
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
-            <p className="text-2xl">Hypes</p>
+            <p className="text-2xl mb-2">Hypes</p>
             <form
               onReset={() => removeFilterOfType("hype")}
               className="flex flex-wrap gap-2"
@@ -569,6 +579,8 @@ const GameFilters = () => {
             aria-label="Favorites"
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
+            <p className="text-2xl mb-2">Saved Filters</p>
+
             <ul>
               {favoriteFilters.length > 0 ? (
                 <>
@@ -707,26 +719,72 @@ const GameFilters = () => {
       </div>
       {/* SORT OPTIONS */}
       <div className="flex mt-4 mb-2 pb-1 justify-between border-b-2">
-        <button
-          onClick={
-            sortOption[0] == "title_asc"
-              ? () => toggleFilter("title_desc", "sort")
-              : () => toggleFilter("title_asc", "sort")
-          }
-          className={`btn btn-md ${
-            (sortOption[0] === "title_desc" || sortOption[0] === "title_asc") &&
-            "font-bold text-primary"
-          }`}
-        >
-          Title
-          {sortOption[0] === "title_desc" ? (
-            <FaSortAlphaDownAlt />
-          ) : sortOption[0] === "title_asc" ? (
-            <FaSortAlphaDown />
-          ) : (
-            <FaSort />
-          )}
-        </button>
+        <div className="flex items-center">
+          <div className="flex">
+            {isGridLayout ? (
+              <button
+                type="button"
+                aria-label={`Switch to list layout`}
+                title="View List Layout"
+                onClick={() => setIsGridLayout(false)}
+                className="
+                p-1
+                rounded
+                cursor-pointer
+                text-base-content
+                hover:text-base-content/60
+                hover:bg-base-200
+                focus-visible:outline-2
+                focus-visible:outline-offset-2
+                focus-visible:outline-current
+                transition-colors"
+              >
+                <FaList />
+              </button>
+            ) : (
+              <button
+                type="button"
+                aria-label={`Switch to Grid layout`}
+                title="View Grid Layout"
+                onClick={() => setIsGridLayout(true)}
+                className="
+                p-1
+                rounded
+                cursor-pointer
+                text-base-content
+                hover:text-base-content/60
+                hover:bg-base-200
+                focus-visible:outline-2
+                focus-visible:outline-offset-2
+                focus-visible:outline-current
+                transition-colors"
+              >
+                <BsFillGrid3X3GapFill />
+              </button>
+            )}
+          </div>
+          <button
+            onClick={
+              sortOption[0] == "title_asc"
+                ? () => toggleFilter("title_desc", "sort")
+                : () => toggleFilter("title_asc", "sort")
+            }
+            className={`btn btn-xs sm:btn-md ${
+              (sortOption[0] === "title_desc" ||
+                sortOption[0] === "title_asc") &&
+              "font-bold text-primary"
+            }`}
+          >
+            Title
+            {sortOption[0] === "title_desc" ? (
+              <FaSortAlphaDownAlt />
+            ) : sortOption[0] === "title_asc" ? (
+              <FaSortAlphaDown />
+            ) : (
+              <FaSort />
+            )}
+          </button>
+        </div>
         <div className="flex gap-1">
           <button
             onClick={
@@ -734,7 +792,7 @@ const GameFilters = () => {
                 ? () => toggleFilter("rating_asc", "sort")
                 : () => toggleFilter("rating_desc", "sort")
             }
-            className={`btn btn-md ${
+            className={`btn btn-xs sm:btn-md ${
               (sortOption[0] === "rating_desc" ||
                 sortOption[0] === "rating_asc") &&
               "font-bold text-primary"
@@ -755,7 +813,7 @@ const GameFilters = () => {
                 ? () => toggleFilter("rating_count_asc", "sort")
                 : () => toggleFilter("rating_count_desc", "sort")
             }
-            className={`btn btn-md ${
+            className={`btn btn-xs sm:btn-md ${
               (sortOption[0] === "rating_count_desc" ||
                 sortOption[0] === "rating_count_asc") &&
               "font-bold text-primary"
@@ -776,7 +834,7 @@ const GameFilters = () => {
                 ? () => toggleFilter("hypes_asc", "sort")
                 : () => toggleFilter("hypes_desc", "sort")
             }
-            className={`btn btn-md ${
+            className={`btn btn-xs sm:btn-md ${
               (sortOption[0] === "hypes_desc" ||
                 sortOption[0] === "hypes_asc") &&
               "font-bold text-primary"
@@ -797,7 +855,7 @@ const GameFilters = () => {
                 ? () => toggleFilter("date_asc", "sort")
                 : () => toggleFilter("date_desc", "sort")
             }
-            className={`btn btn-md ${
+            className={`btn btn-xs sm:btn-md ${
               (sortOption[0] === "date_desc" || sortOption[0] === "date_asc") &&
               "font-bold text-primary"
             }`}
@@ -813,8 +871,84 @@ const GameFilters = () => {
           </button>
         </div>
       </div>
+      {/* Games Display */}
+      <div className="flex flex-wrap justify-around gap-3">
+        {/* Grid Layout */}
+        {games.length > 0 && isGridLayout ? (
+          games.map((game: any) => (
+            <div className="h-44" key={game.id}>
+              <GamePreviewLink
+                game={{
+                  id: game.id,
+                  slug: game.slug,
+                  cover:
+                    game.cover?.url?.replace("t_thumb", "t_cover_big") || null,
+                  name: game.name,
+                }}
+              />
+            </div>
+          ))
+        ) : // List Layout
+        games.length > 0 && !isGridLayout ? (
+          <div className="flex flex-col gap-4">
+            {games.map((game: any) => (
+              <div
+                key={game.id}
+                className="flex w-full gap-4 rounded-lg border border-base-300 bg-base-100 p-3 shadow-sm transition hover:shadow-md sm:gap-6 sm:p-4"
+              >
+                {/* Cover */}
+                <div className="w-24 shrink-0 sm:w-32 md:w-40">
+                  <GamePreviewLink
+                    game={{
+                      id: game.id,
+                      slug: game.slug,
+                      cover:
+                        game.cover?.url?.replace("t_thumb", "t_cover_big") ||
+                        null,
+                      name: game.name,
+                    }}
+                  />
+                </div>
+
+                {/* Game Info */}
+                <div className="flex min-w-0 flex-1 flex-col justify-between">
+                  <div>
+                    <h3 className="mb-1 text-xl font-bold sm:text-2xl md:text-3xl">
+                      {game.name}
+                    </h3>
+
+                    <p className="text-sm opacity-70 sm:text-base">
+                      {convertDate(game.first_release_date)}
+                    </p>
+                  </div>
+
+                  {/* Stats */}
+                  <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm sm:flex sm:flex-wrap sm:gap-x-6 sm:text-base">
+                    <p>
+                      <span className="font-semibold">Rating:</span>{" "}
+                      {game.rating?.toFixed(1) ?? "N/A"}
+                    </p>
+
+                    <p>
+                      <span className="font-semibold">Rating Count:</span>{" "}
+                      {game.rating_count ?? 0}
+                    </p>
+
+                    <p>
+                      <span className="font-semibold">Hypes:</span>{" "}
+                      {game.hypes ?? 0}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-error">No Games Found</p>
+        )}
+      </div>
     </>
   );
 };
 
-export default GameFilters;
+export default GameFilterResults;

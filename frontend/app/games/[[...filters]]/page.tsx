@@ -1,11 +1,9 @@
 // change to catch all /games/[[...filters]]
-import Link from "next/link";
 import getGames from "@/app/api/igdb-api-server";
-import GameFilters from "../../components/GameFilters";
+import GameFilterResults from "./GameFilterResults";
 import { platformMap } from "@/app/mockData/platforms";
 import { genreMap } from "@/app/mockData/genreTags";
 import { themeMap } from "@/app/mockData/themeTags";
-import GamePreviewLink from "@/app/components/GamePreviewLink";
 import { parseFilters } from "@/app/utils/functions";
 
 /*  FILTERS
@@ -24,6 +22,7 @@ import { parseFilters } from "@/app/utils/functions";
     Title
     Release date
     rating count
+
 */
 
 function getYearTimestamps(year: number) {
@@ -123,7 +122,7 @@ const manageDecadeOptions = (decade: DECADES) => {
 function generateQuery(filters: any): string {
   let query = "";
   const fields =
-    "fields cover.url, name, slug, first_release_date, rating, rating_count;";
+    "fields cover.url, name, slug, first_release_date, hypes, rating, rating_count;";
   let whereClause = `where version_parent=null`;
   let sortClause = "";
   let limitClause = "; limit 50;";
@@ -209,28 +208,7 @@ export default async function GamePage({
   console.log(games);
   return (
     <>
-      <GameFilters />
-      {/* <GameSortOptions /> */}
-      {/* <FilteredReults /> */}
-      <div className="flex flex-wrap gap-4">
-        {games.length > 0 ? (
-          games.map((game: any) => (
-            <div className="h-44" key={game.id}>
-              <GamePreviewLink
-                game={{
-                  id: game.id,
-                  slug: game.slug,
-                  cover:
-                    game.cover?.url?.replace("t_thumb", "t_cover_big") || null,
-                  name: game.name,
-                }}
-              />
-            </div>
-          ))
-        ) : (
-          <p className="text-error">No Games Found</p>
-        )}
-      </div>
+      <GameFilterResults games={games} />
     </>
   );
 }
