@@ -372,12 +372,12 @@ const GameFilterResults: React.FC<{
               />
             </form>
           </div>
-          {/* YEAR */}
+          {/* Release */}
           <input
             type="radio"
             name="filters"
             className="tab active:text-primary/70 focus:text-primary"
-            aria-label="Year"
+            aria-label="Release"
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
             <p className="text-2xl mb-2 ">Decades</p>
@@ -385,7 +385,7 @@ const GameFilterResults: React.FC<{
               className="flex flex-col gap-2"
               onReset={() => removeFilterOfType("year", "decade")}
             >
-              <div className="flex">
+              <div className="flex flex-wrap">
                 {DECADES.map((decade) => (
                   <input
                     key={decade}
@@ -428,7 +428,7 @@ const GameFilterResults: React.FC<{
             type="radio"
             name="filters"
             className="tab active:text-primary/70 focus:text-primary"
-            aria-label="Genre & Theme"
+            aria-label="Genres & Themes"
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
             <p className="text-2xl mb-2">Genres</p>
@@ -440,7 +440,7 @@ const GameFilterResults: React.FC<{
                 <input
                   key={index}
                   onChange={() => toggleFilter(g.slug, "genre")}
-                  className="btn btn-outline"
+                  className="btn btn-sm sm:btn-md btn-outline"
                   checked={filteredGenres.includes(genreSlugMap[g.name])}
                   aria-checked={filteredGenres.includes(genreSlugMap[g.name])}
                   type="checkbox"
@@ -504,7 +504,7 @@ const GameFilterResults: React.FC<{
                   min={0}
                   max="100"
                   value={minRating ?? 0}
-                  className="range range-secondary w-96"
+                  className="range range-secondary w-full sm:w-96"
                 />
                 <div className="flex w-full gap-2">
                   <div className="w-fit">
@@ -576,18 +576,18 @@ const GameFilterResults: React.FC<{
             type="radio"
             name="filters"
             className="tab active:text-primary/70 focus:text-primary"
-            aria-label="Favorites"
+            aria-label="Saved Filters"
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
             <p className="text-2xl mb-2">Saved Filters</p>
 
-            <ul>
+            <ul className="space-y-6 sm:space-y-4">
               {favoriteFilters.length > 0 ? (
                 <>
                   {favoriteFilters.map((f) => (
                     <li key={f}>
-                      <div className="flex items-center gap-3 group">
-                        <Link className="hover:link" href={f}>
+                      <div className="flex flex-wrap items-center gap-3 group">
+                        <Link className="hover:link inline" href={f}>
                           - {f}
                         </Link>
 
@@ -601,9 +601,10 @@ const GameFilterResults: React.FC<{
                             );
                           }}
                           className="
-                          hidden
+                          inline sm:hidden
                 group-hover:inline-flex items-center justify-center
                 p-1
+                
                 rounded
                 cursor-pointer
                 text-base-content/60
@@ -671,7 +672,7 @@ const GameFilterResults: React.FC<{
         </div>
         {/* favorite button */}
         {filters.length > 0 && (
-          <div className="flex mt-2 justify-between">
+          <div className="flex mt-2 px-2 justify-between">
             {favoriteFilters.includes(pathname) ? (
               <button
                 title="Remove search from Favorites"
@@ -872,11 +873,11 @@ const GameFilterResults: React.FC<{
         </div>
       </div>
       {/* Games Display */}
-      <div className="flex flex-wrap justify-around gap-3">
+      <div className="flex flex-wrap justify-around sm:justify-start gap-3 pb-4">
         {/* Grid Layout */}
         {games.length > 0 && isGridLayout ? (
           games.map((game: any) => (
-            <div className="h-44" key={game.id}>
+            <div className="h-48 " key={game.id}>
               <GamePreviewLink
                 game={{
                   id: game.id,
