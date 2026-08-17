@@ -720,7 +720,7 @@ const GameFilterResults: React.FC<{
       </div>
       {/* SORT OPTIONS */}
       <div className="flex mt-4 mb-2 pb-1 justify-between border-b-2">
-        <div className="flex items-center">
+        <div className="flex items-center gap-x-1">
           <div className="flex">
             {isGridLayout ? (
               <button

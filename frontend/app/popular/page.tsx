@@ -113,7 +113,7 @@ limit 10;`,
       {/* shows popular lists and members */}
       <Carousel
         title="What's the Meta?"
-        link="/games/rating/85/hype/75/sort/date_desc"
+        link="/games/hype/75/sort/date_desc"
         games={trendingGames}
       />
       <WhyUsSection />
@@ -133,7 +133,11 @@ limit 10;`,
           </Link>
         </div>
       </section>
-      <Carousel title="Most Recent" games={recentGames} />
+      <Carousel
+        title="Most Recent"
+        games={recentGames}
+        link="games/rating/75/sort/date_desc"
+      />
 
       {/* popular discussions */}
       <section className="mb-4">
@@ -152,7 +156,11 @@ limit 10;`,
         </div>
       </section>
 
-      <Carousel title="Most Anticipated" games={anticipatedGames} />
+      <Carousel
+        title="Most Anticipated"
+        games={anticipatedGames}
+        link="/games/decade/upcoming/hype/50/sort/date_asc"
+      />
 
       {/* popular lists */}
       <section className="mb-4">
@@ -170,7 +178,11 @@ limit 10;`,
           </Link>
         </div>
       </section>
-      <Carousel title="Classic Gems" games={popularGames} />
+      <Carousel
+        title="Classic Gems"
+        games={popularGames}
+        link="/games/rating/85/sort/rating_count_desc"
+      />
       {/* possibly add top players/tags + add recent games carousel */}
     </div>
   );
