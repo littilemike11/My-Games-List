@@ -218,3 +218,15 @@ export type ListType =
   | "playing"
   | "wishlist";
 export type StatusKey = "played" | "playing" | "wishlist" | "favorite";
+
+export type Filters = {
+  platform?: string[];
+  year?: string[];
+  decade?: string[];
+  genre?: string[];
+  theme?: string[];
+  rating?: string[];
+  hype?: string[];
+  rating_count?: string[];
+  sort?: string[];
+};

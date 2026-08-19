@@ -29,17 +29,22 @@ export default async function Home() {
   console.log(todayTimestamp);
 
   const queries = [
+    // classic
     "fields cover.url, name, slug;where version_parent=null & rating > 85 ;sort rating_count desc; limit 10;",
+    // trending/popular
     `
+    
 fields cover.url, name, slug, artworks.url;
 where first_release_date < ${todayTimestamp} & version_parent = null & hypes > 75;
 sort first_release_date desc;
 limit 10;`,
+    // most antipated
     `
 fields cover.url, name, slug;
 where first_release_date > ${todayTimestamp} & version_parent = null & hypes>50;
 sort first_release_date asc;
 limit 10;`,
+    // recent
     `
 fields cover.url, name, slug, artworks.url;
 where first_release_date < ${todayTimestamp} & version_parent = null & rating > 75;
@@ -98,7 +103,7 @@ limit 10;`,
       <GameHero
         bgImage={artworks[Math.floor(Math.random() * artworks.length)].replace(
           "t_thumb",
-          "t_original"
+          "t_original",
         )}
         heading={heading}
         subHeading="A Community Hub for Gamers by Gamers"
@@ -106,7 +111,11 @@ limit 10;`,
       <Quote content={randomQuote.text} origin={randomQuote.origin} />
       <Tabs />
       {/* shows popular lists and members */}
-      <Carousel title="What's the Meta?" games={trendingGames} />
+      <Carousel
+        title="What's the Meta?"
+        link="/games/hype/75/sort/date_desc"
+        games={trendingGames}
+      />
       <WhyUsSection />
       {/* popular reviews */}
       <section className="mb-4">
@@ -124,7 +133,11 @@ limit 10;`,
           </Link>
         </div>
       </section>
-      <Carousel title="Most Recent" games={recentGames} />
+      <Carousel
+        title="Most Recent"
+        games={recentGames}
+        link="games/rating/75/sort/date_desc"
+      />
 
       {/* popular discussions */}
       <section className="mb-4">
@@ -143,7 +156,11 @@ limit 10;`,
         </div>
       </section>
 
-      <Carousel title="Most Anticipated" games={anticipatedGames} />
+      <Carousel
+        title="Most Anticipated"
+        games={anticipatedGames}
+        link="/games/decade/upcoming/hype/50/sort/date_asc"
+      />
 
       {/* popular lists */}
       <section className="mb-4">
@@ -161,7 +178,11 @@ limit 10;`,
           </Link>
         </div>
       </section>
-      <Carousel title="Classic Gems" games={popularGames} />
+      <Carousel
+        title="Classic Gems"
+        games={popularGames}
+        link="/games/rating/85/sort/rating_count_desc"
+      />
       {/* possibly add top players/tags + add recent games carousel */}
     </div>
   );

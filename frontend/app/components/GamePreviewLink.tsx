@@ -18,7 +18,7 @@ const GamePreviewLink: React.FC<Props> = ({ game, isRound = true }) => {
         href={`/game/${game?.slug}`}
       >
         <img
-          className="w-full h-full "
+          className="w-full h-full aspect-[3/4]"
           src={game?.cover}
           alt={`${game?.name} cover`}
         />

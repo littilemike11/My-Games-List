@@ -70,21 +70,21 @@ export default function DrawerLayout({
 
       if (selectedOptions.Platforms?.length > 0) {
         const ids = selectedOptions.Platforms.map(
-          (name) => platforms.find((p) => p.name === name)?.id
+          (name) => platforms.find((p) => p.name === name)?.id,
         ).filter(Boolean) as number[]; // remove undefined
         filterClauses.push(`platforms = (${ids.join(",")})`);
       }
 
       if (selectedOptions.Genres?.length > 0) {
         const ids = selectedOptions.Genres.map(
-          (name) => IGDBgenres.find((p) => p.name === name)?.id
+          (name) => IGDBgenres.find((p) => p.name === name)?.id,
         ).filter(Boolean) as number[]; // remove undefined
         filterClauses.push(`genres = (${ids.join(",")})`);
       }
 
       if (selectedOptions.Themes?.length > 0) {
         const ids = selectedOptions.Themes.map(
-          (name) => IGDBthemes.find((p) => p.name === name)?.id
+          (name) => IGDBthemes.find((p) => p.name === name)?.id,
         ).filter(Boolean) as number[]; // remove undefined
         filterClauses.push(`themes = (${ids.join(",")})`);
       }
@@ -121,7 +121,7 @@ export default function DrawerLayout({
 
   const handleOptionChange = (
     sectionName: "Platforms" | "Genres" | "Themes",
-    optionName: string
+    optionName: string,
   ) => {
     setSelectedOptions((prev) => {
       const prevSection = prev[sectionName];
@@ -183,11 +183,12 @@ export default function DrawerLayout({
                 <Link href={"/popular"}>✨ Popular</Link>
               </li>
               <li>
+                <Link href={"/games"}>🎮 Games</Link>
+              </li>
+              <li>
                 <Link href={"/popular/posts"}>📚 All Posts</Link>
               </li>
-              {/* <li>
-                <Link href={"/games"}>🎮 Games</Link>
-              </li> */}
+
               <li>
                 <Link href={"/popular/reviews"}>⭐ Reviews</Link>
               </li>

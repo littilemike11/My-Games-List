@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import GameSearch from "./GameSearch";
-import { genres, genreNames } from "../mockData/genreTags";
-import { themes, themeNames } from "../mockData/themeTags";
+import { genres, genreSlugs } from "../mockData/genreTags";
+import { themes, themeSlugs } from "../mockData/themeTags";
 import restrictedTags from "../mockData/restrictedTags";
 import { getPopularTags } from "../api/supabase-api/tag-api";
 import { Tag } from "../types/models";
@@ -49,8 +49,8 @@ const TagSection: React.FC<{
       : {
           "Popular Tags": popularTags,
           "Give Back": ["player-feedback", "bug-report"],
-          Genres: genreNames,
-          Themes: themeNames,
+          Genres: genreSlugs,
+          Themes: themeSlugs,
         };
 
   const addTag = (tag: string) => {
@@ -106,7 +106,7 @@ const TagSection: React.FC<{
             value={tagInput}
             onChange={(e) =>
               setTagInput(
-                e.target.value.replace(/[^a-zA-Z0-9_-]/g, "-") // remove disallowed chars - make it slug safe
+                e.target.value.replace(/[^a-zA-Z0-9_-]/g, "-"), // remove disallowed chars - make it slug safe
               )
             }
             onKeyDown={(e) =>

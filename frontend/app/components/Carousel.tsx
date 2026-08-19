@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { GamePreview } from "../types/models";
 import GamePreviewLink from "./GamePreviewLink";
 import { useRef } from "react";
@@ -6,6 +7,7 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 
 type CarouselProps = {
   title?: string;
+  link?: string;
   games: GamePreview[];
   isList?: boolean;
 };
@@ -15,6 +17,7 @@ const CARD_WIDTH = 160 + 16; // width + gap
 const Carousel: React.FC<CarouselProps> = ({
   title,
   games,
+  link,
   isList = false,
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -30,7 +33,12 @@ const Carousel: React.FC<CarouselProps> = ({
 
   return (
     <section className="w-full space-y-2">
-      {title && <h2 className="text-xl sm:text-2xl font-semibold">{title}</h2>}
+      {title && (
+        <div className="flex justify-between">
+          <h2 className="text-xl sm:text-2xl font-semibold">{title}</h2>
+          {link && <Link href={link}>see more</Link>}
+        </div>
+      )}
 
       <div className="relative group">
         {/* LEFT ARROW (desktop only) */}
