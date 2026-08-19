@@ -11,14 +11,14 @@ const GamePreviewLink: React.FC<Props> = ({ game, isRound = true }) => {
   return (
     <>
       <Link
-        className={`overflow-hidden block w-full h-full hover:scale-105 transition-transform duration-200 relative ${
+        className={`overflow-hidden aspect-[3/4] block w-full h-full hover:scale-105 transition-transform duration-200 relative ${
           isRound && "rounded-2xl "
         }`}
         title={game?.name}
         href={`/game/${game?.slug}`}
       >
         <img
-          className="w-full h-full aspect-[3/4]"
+          className="w-full h-full"
           src={game?.cover}
           alt={`${game?.name} cover`}
         />
