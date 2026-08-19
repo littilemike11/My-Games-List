@@ -877,7 +877,7 @@ const GameFilterResults: React.FC<{
         {/* Grid Layout */}
         {games.length > 0 && isGridLayout ? (
           games.map((game: any) => (
-            <div className="h-48 " key={game.id}>
+            <div className="w-24 sm:w-36 h-32 sm:h-48 " key={game.id}>
               <GamePreviewLink
                 game={{
                   id: game.id,
@@ -898,7 +898,7 @@ const GameFilterResults: React.FC<{
                 className="flex w-full gap-4 rounded-lg border border-base-300 bg-base-100 p-3 shadow-sm transition hover:shadow-md sm:gap-6 sm:p-4"
               >
                 {/* Cover */}
-                <div className="w-24 shrink-0 sm:w-32 md:w-40">
+                <div className=" shrink-0 w-24 sm:w-36 h-32 sm:h-48">
                   <GamePreviewLink
                     game={{
                       id: game.id,

@@ -78,7 +78,7 @@ const Carousel: React.FC<CarouselProps> = ({
               className={`
                 snap-start
                 flex-shrink-0
-                 ${isList ? "h-44" : "h-56"}
+                 ${isList ? "w-36 h-48 " : "w-40 h-52"}
               `}
             >
               <GamePreviewLink game={game} />

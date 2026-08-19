@@ -11,7 +11,20 @@ import { IGDBgenres } from "../mockData/genreTags";
 import { IGDBthemes } from "../mockData/themeTags";
 import { platforms } from "../mockData/platforms";
 import getGames from "../api/igdb-api-server";
-import Footer from "./Footer";
+
+import {
+  FaHome,
+  FaFire,
+  FaGamepad,
+  FaBook,
+  FaStar,
+  FaComments,
+  FaList,
+  FaUsers,
+  FaTags,
+  FaNewspaper,
+} from "react-icons/fa";
+
 export default function DrawerLayout({
   children,
 }: {
@@ -177,35 +190,82 @@ export default function DrawerLayout({
           <nav className="menu bg-base-200 text-base-content min-h-full w-64 p-4 space-y-4">
             <ul className=" bg-base-200 rounded-box text-lg space-y-2 w-full">
               <li>
-                <Link href={"/"}>🏠 Home</Link>
-              </li>
-              <li>
-                <Link href={"/popular"}>✨ Popular</Link>
-              </li>
-              <li>
-                <Link href={"/games"}>🎮 Games</Link>
-              </li>
-              <li>
-                <Link href={"/popular/posts"}>📚 All Posts</Link>
+                <Link href="/" className="flex items-center gap-2">
+                  <FaHome />
+                  Home
+                </Link>
               </li>
 
               <li>
-                <Link href={"/popular/reviews"}>⭐ Reviews</Link>
+                <Link href="/popular" className="flex items-center gap-2">
+                  <FaFire />
+                  Popular
+                </Link>
               </li>
+
               <li>
-                <Link href={"/popular/discussions"}>💬 Discussions</Link>
+                <Link href="/games" className="flex items-center gap-2">
+                  <FaGamepad />
+                  Games
+                </Link>
               </li>
+
               <li>
-                <Link href={"/popular/lists"}>📜 Lists</Link>
+                <Link href="/popular/posts" className="flex items-center gap-2">
+                  <FaBook />
+                  All Posts
+                </Link>
               </li>
+
               <li>
-                <Link href={"/popular/players"}>👥 Players</Link>
+                <Link
+                  href="/popular/reviews"
+                  className="flex items-center gap-2"
+                >
+                  <FaStar />
+                  Reviews
+                </Link>
               </li>
+
               <li>
-                <Link href={"/popular/tags"}>🏷️ Tags</Link>
+                <Link
+                  href="/popular/discussions"
+                  className="flex items-center gap-2"
+                >
+                  <FaComments />
+                  Discussions
+                </Link>
               </li>
+
               <li>
-                <Link href={"/news"}>📰 News</Link>
+                <Link href="/popular/lists" className="flex items-center gap-2">
+                  <FaList />
+                  Lists
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/popular/players"
+                  className="flex items-center gap-2"
+                >
+                  <FaUsers />
+                  Players
+                </Link>
+              </li>
+
+              <li>
+                <Link href="/popular/tags" className="flex items-center gap-2">
+                  <FaTags />
+                  Tags
+                </Link>
+              </li>
+
+              <li>
+                <Link href="/news" className="flex items-center gap-2">
+                  <FaNewspaper />
+                  News
+                </Link>
               </li>
 
               {/* recently visited */}
