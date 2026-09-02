@@ -35,121 +35,121 @@ export default function DrawerLayout({
   const [favTags, setFavTags] = useState<Tag[]>([]);
   const [recommendedGames, setRecommendedGames] = useState<GamePreview[]>([]);
   const [following, setFollowing] = useState<ProfilePreview[]>([]);
-  type SectionName = "Platforms" | "Genres" | "Themes";
+  // type SectionName = "Platforms" | "Genres" | "Themes";
 
-  interface Preference {
-    name: SectionName;
-    options: { id: number; name: string }[];
-  }
+  // interface Preference {
+  //   name: SectionName;
+  //   options: { id: number; name: string }[];
+  // }
 
-  const preferences: Preference[] = [
-    { name: "Platforms", options: platforms },
-    { name: "Genres", options: IGDBgenres },
-    { name: "Themes", options: IGDBthemes },
-  ];
+  // const preferences: Preference[] = [
+  //   { name: "Platforms", options: platforms },
+  //   { name: "Genres", options: IGDBgenres },
+  //   { name: "Themes", options: IGDBthemes },
+  // ];
 
-  const [selectedOptions, setSelectedOptions] = useState<{
-    Platforms: string[];
-    Genres: string[];
-    Themes: string[];
-  }>({
-    Platforms: [],
-    Genres: [],
-    Themes: [],
-  });
+  // const [selectedOptions, setSelectedOptions] = useState<{
+  //   Platforms: string[];
+  //   Genres: string[];
+  //   Themes: string[];
+  // }>({
+  //   Platforms: [],
+  //   Genres: [],
+  //   Themes: [],
+  // });
 
   // ✅ Load from localStorage on mount
-  useEffect(() => {
-    const stored = localStorage.getItem("userPreferences");
-    if (stored) {
-      try {
-        setSelectedOptions(JSON.parse(stored));
-      } catch (err) {
-        console.error("Error parsing preferences:", err);
-      }
-    } else {
-      // current empty
-      localStorage.setItem("userPreferences", JSON.stringify(selectedOptions));
-    }
-  }, []);
+  // useEffect(() => {
+  //   const stored = localStorage.getItem("userPreferences");
+  //   if (stored) {
+  //     try {
+  //       setSelectedOptions(JSON.parse(stored));
+  //     } catch (err) {
+  //       console.error("Error parsing preferences:", err);
+  //     }
+  //   } else {
+  //     // current empty
+  //     localStorage.setItem("userPreferences", JSON.stringify(selectedOptions));
+  //   }
+  // }, []);
 
-  const updateGames = async () => {
-    try {
-      // Base rating condition
-      const ratingClause = "rating > 50";
+  // const updateGames = async () => {
+  //   try {
+  //     // Base rating condition
+  //     const ratingClause = "rating > 50";
 
-      // Collect filter clauses dynamically
-      let filterClauses: string[] = [];
+  //     // Collect filter clauses dynamically
+  //     let filterClauses: string[] = [];
 
-      if (selectedOptions.Platforms?.length > 0) {
-        const ids = selectedOptions.Platforms.map(
-          (name) => platforms.find((p) => p.name === name)?.id,
-        ).filter(Boolean) as number[]; // remove undefined
-        filterClauses.push(`platforms = (${ids.join(",")})`);
-      }
+  //     if (selectedOptions.Platforms?.length > 0) {
+  //       const ids = selectedOptions.Platforms.map(
+  //         (name) => platforms.find((p) => p.name === name)?.id,
+  //       ).filter(Boolean) as number[]; // remove undefined
+  //       filterClauses.push(`platforms = (${ids.join(",")})`);
+  //     }
 
-      if (selectedOptions.Genres?.length > 0) {
-        const ids = selectedOptions.Genres.map(
-          (name) => IGDBgenres.find((p) => p.name === name)?.id,
-        ).filter(Boolean) as number[]; // remove undefined
-        filterClauses.push(`genres = (${ids.join(",")})`);
-      }
+  //     if (selectedOptions.Genres?.length > 0) {
+  //       const ids = selectedOptions.Genres.map(
+  //         (name) => IGDBgenres.find((p) => p.name === name)?.id,
+  //       ).filter(Boolean) as number[]; // remove undefined
+  //       filterClauses.push(`genres = (${ids.join(",")})`);
+  //     }
 
-      if (selectedOptions.Themes?.length > 0) {
-        const ids = selectedOptions.Themes.map(
-          (name) => IGDBthemes.find((p) => p.name === name)?.id,
-        ).filter(Boolean) as number[]; // remove undefined
-        filterClauses.push(`themes = (${ids.join(",")})`);
-      }
+  //     if (selectedOptions.Themes?.length > 0) {
+  //       const ids = selectedOptions.Themes.map(
+  //         (name) => IGDBthemes.find((p) => p.name === name)?.id,
+  //       ).filter(Boolean) as number[]; // remove undefined
+  //       filterClauses.push(`themes = (${ids.join(",")})`);
+  //     }
 
-      // Combine filter clauses with OR (|)
-      const filtersQuery =
-        filterClauses.length > 0 ? `(${filterClauses.join(" | ")})` : "";
+  //     // Combine filter clauses with OR (|)
+  //     const filtersQuery =
+  //       filterClauses.length > 0 ? `(${filterClauses.join(" | ")})` : "";
 
-      // Final where clause: rating AND (filters)
-      const whereQuery = filtersQuery
-        ? `${ratingClause} & ${filtersQuery}`
-        : ratingClause;
+  //     // Final where clause: rating AND (filters)
+  //     const whereQuery = filtersQuery
+  //       ? `${ratingClause} & ${filtersQuery}`
+  //       : ratingClause;
 
-      // Build final IGDB query string
-      const query = `
-      fields id, slug, name, cover.url;
-      where ${whereQuery};
-      sort rating desc;
-      limit 10;
-    `;
-      console.log(query);
-      const response = await getGames(query);
-      setRecommendedGames(response);
-    } catch (error) {
-      console.error("Error getting recommended IGDB games:", error);
-    }
-  };
+  //     // Build final IGDB query string
+  //     const query = `
+  //     fields id, slug, name, cover.url;
+  //     where ${whereQuery};
+  //     sort rating desc;
+  //     limit 10;
+  //   `;
+  //     console.log(query);
+  //     const response = await getGames(query);
+  //     setRecommendedGames(response);
+  //   } catch (error) {
+  //     console.error("Error getting recommended IGDB games:", error);
+  //   }
+  // };
 
-  // ✅ Save to localStorage whenever preferences change
-  useEffect(() => {
-    localStorage.setItem("userPreferences", JSON.stringify(selectedOptions));
-    updateGames();
-  }, [selectedOptions]);
+  // // ✅ Save to localStorage whenever preferences change
+  // useEffect(() => {
+  //   localStorage.setItem("userPreferences", JSON.stringify(selectedOptions));
+  //   updateGames();
+  // }, [selectedOptions]);
 
-  const handleOptionChange = (
-    sectionName: "Platforms" | "Genres" | "Themes",
-    optionName: string,
-  ) => {
-    setSelectedOptions((prev) => {
-      const prevSection = prev[sectionName];
-      const isSelected = prevSection.includes(optionName);
+  // const handleOptionChange = (
+  //   sectionName: "Platforms" | "Genres" | "Themes",
+  //   optionName: string,
+  // ) => {
+  //   setSelectedOptions((prev) => {
+  //     const prevSection = prev[sectionName];
+  //     const isSelected = prevSection.includes(optionName);
 
-      const updated = {
-        ...prev,
-        [sectionName]: isSelected
-          ? prevSection.filter((opt) => opt !== optionName)
-          : [...prevSection, optionName],
-      };
+  //     const updated = {
+  //       ...prev,
+  //       [sectionName]: isSelected
+  //         ? prevSection.filter((opt) => opt !== optionName)
+  //         : [...prevSection, optionName],
+  //     };
 
-      return updated;
-    });
-  };
+  //     return updated;
+  //   });
+  // };
   useEffect(() => {
     const fetchUserPref = async () => {
       if (userID) {
