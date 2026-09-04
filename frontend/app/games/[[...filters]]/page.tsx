@@ -208,6 +208,8 @@ export default async function GamePage({
   console.log(games);
   return (
     <>
+      <h1 className="text-4xl text-pretty text-center font-bold mb-6">Games</h1>
+
       <GameFilterResults games={games} />
     </>
   );

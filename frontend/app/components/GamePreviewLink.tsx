@@ -19,7 +19,10 @@ const GamePreviewLink: React.FC<Props> = ({ game, isRound = true }) => {
       >
         <img
           className="w-full h-full"
-          src={game?.cover}
+          src={
+            game?.cover ??
+            "https://upload.wikimedia.org/wikipedia/commons/f/f5/No-Image-Placeholder-landscape.svg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original"
+          }
           alt={`${game?.name} cover`}
         />
         <p className="absolute bottom-0 z-10 left-0 right-0 bg-black text-xs text-white text-center truncate px-1 py-0.5">
