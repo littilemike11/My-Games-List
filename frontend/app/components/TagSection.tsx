@@ -38,8 +38,11 @@ const TagSection: React.FC<{
   useEffect(() => {
     const fetchPopularTags = async () => {
       const response = await getPopularTags(5, "usage", "desc");
-      // remove restricted tags
-      setPopularTags(response.map((tag) => tag.name));
+      setPopularTags(
+        response
+          .filter((tag) => !restrictedTags.includes(tag.name))
+          .map((tag) => tag.name),
+      );
     };
     fetchPopularTags();
   }, []);
