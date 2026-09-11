@@ -2,10 +2,11 @@ import { useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-const MarkdownText: React.FC<{ text: string; setText: any }> = ({
-  text,
-  setText,
-}) => {
+const MarkdownText: React.FC<{
+  text: string;
+  setText: any;
+  placeholderText?: string;
+}> = ({ text, setText, placeholderText = "What are your thoughts?" }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const apply = (before: string, after = "") => {
@@ -16,7 +17,7 @@ const MarkdownText: React.FC<{ text: string; setText: any }> = ({
   function insertMarkdown(
     textarea: HTMLTextAreaElement,
     before: string,
-    after = ""
+    after = "",
   ) {
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
@@ -185,7 +186,7 @@ const MarkdownText: React.FC<{ text: string; setText: any }> = ({
         <textarea
           ref={textareaRef}
           className="textarea w-full min-h-[160px] "
-          placeholder="What are your thoughts?"
+          placeholder={placeholderText}
           value={text}
           onChange={(e) => setText(e.target.value)}
           required

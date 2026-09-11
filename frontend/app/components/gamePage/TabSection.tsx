@@ -87,6 +87,7 @@ const TabSection: React.FC<TabProps> = ({
       case "Reviews":
         return reviews?.length ? (
           <div className="flex flex-col gap-4">
+            <CreateReview game={game} />
             {reviews.map((review) => (
               <ReviewItem showCover={false} key={review.id} review={review} />
             ))}
@@ -100,6 +101,7 @@ const TabSection: React.FC<TabProps> = ({
       case "Discussions":
         return discussions?.length ? (
           <div className="flex flex-col gap-4">
+            <CreateDiscussion ctaType="game" />
             {discussions.map((discussion) => (
               <DiscussionItem discussion={discussion} key={discussion.id} />
             ))}
@@ -107,12 +109,13 @@ const TabSection: React.FC<TabProps> = ({
         ) : (
           <div className="flex flex-col gap-4">
             <p>Be the first to start a Discussion</p>
-            <CreateDiscussion ctaType="button" />
+            <CreateDiscussion ctaType="game" />
           </div>
         );
       case "Lists":
         return lists?.length ? (
           <div className="flex flex-col gap-4">
+            <CreateList />
             {lists.map((list) => (
               <ListItem list={list} key={list.id} />
             ))}

@@ -8,12 +8,22 @@ import { getPopularTags } from "../api/supabase-api/tag-api";
 import { Tag } from "../types/models";
 import { searchTags } from "../api/supabase-api/tag-api";
 import { useAuth } from "../auth/auth-context";
+
+import { FaLock } from "react-icons/fa";
+
 const TagSection: React.FC<{
   canSearchGame?: boolean;
   recommendedTags?: string[];
+  lockedTags?: string[];
   tags: string[];
   setTags: Function;
-}> = ({ canSearchGame = false, recommendedTags = [], tags, setTags }) => {
+}> = ({
+  canSearchGame = false,
+  recommendedTags = [],
+  lockedTags = [],
+  tags,
+  setTags,
+}) => {
   const [popularTags, setPopularTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [searchResults, setSearchResults] = useState<Tag[]>([]);
@@ -28,7 +38,11 @@ const TagSection: React.FC<{
   useEffect(() => {
     const fetchPopularTags = async () => {
       const response = await getPopularTags(5, "usage", "desc");
-      setPopularTags(response.map((tag) => tag.name));
+      setPopularTags(
+        response
+          .filter((tag) => !restrictedTags.includes(tag.name))
+          .map((tag) => tag.name),
+      );
     };
     fetchPopularTags();
   }, []);
@@ -71,7 +85,7 @@ const TagSection: React.FC<{
   };
 
   const clearTags = () => {
-    setTags([]);
+    lockedTags ? setTags(lockedTags) : setTags([]);
   };
 
   const updateSearch = async () => {
@@ -219,20 +233,24 @@ const TagSection: React.FC<{
                 className="badge badge-outline badge-lg flex items-center gap-2"
               >
                 {tag}
-                <button
-                  type="button"
-                  className="text-error font-bold cursor-pointer"
-                  onClick={() => removeTag(tag)}
-                >
-                  ×
-                </button>
+                {lockedTags.includes(tag) ? (
+                  <FaLock />
+                ) : (
+                  <button
+                    type="button"
+                    className="text-error font-bold cursor-pointer"
+                    onClick={() => removeTag(tag)}
+                  >
+                    ×
+                  </button>
+                )}
               </span>
             ))}
           </div>
           <button
             onClick={clearTags}
             type="button"
-            className="btn btn-ghost btn-sm mt-2"
+            className="btn btn-ghost btn-sm mt-2 block"
           >
             clear
           </button>
