@@ -5,8 +5,15 @@ import { getReviews } from "../api/supabase-api/review-api";
 import { getDiscussions } from "../api/supabase-api/discussion-api";
 import { getLists } from "../api/supabase-api/list-api";
 import getGames from "../api/igdb-api-server";
-import { parseGamePreview } from "../utils/functions";
-import { Discussion, GamePreview, List, Review } from "../types/models";
+import { getEvents } from "../api/igdb-api-server";
+import { parseGamePreview, parseEvent } from "../utils/functions";
+import {
+  Discussion,
+  EventDetails,
+  GamePreview,
+  List,
+  Review,
+} from "../types/models";
 import Tabs from "../components/Tabs";
 import ReviewItem from "../components/ReviewItem";
 import DiscussionItem from "../components/DiscussionItem";
@@ -17,6 +24,7 @@ import { welcomeQuotes } from "../mockData/quotes";
 import WhyUsSection from "../components/WhyUsSection";
 import Link from "next/link";
 import type { Metadata } from "next";
+import EventShowcase from "../components/EventShowcase";
 
 export const metadata: Metadata = {
   title: "Popular",
@@ -28,7 +36,7 @@ export default async function Home() {
   const todayTimestamp = Math.floor(Date.now() / 1000);
   console.log(todayTimestamp);
 
-  const queries = [
+  const gameQueries = [
     // classic
     "fields cover.url, name, slug;where version_parent=null & rating > 85 ;sort rating_count desc; limit 10;",
     // trending/popular
@@ -51,6 +59,19 @@ where first_release_date < ${todayTimestamp} & version_parent = null & rating > 
 sort first_release_date desc;
 limit 10;`,
   ];
+  const recentEventsQuery = `
+  fields name, description, event_logo.*, event_networks.*, start_time, time_zone, live_stream_url; 
+  where start_time < ${todayTimestamp};
+  sort start_time desc ;
+  limit 6;
+`;
+
+  const upcomingEventsQuery = `
+  fields name, description, event_logo.*, event_networks.*, start_time, time_zone, live_stream_url;
+  where start_time > ${todayTimestamp};
+  sort start_time asc;
+  limit 6;
+`;
 
   let popularGames: GamePreview[] = [];
   let trendingGames: GamePreview[] = [];
@@ -61,6 +82,8 @@ limit 10;`,
   let discussions: Discussion[] = [];
   let lists: List[] = [];
   let artworks: any = [];
+  let recentEvents: EventDetails[] = [];
+  let upcomingEvents: EventDetails[] = [];
   let randomQuote =
     welcomeQuotes[Math.floor(Math.random() * welcomeQuotes.length)];
   const heading = (
@@ -70,13 +93,21 @@ limit 10;`,
   );
 
   try {
-    const [gameResponses, reviewsRes, discussionsRes, listsRes] =
-      await Promise.all([
-        Promise.all(queries.map((q) => getGames(q))), // array of game arrays
-        getReviews(5, "date"),
-        getDiscussions(5, "date"),
-        getLists(5, "date"),
-      ]);
+    const [
+      gameResponses,
+      reviewsRes,
+      discussionsRes,
+      listsRes,
+      recentEventsRes,
+      upcomingEventsRes,
+    ] = await Promise.all([
+      Promise.all(gameQueries.map((q) => getGames(q))), // array of game arrays
+      getReviews(5, "date"),
+      getDiscussions(5, "date"),
+      getLists(5, "date"),
+      getEvents(recentEventsQuery),
+      getEvents(upcomingEventsQuery),
+    ]);
 
     // Parse game groups
     popularGames = gameResponses[0].map(parseGamePreview);
@@ -90,10 +121,17 @@ limit 10;`,
       }
     });
 
-    // Assign other results
+    // Get Posts
     reviews = reviewsRes;
     discussions = discussionsRes;
     lists = listsRes;
+
+    // events
+    recentEvents = recentEventsRes.map(parseEvent);
+    console.log(recentEventsRes);
+    upcomingEvents = upcomingEventsRes.map(parseEvent);
+    console.log("recentEvents:", recentEvents);
+    console.log("upcoming events:", upcomingEvents);
   } catch (error) {
     console.error("Failed to fetch home page games:", error);
   }
@@ -133,6 +171,7 @@ limit 10;`,
           </Link>
         </div>
       </section>
+      <EventShowcase title="Recent Events" events={recentEvents} />
       <Carousel
         title="Most Recent"
         games={recentGames}
@@ -156,6 +195,7 @@ limit 10;`,
         </div>
       </section>
 
+      <EventShowcase title="Upcoming Events" events={upcomingEvents} />
       <Carousel
         title="Most Anticipated"
         games={anticipatedGames}

@@ -64,6 +64,17 @@ export interface Game extends GamePreview {
   }[];
 }
 
+export interface EventDetails {
+  id: number;
+  name: string;
+  description: string;
+  start_time: string;
+  time_zone: string;
+  event_logo: string;
+  live_stream_url: string;
+  links: string[];
+}
+
 export interface GamePreview {
   id: number;
   cover?: string;
