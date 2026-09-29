@@ -4,15 +4,22 @@ import Carousel from "../components/Carousel";
 import { getReviews } from "../api/supabase-api/review-api";
 import { getDiscussions } from "../api/supabase-api/discussion-api";
 import { getLists } from "../api/supabase-api/list-api";
-import getGames from "../api/igdb-api-server";
-import { getEvents } from "../api/igdb-api-server";
-import { parseGamePreview, parseEvent } from "../utils/functions";
+import getGames, { getTwitchGames, getVideos } from "../api/igdb-api-server";
+import { getEvents, getStreams } from "../api/igdb-api-server";
+import {
+  parseGamePreview,
+  parseEvent,
+  parseStream,
+  parseVideo,
+} from "../utils/functions";
 import {
   Discussion,
   EventDetails,
   GamePreview,
   List,
   Review,
+  StreamDetails,
+  VideoDetails,
 } from "../types/models";
 import Tabs from "../components/Tabs";
 import ReviewItem from "../components/ReviewItem";
@@ -25,6 +32,9 @@ import WhyUsSection from "../components/WhyUsSection";
 import Link from "next/link";
 import type { Metadata } from "next";
 import EventShowcase from "../components/EventShowcase";
+import TwitchStreamShowcase, {
+  TrendingGameHighlight,
+} from "../components/TwitchStreamShowcase";
 
 export const metadata: Metadata = {
   title: "Popular",
@@ -84,6 +94,10 @@ limit 10;`,
   let artworks: any = [];
   let recentEvents: EventDetails[] = [];
   let upcomingEvents: EventDetails[] = [];
+  let trendingStreams: StreamDetails[] = [];
+  let trendingVods: VideoDetails[] = [];
+  let trendingHighlights: TrendingGameHighlight[] = [];
+
   let randomQuote =
     welcomeQuotes[Math.floor(Math.random() * welcomeQuotes.length)];
   const heading = (
@@ -100,6 +114,7 @@ limit 10;`,
       listsRes,
       recentEventsRes,
       upcomingEventsRes,
+      // trendingStreamRes,
     ] = await Promise.all([
       Promise.all(gameQueries.map((q) => getGames(q))), // array of game arrays
       getReviews(5, "date"),
@@ -107,6 +122,7 @@ limit 10;`,
       getLists(5, "date"),
       getEvents(recentEventsQuery),
       getEvents(upcomingEventsQuery),
+      // getStreams(21779),
     ]);
 
     // Parse game groups
@@ -115,9 +131,22 @@ limit 10;`,
     anticipatedGames = gameResponses[2].map(parseGamePreview);
     recentGames = gameResponses[3].map(parseGamePreview);
 
+    // trendingStreams = (
+    //   await Promise.all(
+    //     trendingGames.map(async (game) => ({
+    //       game,
+    //       streams: await getStreams(String(game.id)),
+    //     })),
+    //   )
+    // ).filter(({ streams }) => streams.length > 0);
+    // trendingStreams = (
+    //   await Promise.all(gameResponses[1].map((game) => getStreams(game.id)))
+    // ).flat();
+
     gameResponses[1].forEach((game: any) => {
       if (game.artworks) {
         artworks.push(game.artworks?.[0].url);
+        return;
       }
     });
 
@@ -128,16 +157,54 @@ limit 10;`,
 
     // events
     recentEvents = recentEventsRes.map(parseEvent);
-    console.log(recentEventsRes);
     upcomingEvents = upcomingEventsRes.map(parseEvent);
-    console.log("recentEvents:", recentEvents);
-    console.log("upcoming events:", upcomingEvents);
+
+    // Streams
+    // trendingStreams = trendingStreamRes.map(parseStream);
+    console.log(gameResponses[1]);
+    try {
+      const twitchIDs = await getTwitchGames(
+        trendingGames.map((game) => game.id),
+      );
+
+      const twitchByIgdbId = new Map(
+        twitchIDs.map((twitchGame) => [String(twitchGame.igdb_id), twitchGame]),
+      );
+
+      trendingHighlights = await Promise.all(
+        trendingGames.map(async (game) => {
+          const twitchGame = twitchByIgdbId.get(String(game.id));
+          if (!twitchGame) {
+            return {
+              game,
+              streams: [],
+              videos: [],
+            };
+          }
+
+          const [streams, videos] = await Promise.all([
+            getStreams(twitchGame.id),
+            getVideos(twitchGame.id),
+          ]);
+
+          return {
+            game,
+            streams: streams.map(parseStream),
+            videos: videos.map(parseVideo),
+          };
+        }),
+      );
+    } catch (error) {
+      console.log("error", error);
+    }
+    console.log("trending highlights:", trendingHighlights);
   } catch (error) {
     console.error("Failed to fetch home page games:", error);
   }
 
   return (
     <div className="flex flex-col gap-2 items-center ">
+      {/* Above the Folde */}
       <GameHero
         bgImage={artworks[Math.floor(Math.random() * artworks.length)].replace(
           "t_thumb",
@@ -148,59 +215,80 @@ limit 10;`,
       />
       <Quote content={randomQuote.text} origin={randomQuote.origin} />
       <Tabs />
+      {/* Above the Fold */}
       {/* shows popular lists and members */}
-      <Carousel
+      {/* <Carousel
         title="What's the Meta?"
         link="/games/hype/75/sort/date_desc"
         games={trendingGames}
-      />
-      <WhyUsSection />
+      /> */}
+      <TwitchStreamShowcase highlights={trendingHighlights} />
       {/* popular reviews */}
       <section className="mb-4">
         <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-6">
-          Trending Reviews
+          From the Community
         </h2>
-        <div className="flex flex-col space-y-10">
-          {reviews.map((review) => (
-            <ReviewItem key={review.id} review={review} />
-          ))}
-        </div>
-        <div className="flex justify-end w-full my-2">
-          <Link className="link link:hover" href={`/popular/reviews`}>
-            view more reviews...
-          </Link>
+        <div className="grid grid-cols-1 ">
+          {/* Reviews */}
+          <div>
+            <h3 className="text-xl sm:text-2xl font-semibold text-center mb-6">
+              Trending Reviews
+            </h3>
+            <div className="flex flex-col space-y-10">
+              {reviews.map((review) => (
+                <ReviewItem key={review.id} review={review} />
+              ))}
+            </div>
+            <div className="flex justify-end w-full my-2">
+              <Link className="link link:hover" href={`/popular/reviews`}>
+                view more reviews...
+              </Link>
+            </div>
+          </div>
+          {/* Discussions */}
+          <div>
+            <h3 className="text-xl sm:text-2xl font-semibold text-center mb-6">
+              Trending Discussions
+            </h3>
+            <div className="flex flex-col space-y-10">
+              {discussions.map((discussion) => (
+                <DiscussionItem key={discussion.id} discussion={discussion} />
+              ))}
+            </div>
+            <div className="flex justify-end w-full my-2">
+              <Link className="link link:hover" href={`/popular/discussions`}>
+                view more discussions...
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
-      <EventShowcase title="Recent Events" events={recentEvents} />
+
+      {/* Discover */}
       <Carousel
         title="Most Recent"
         games={recentGames}
         link="games/rating/75/sort/date_desc"
       />
 
-      {/* popular discussions */}
-      <section className="mb-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-6">
-          Trending Discussions
-        </h2>
-        <div className="flex flex-col space-y-10">
-          {discussions.map((discussion) => (
-            <DiscussionItem key={discussion.id} discussion={discussion} />
-          ))}
-        </div>
-        <div className="flex justify-end w-full my-2">
-          <Link className="link link:hover" href={`/popular/discussions`}>
-            view more discussions...
-          </Link>
-        </div>
-      </section>
-
-      <EventShowcase title="Upcoming Events" events={upcomingEvents} />
       <Carousel
         title="Most Anticipated"
         games={anticipatedGames}
         link="/games/decade/upcoming/hype/50/sort/date_asc"
       />
+
+      {/* events */}
+      <section className="mb-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-6">
+          Events
+        </h2>
+        <div className="grid grid-cols-1 ">
+          {/* maybe highlight single events for full width */}
+          <EventShowcase title="Upcoming Events" events={upcomingEvents} />
+
+          <EventShowcase title="Recent Events" events={recentEvents} />
+        </div>
+      </section>
 
       {/* popular lists */}
       <section className="mb-4">
@@ -218,6 +306,8 @@ limit 10;`,
           </Link>
         </div>
       </section>
+      <WhyUsSection />
+
       <Carousel
         title="Classic Gems"
         games={popularGames}

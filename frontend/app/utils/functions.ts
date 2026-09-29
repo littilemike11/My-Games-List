@@ -1,4 +1,11 @@
-import { Game, GamePreview, Filters, EventDetails } from "../types/models";
+import {
+  Game,
+  GamePreview,
+  Filters,
+  EventDetails,
+  StreamDetails,
+  VideoDetails,
+} from "../types/models";
 export const parseGame = (gameInfo: any): Game => {
   return {
     id: gameInfo.id,
@@ -71,6 +78,34 @@ export const parseEvent = (eventInfo: any): EventDetails => {
   };
 };
 
+export const parseStream = (streamInfo: any): StreamDetails => {
+  return {
+    id: streamInfo.id,
+    username: streamInfo.user_name,
+    title: streamInfo.title,
+    // description: streamInfo.description,
+    date: formatDate(streamInfo.started_at),
+    // url: streamInfo.url,
+    thumbnail: streamInfo.thumbnail_url,
+    views: streamInfo.viewer_count,
+    // language
+    // duration: streamInfo.duration,
+  };
+};
+export const parseVideo = (streamInfo: any): VideoDetails => {
+  return {
+    id: streamInfo.id,
+    username: streamInfo.user_name,
+    title: streamInfo.title,
+    description: streamInfo.description,
+    date: formatDate(streamInfo.created_at),
+    url: streamInfo.url,
+    thumbnail: streamInfo.thumbnail_url,
+    views: streamInfo.view_count,
+    // language
+    duration: streamInfo.duration,
+  };
+};
 export function convertDate(timestamp: number): string {
   const date = new Date(timestamp * 1000); // Multiply by 1000 to convert seconds → milliseconds
   // return date.toUTCString(); // or use toLocaleString() for local time

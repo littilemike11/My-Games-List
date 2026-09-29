@@ -75,6 +75,27 @@ export interface EventDetails {
   links: string[];
 }
 
+export interface StreamDetails {
+  id: number;
+  username: string;
+  title: string;
+  date: string;
+  thumbnail: string;
+  views: number;
+  // language
+}
+export interface VideoDetails {
+  id: number;
+  username: string;
+  title: string;
+  description: string;
+  date: string;
+  url: string;
+  thumbnail: string;
+  views: number;
+  // language
+  duration: string;
+}
 export interface GamePreview {
   id: number;
   cover?: string;
