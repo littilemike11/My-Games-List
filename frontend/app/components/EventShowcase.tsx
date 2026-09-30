@@ -1,7 +1,17 @@
-import { link } from "fs";
 import { EventDetails } from "../types/models";
-import Link from "next/link";
-
+import {
+  FaYoutube,
+  FaTwitch,
+  FaTwitter,
+  FaFacebook,
+  FaInstagram,
+  FaTiktok,
+  FaDiscord,
+  FaReddit,
+  FaLinkedin,
+} from "react-icons/fa";
+import { FaThreads, FaBluesky } from "react-icons/fa6";
+import { FiExternalLink } from "react-icons/fi";
 const EventShowcase: React.FC<{
   events: EventDetails[];
   title: string;
@@ -15,58 +25,63 @@ const EventShowcase: React.FC<{
     );
   }
 
+  interface Website {
+    name: string;
+    icon: any;
+  }
+
   const parseLink = (link: string) => {
     const url = link.toLowerCase();
 
     if (url.includes("youtube.com") || url.includes("youtu.be")) {
-      return "youtube";
+      return { name: "YouTube", icon: FaYoutube };
     }
 
     if (url.includes("twitch.tv")) {
-      return "twitch";
+      return { name: "Twitch", icon: FaTwitch };
     }
 
     if (url.includes("twitter.com") || url.includes("x.com")) {
-      return "twitter";
+      return { name: "Twitter", icon: FaTwitter };
     }
 
     if (url.includes("facebook.com") || url.includes("fb.com")) {
-      return "facebook";
+      return { name: "Facebook", icon: FaFacebook };
     }
 
     if (url.includes("instagram.com")) {
-      return "instagram";
+      return { name: "Instagram", icon: FaInstagram };
     }
 
     if (url.includes("tiktok.com")) {
-      return "tiktok";
+      return { name: "TikTok", icon: FaTiktok };
     }
 
     if (url.includes("discord.com") || url.includes("discord.gg")) {
-      return "discord";
+      return { name: "Discord", icon: FaDiscord };
     }
 
     if (url.includes("reddit.com")) {
-      return "reddit";
+      return { name: "Reddit", icon: FaReddit };
     }
 
     if (url.includes("linkedin.com")) {
-      return "linkedin";
+      return { name: "LinkedIn", icon: FaLinkedin };
     }
 
     if (url.includes("threads.net")) {
-      return "threads";
+      return { name: "Threads", icon: FaThreads };
     }
 
-    if (url.includes("bluesky.app")) {
-      return "bluesky";
+    if (url.includes("bsky.app")) {
+      return { name: "Bluesky", icon: FaBluesky };
     }
 
     if (url.includes("mastodon")) {
-      return "mastodon";
+      return { name: "mastodon", icon: FiExternalLink };
     }
 
-    return "website";
+    return { name: "Website", icon: FiExternalLink };
   };
 
   return (
@@ -125,17 +140,22 @@ const EventShowcase: React.FC<{
                     </span>
                   )}
 
-                  {event.links?.map((link) => (
-                    <a
-                      key={link}
-                      href={link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn btn-ghost btn-sm"
-                    >
-                      {parseLink(link)}
-                    </a>
-                  ))}
+                  {event.links?.map((link) => {
+                    const { name, icon: Icon } = parseLink(link);
+
+                    return (
+                      <a
+                        key={link}
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-ghost btn-sm"
+                      >
+                        <Icon size={16} />
+                        {name}
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             </div>

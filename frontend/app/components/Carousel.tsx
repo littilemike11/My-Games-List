@@ -32,11 +32,23 @@ const Carousel: React.FC<CarouselProps> = ({
   };
 
   return (
-    <section className="w-full space-y-2">
+    <section className="w-full space-y-2 px-2 rounded-lg border border-base-200 bg-base-100 shadow-sm transition-shadow hover:shadow-md">
       {title && (
         <div className="flex justify-between">
-          <h2 className="text-xl sm:text-2xl font-semibold">{title}</h2>
-          {link && <Link href={link}>see more</Link>}
+          {link ? (
+            <Link href={link}>
+              <h2 className="text-xl sm:text-2xl font-semibold text-secondary hover:link">
+                {title}
+              </h2>
+            </Link>
+          ) : (
+            <h2 className="text-xl sm:text-2xl font-semibold">{title}</h2>
+          )}
+          {link && (
+            <Link className="link" href={link}>
+              see more ....
+            </Link>
+          )}
         </div>
       )}
 
@@ -78,7 +90,7 @@ const Carousel: React.FC<CarouselProps> = ({
               className={`
                 snap-start
                 flex-shrink-0
-                 ${isList ? "w-36 h-48 " : "w-40 h-52"}
+                 ${isList ? "w-24 h-32 " : "w-36 h-48"}
               `}
             >
               <GamePreviewLink game={game} />

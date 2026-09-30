@@ -32,7 +32,7 @@ const GameHero: React.FC<{
 
           {/* Game name */}
           {gameName && (
-            <div className="absolute top-4 right-4 sm:top-6 sm:right-6 max-w-[45%] sm:max-w-xs z-10">
+            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 max-w-[45%] sm:max-w-xs z-10">
               <div className="flex items-start justify-end gap-2">
                 <span className="mt-1.5 h-px w-6 shrink-0 bg-primary" />
 
@@ -60,7 +60,7 @@ const GameHero: React.FC<{
           {/* Hero content */}
           <div className="relative z-10 hero-content text-neutral-content text-center">
             <div className="max-w-md">
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white drop-shadow-md line-clamp-2 text-balance">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-md line-clamp-2 text-balance">
                 {heading}
               </h1>
 
