@@ -18,8 +18,6 @@ import {
   GamePreview,
   List,
   Review,
-  StreamDetails,
-  VideoDetails,
 } from "../types/models";
 import Tabs from "../components/Tabs";
 import ReviewItem from "../components/ReviewItem";
@@ -92,10 +90,9 @@ limit 10;`,
   let discussions: Discussion[] = [];
   let lists: List[] = [];
   let artworks: any = [];
+  let featuredGame;
   let recentEvents: EventDetails[] = [];
   let upcomingEvents: EventDetails[] = [];
-  let trendingStreams: StreamDetails[] = [];
-  let trendingVods: VideoDetails[] = [];
   let trendingHighlights: TrendingGameHighlight[] = [];
 
   let randomQuote =
@@ -131,24 +128,16 @@ limit 10;`,
     anticipatedGames = gameResponses[2].map(parseGamePreview);
     recentGames = gameResponses[3].map(parseGamePreview);
 
-    // trendingStreams = (
-    //   await Promise.all(
-    //     trendingGames.map(async (game) => ({
-    //       game,
-    //       streams: await getStreams(String(game.id)),
-    //     })),
-    //   )
-    // ).filter(({ streams }) => streams.length > 0);
-    // trendingStreams = (
-    //   await Promise.all(gameResponses[1].map((game) => getStreams(game.id)))
-    // ).flat();
+    // get game hero
+    const featuredGames = gameResponses[1]
+      .filter((game: any) => game.artworks?.length)
+      .map((game: any) => ({
+        name: game.name,
+        artwork: game.artworks[0].url,
+      }));
 
-    gameResponses[1].forEach((game: any) => {
-      if (game.artworks) {
-        artworks.push(game.artworks?.[0].url);
-        return;
-      }
-    });
+    const randomIndex = Math.floor(Math.random() * featuredGames.length);
+    featuredGame = featuredGames[randomIndex];
 
     // Get Posts
     reviews = reviewsRes;
@@ -204,15 +193,15 @@ limit 10;`,
 
   return (
     <div className="flex flex-col gap-2 items-center ">
-      {/* Above the Folde */}
-      <GameHero
-        bgImage={artworks[Math.floor(Math.random() * artworks.length)].replace(
-          "t_thumb",
-          "t_original",
-        )}
-        heading={heading}
-        subHeading="A Community Hub for Gamers by Gamers"
-      />
+      {/* Above the Fold */}
+      {featuredGame && (
+        <GameHero
+          bgImage={featuredGame.artwork.replace("t_thumb", "t_original")}
+          heading={heading}
+          subHeading="A Community Hub for Gamers by Gamers"
+          gameName={featuredGame.name}
+        />
+      )}
       <Quote content={randomQuote.text} origin={randomQuote.origin} />
       <Tabs />
       {/* Above the Fold */}
