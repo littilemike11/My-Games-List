@@ -6,7 +6,6 @@ import {
   FaArrowLeft,
   FaArrowRight,
   FaEye,
-  FaGamepad,
   FaPlay,
   FaTwitch,
 } from "react-icons/fa";
@@ -29,7 +28,6 @@ const getThumbnail = (thumbnail?: string, isStream: boolean = true) => {
   if (isStream) return thumbnail.replace("{width}x{height}", "1280x720");
   else return thumbnail.replace("%{width}x%{height}", "1280x720");
 };
-//https://static-cdn.jtvnw.net/previews-ttv/live_user_joshstrifehayes-{width}x{height}.jpg
 const TwitchEmbed: React.FC<{
   channel: string;
 }> = ({ channel }) => {
@@ -41,9 +39,7 @@ const TwitchEmbed: React.FC<{
       src={`https://player.twitch.tv/?channel=${encodeURIComponent(
         channel,
       )}&parent=${encodeURIComponent(parent)}&muted=true`}
-      //   className="absolute inset-0 w-full h-full"
-      height={"480"}
-      width={"640"}
+      className="absolute inset-0 w-full h-full"
       allowFullScreen
       title={`${channel} Twitch stream`}
     />
@@ -181,7 +177,7 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
 
       {/* Main showcase */}
       <article className="card bg-base-100 shadow-md overflow-hidden">
-        <div className="grid lg:grid-cols-[200px_1fr]">
+        <div className="grid lg:grid-cols-[200px_1fr] xl:grid-cols-[240px_1fr]">
           {/* Game identity */}
           <div className="bg-base-200 p-5 flex flex-col">
             <div className="aspect-[3/4] overflow-hidden rounded-box bg-base-300 hidden lg:block">
