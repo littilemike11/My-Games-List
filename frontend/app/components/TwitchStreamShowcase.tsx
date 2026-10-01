@@ -177,9 +177,9 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
 
       {/* Main showcase */}
       <article className="card bg-base-100 shadow-md overflow-hidden">
-        <div className="grid lg:grid-cols-[200px_1fr] xl:grid-cols-[240px_1fr]">
+        <div className="grid lg:grid-cols-[200px_1fr] xl:grid-cols-[1fr_3fr]">
           {/* Game identity */}
-          <div className="bg-base-200 p-5 flex flex-col">
+          <div className="bg-base-200 p-5 flex flex-col max-w-[240px]">
             <div className="aspect-[3/4] overflow-hidden rounded-box bg-base-300 hidden lg:block">
               <GamePreviewLink game={game} />
             </div>
@@ -201,7 +201,7 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
           </div>
 
           {/* Featured media */}
-          <div className="relative aspect-video w-full h-full bg-base-300">
+          <div className="relative border aspect-video w-full h-full bg-base-300">
             {hasLiveStream ? (
               <>
                 {playing ? (
