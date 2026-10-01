@@ -1,4 +1,11 @@
-import { Game, GamePreview, Filters } from "../types/models";
+import {
+  Game,
+  GamePreview,
+  Filters,
+  EventDetails,
+  StreamDetails,
+  VideoDetails,
+} from "../types/models";
 export const parseGame = (gameInfo: any): Game => {
   return {
     id: gameInfo.id,
@@ -56,11 +63,61 @@ export const parseGamePreview = (gameInfo: any): GamePreview => {
   };
 };
 
+export const parseEvent = (eventInfo: any): EventDetails => {
+  return {
+    id: eventInfo.id,
+    name: eventInfo.name,
+    description: eventInfo.description,
+    start_time: convertDateTime(eventInfo.start_time),
+    time_zone: eventInfo.time_zone,
+    event_logo: eventInfo.event_logo?.url
+      ? eventInfo.event_logo.url.replace("t_thumb", "t_cover_big")
+      : "",
+    live_stream_url: eventInfo.live_stream_url,
+    links: eventInfo.event_networks?.map((e: any) => e.url) ?? [],
+  };
+};
+
+export const parseStream = (streamInfo: any): StreamDetails => {
+  return {
+    id: streamInfo.id,
+    username: streamInfo.user_name,
+    title: streamInfo.title,
+    // description: streamInfo.description,
+    date: formatDate(streamInfo.started_at),
+    // url: streamInfo.url,
+    thumbnail: streamInfo.thumbnail_url,
+    views: streamInfo.viewer_count,
+    // language
+    // duration: streamInfo.duration,
+  };
+};
+export const parseVideo = (streamInfo: any): VideoDetails => {
+  return {
+    id: streamInfo.id,
+    username: streamInfo.user_name,
+    title: streamInfo.title,
+    description: streamInfo.description,
+    date: formatDate(streamInfo.created_at),
+    url: streamInfo.url,
+    thumbnail: streamInfo.thumbnail_url,
+    views: streamInfo.view_count,
+    // language
+    duration: streamInfo.duration,
+  };
+};
 export function convertDate(timestamp: number): string {
   const date = new Date(timestamp * 1000); // Multiply by 1000 to convert seconds → milliseconds
   // return date.toUTCString(); // or use toLocaleString() for local time
   // return date.toLocaleDateString();
   return date.toLocaleDateString();
+}
+
+export function convertDateTime(timestamp: number): string {
+  const date = new Date(timestamp * 1000); // Multiply by 1000 to convert seconds → milliseconds
+  // return date.toUTCString(); // or use toLocaleString() for local time
+  // return date.toLocaleDateString();
+  return date.toLocaleString();
 }
 
 export function formatDate(date: Date) {

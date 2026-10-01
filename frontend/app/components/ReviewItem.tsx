@@ -19,61 +19,63 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
 
   return (
     <>
-      <div className="card card-side bg-base-100 w-full h-fit rounded-lg border border-base-200 hover:shadow-lg shadow-sm transition-all duration-200">
-        {/* game cover img Optional */}
-        {showCover && (
-          <figure className="flex-shrink-0 w-24 sm:w-36 h-32 sm:h-48 ">
-            <GamePreviewLink game={review.game!} />
-          </figure>
-        )}
+      <article className="w-full rounded-lg border border-base-200 bg-base-100 shadow-sm transition-shadow hover:shadow-md overflow-hidden">
+        {/* ================= HEADER ================= */}
+        <div className="flex gap-3 p-3 sm:p-4">
+          {/* Game cover */}
+          {showCover && (
+            <figure className="w-20 sm:w-24 aspect-[3/4] shrink-0 overflow-hidden rounded-md">
+              <GamePreviewLink game={review.game!} />
+            </figure>
+          )}
 
-        <div className="card-body">
-          {/* title */}
-          <div className="flex justify-between">
-            <Link
-              className="link link-hover decoration-primary"
-              href={`/review/${review.id}`}
-            >
-              <h2 className="card-title text-primary line-clamp-2 text-pretty font-bold">
-                {review.title}
-              </h2>
-            </Link>
-            <PostOptions
-              postType="review"
-              postID={review.id}
-              ownerID={review.profile.id}
-              ownerName={review.profile.username}
-            />
-          </div>
+          {/* Review metadata */}
+          <div className="min-w-0 flex-1">
+            {/* Title + options */}
+            <div className="flex items-start gap-2">
+              <Link href={`/review/${review.id}`} className="min-w-0 flex-1">
+                <h2 className="font-bold text-base sm:text-lg leading-tight text-primary line-clamp-2 link link-hover decoration-primary">
+                  {review.title}
+                </h2>
+              </Link>
 
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 ">
-            <div className="flex flex-col gap-2 ">
-              {/* user info */}
-              <div>
-                <Link
-                  className="link link-hover"
-                  href={`/user/${review.profile?.username}`}
-                >
-                  <div className="flex items-baseline">
-                    <div className="avatar avatar-placeholder">
-                      <div className="bg-neutral text-neutral-content w-8 rounded-full">
-                        <span>{review.profile?.username[0].toUpperCase()}</span>
-                      </div>
-                    </div>
+              <PostOptions
+                postType="review"
+                postID={review.id}
+                ownerID={review.profile.id}
+                ownerName={review.profile.username}
+              />
+            </div>
 
-                    <span className="ml-2 w-full font-medium italic">
-                      {review.profile?.username || "(deleted)"}
-                    </span>
-                  </div>
-                </Link>
-                {/* 
-                <span> reviewed</span>
-                <span className="font-semibold">{review.game?.name}</span> */}
+            {/* Author + date */}
+            <div className="mt-1 text-xs sm:text-sm opacity-70">
+              <div className="avatar avatar-placeholder">
+                <div className="bg-neutral text-neutral-content w-6 rounded-full">
+                  <span>{review.profile?.username[0].toUpperCase()}</span>
+                </div>
               </div>
-              {/* rating */}
-              <div className="rating rating-half rating-xs">
+              <Link
+                href={`/user/${review.profile?.username}`}
+                className="font-medium hover:underline"
+              >
+                @{review.profile?.username || "deleted"}
+              </Link>
+
+              <span className="mx-1">·</span>
+
+              <span>{formatDate(review.created_at!)}</span>
+            </div>
+
+            {/* Rating + metadata */}
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm">
+              {/* Rating */}
+              <div
+                className="rating rating-half rating-xs"
+                aria-label={`Rating: ${review.rating} out of 10`}
+              >
                 {[...Array(20)].map((_, index) => {
                   const rating = (index + 1) / 2;
+
                   return (
                     <div
                       key={index}
@@ -86,29 +88,38 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
                   );
                 })}
               </div>
-            </div>
 
-            <div className="flex text-pretty flex-col flex-shrink-0 h-fit text-sm w-fit gap-2 opacity-50">
-              <span>
-                {formatDate(review.created_at!)}, 🕗 {review.hours_played}hrs
-              </span>
+              {/* Numeric rating */}
+              <span className="font-semibold">{review.rating}/10</span>
+
+              <span className="opacity-50">•</span>
+
               <span>{review.platform}</span>
-              {/* <span>🕗 {review.hours_played}hrs</span> */}
+
+              <span className="opacity-50">•</span>
+
+              <span>{review.hours_played} hrs</span>
             </div>
           </div>
-          <div className="font-medium">
+        </div>
+
+        {/* ================= REVIEW ================= */}
+        <div className="border-t border-base-200 px-3 pb-3 sm:px-4 sm:pb-4">
+          <div className="text-sm sm:text-base leading-relaxed">
             <Paragraph text={review.content} />
           </div>
-          {/* <p className="font-medium">{review.content}</p> */}
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-2">
-            {review.tags?.map((tag) => (
-              <TagItem key={tag.id} tag={tag} />
-            ))}
-          </div>
-          {/* CTAs */}
-          <div className=" card-actions items-center">
+          {review.tags && review.tags.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {review.tags.map((tag) => (
+                <TagItem key={tag.id} tag={tag} />
+              ))}
+            </div>
+          )}
+
+          {/* Reactions */}
+          <div className="mt-3 flex items-center">
             <Reactions
               likeCount={review.likes ?? 0}
               dislikeCount={review.dislikes ?? 0}
@@ -118,7 +129,7 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
             />
           </div>
         </div>
-      </div>
+      </article>
     </>
   );
 };
