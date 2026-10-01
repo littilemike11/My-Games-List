@@ -177,9 +177,9 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
 
       {/* Main showcase */}
       <article className="card bg-base-100 shadow-md overflow-hidden">
-        <div className="grid lg:grid-cols-[200px_1fr] xl:grid-cols-[1fr_3fr]">
+        <div className="grid lg:grid-cols-[200px_1fr] xl:grid-cols-[1fr_4fr]">
           {/* Game identity */}
-          <div className="bg-base-200 p-5 flex flex-col max-w-[240px]">
+          <div className="bg-base-200 p-5 flex flex-col">
             <div className="aspect-[3/4] overflow-hidden rounded-box bg-base-300 hidden lg:block">
               <GamePreviewLink game={game} />
             </div>
