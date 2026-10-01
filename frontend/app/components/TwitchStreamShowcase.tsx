@@ -201,7 +201,7 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
           </div>
 
           {/* Featured media */}
-          <div className="relative border aspect-video w-full h-full bg-base-300">
+          <div className="relative aspect-video w-full h-full bg-base-300">
             {hasLiveStream ? (
               <>
                 {playing ? (
