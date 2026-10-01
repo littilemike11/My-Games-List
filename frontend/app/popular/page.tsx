@@ -297,8 +297,11 @@ limit 10;`,
 
       {/* popular lists */}
       <section className="mb-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-6">
-          Trending Lists
+        <h2 className="text-xl sm:text-2xl font-semibold mb-6">
+          Trending{" "}
+          <Link href={"/popular/lists"} className="text-secondary hover:link">
+            Lists
+          </Link>
         </h2>
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 ">
           {lists.map((list, index) => (
@@ -306,7 +309,7 @@ limit 10;`,
           ))}
         </div>
         <div className="flex justify-end w-full my-2">
-          <Link className="link link:hover" href={`/popular/lists`}>
+          <Link className="link text-secondary" href={`/popular/lists`}>
             view more lists...
           </Link>
         </div>
