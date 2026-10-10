@@ -1,5 +1,4 @@
 import { List } from "../types/models";
-import GamePreviewLink from "./GamePreviewLink";
 import Link from "next/link";
 import Reactions from "./Reactions";
 import TagItem from "./TagItem";
@@ -12,77 +11,73 @@ const ListItem: React.FC<{
   console.log(list);
   return (
     <>
-      <div className="grid grid-cols-1 space-y-2 bg-base-100 w-full h-full rounded-lg border border-base-200 hover:shadow-lg shadow-sm transition-all duration-200 p-2">
-        <div className="flex justify-between">
-          <Link
-            className="link link-hover decoration-primary"
-            href={`/list/${list.id}`}
-          >
-            <h3 className="text-xl font-bold text-primary">{list.title}</h3>
-          </Link>
-          <PostOptions
-            postType="list"
-            postID={list.id}
-            ownerID={list.profile.id}
-            ownerName={list.profile.username}
-          />
-        </div>
-        {/* Author info and date */}
-        <div className="flex items-center justify-between text-sm ">
-          <div className="flex items-center gap-3">
-            <Link
-              className="link link-hover"
-              href={`/user/${list.profile?.username}`}
-            >
-              <figure>
-                <div className="avatar avatar-placeholder">
-                  <div className="bg-neutral text-neutral-content w-8 rounded-full">
-                    <span>{list.profile?.username[0].toUpperCase()}</span>
-                  </div>
-                </div>
-
-                <span className="ml-2 font-medium italic">
-                  {list.profile?.username || "(deleted)"}
-                </span>
-              </figure>
+      <article className="min-w-0 w-full overflow-hidden px-2 rounded-lg border border-base-200 bg-base-100 shadow-sm transition-shadow hover:shadow-md">
+        {/* Header */}
+        <div className="p-3 sm:p-4">
+          {/* Title + options */}
+          <div className="flex items-start gap-2">
+            <Link href={`/list/${list.id}`} className="min-w-0 flex-1">
+              <h3 className="line-clamp-2 text-base font-bold leading-tight text-primary sm:text-lg link link-hover decoration-primary">
+                {list.title}
+              </h3>
             </Link>
+
+            <PostOptions
+              postType="list"
+              postID={list.id}
+              ownerID={list.profile.id}
+              ownerName={list.profile.username}
+            />
           </div>
-          <time className="opacity-50">{formatDate(list.created_at)}</time>
-        </div>
-        <Carousel isList={true} games={list.games} />
 
-        {/* <div className="flex border h-40 group overflow-hidden">
-            {list.games.map((game) => (
-              <div
-                key={game.id}
-                className="
-                    flex-1 
-                    transition-all duration-300 ease-in-out 
-                    group-hover:flex-[0.7] hover:flex-[1.2] 
-                  "
-              >
-                <GamePreviewLink game={game} isRound={false} />
+          {/* Author + date */}
+          <div className="mt-1 flex flex-wrap items-center gap-x-2 text-xs sm:text-sm opacity-70">
+            <div className="avatar avatar-placeholder">
+              <div className="bg-neutral text-neutral-content w-6 rounded-full">
+                <span>{list.profile?.username[0].toUpperCase()}</span>
               </div>
-            ))}
-          </div> */}
+            </div>
+            <Link
+              href={`/user/${list.profile?.username}`}
+              className="font-medium hover:underline"
+            >
+              @{list.profile?.username || "deleted"}
+            </Link>
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2">
-          {list.tags?.map((tag) => (
-            <TagItem key={tag.id} tag={tag} />
-          ))}
+            <span>·</span>
+
+            <time>{formatDate(list.created_at)}</time>
+          </div>
         </div>
-        {/* CTAs */}
-        <div className=" card-actions items-center">
-          <Reactions
-            likeCount={list.likes ?? 0}
-            dislikeCount={list.dislikes ?? 0}
-            commentCount={list.comment_count ?? 0}
-            parent_type="list"
-            parent_id={list.id}
-          />
+
+        {/* Games */}
+        <div className="min-w-0 px-3 sm:px-4">
+          <Carousel isList={true} games={list.games} />
         </div>
-      </div>
+
+        {/* Footer */}
+        <div className="px-3 pb-3 pt-2 sm:px-4 sm:pb-4">
+          {/* Tags */}
+          {list.tags && list.tags.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {list.tags.map((tag) => (
+                <TagItem key={tag.id} tag={tag} />
+              ))}
+            </div>
+          )}
+
+          {/* Reactions */}
+          <div className="mt-3 flex items-center">
+            <Reactions
+              likeCount={list.likes ?? 0}
+              dislikeCount={list.dislikes ?? 0}
+              commentCount={list.comment_count ?? 0}
+              parent_type="list"
+              parent_id={list.id}
+            />
+          </div>
+        </div>
+      </article>
     </>
   );
 };

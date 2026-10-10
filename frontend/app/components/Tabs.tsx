@@ -84,7 +84,7 @@ const Tabs = () => {
                 key={tab.slug}
                 href={`/popular/${tab.slug}`}
                 role="tab"
-                className={`tab px-4 transition-colors ${
+                className={`tab px-4 lg:text-lg transition-colors ${
                   activeTab === tab.slug
                     ? "tab-active text-primary hover:text-primary border-primary"
                     : "hover:text-primary/70"

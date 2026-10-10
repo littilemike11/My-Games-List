@@ -7,32 +7,51 @@ import AuthModal from "./AuthModal";
 import { useAuth } from "../auth/auth-context";
 import TagSection from "./TagSection";
 import MarkdownText from "./MarkdownText";
-const CreateDiscussion: React.FC<{ ctaType?: "input" | "button" }> = ({
-  ctaType = "input",
-}) => {
+import { FaBug, FaCommentMedical } from "react-icons/fa";
+const CreateDiscussion: React.FC<{
+  ctaType?: "input" | "game" | "bug" | "tag" | "feedback";
+}> = ({ ctaType = "input" }) => {
   const [showAuth, setShowAuth] = useState(false);
+  const [initialTags, setInitialTags] = useState<string[]>([]);
 
   const pathname = usePathname();
+  const modalId = `create-discussion-${ctaType}`;
   console.log(pathname);
   // Extract current category from pathname
-  const currentSource =
-    ["game", "tag"].find((route) => pathname.includes(`/${route}`)) || "all";
+  const params = useParams<{
+    slug?: string;
+    name?: string; // tag name
+  }>();
+  console.log("params", params);
 
-  console.log("current source", currentSource);
-  let recommendedTags: string[] = [];
+  const { slug, name } = params;
+  const managetags = () => {
+    let recommendedTags: string[] = [];
+    switch (ctaType) {
+      case "game":
+        slug && recommendedTags.push(slug);
+        break;
+      case "tag":
+        name && recommendedTags.push(name);
+        break;
+      case "bug":
+        recommendedTags.push("bug-report");
+        break;
+      case "feedback":
+        recommendedTags.push("player-feedback");
+        break;
+      default:
+        break;
+    }
+    setInitialTags(recommendedTags);
+    return recommendedTags;
+  };
 
-  // get recommended tags based on route
-  if (currentSource === "game") {
-    const { slug } = useParams<{ slug: string }>();
-    recommendedTags.push(slug);
-  }
-  if (currentSource == "tag") {
-    const { tag } = useParams<{ tag: string }>();
-    recommendedTags.push(tag);
-  }
+  useEffect(() => {
+    setTags(managetags());
+  }, [ctaType, slug, name]);
 
-  // const recommendedTags: string[] = slug ? [slug] : [];
-  const [tags, setTags] = useState<string[]>(recommendedTags);
+  const [tags, setTags] = useState<string[]>([]);
   const { session, profile, loading } = useAuth();
 
   const [title, setTitle] = useState("");
@@ -61,15 +80,11 @@ const CreateDiscussion: React.FC<{ ctaType?: "input" | "button" }> = ({
       setShowAuth(true);
       return;
     }
-    const modal = document.getElementById(
-      "my_modal_4"
-    ) as HTMLDialogElement | null;
+    const modal = document.getElementById(modalId) as HTMLDialogElement | null;
     modal?.showModal();
   };
   const closeModal = () => {
-    const modal = document.getElementById(
-      "my_modal_4"
-    ) as HTMLDialogElement | null;
+    const modal = document.getElementById(modalId) as HTMLDialogElement | null;
     modal?.close();
   };
 
@@ -83,19 +98,46 @@ const CreateDiscussion: React.FC<{ ctaType?: "input" | "button" }> = ({
         <button className="input border-amber-100" onClick={openModal}>
           What's on your mind?
         </button>
-      ) : (
-        <button type="button" onClick={openModal} className="btn btn-primary">
+      ) : ctaType == "game" ? (
+        <button
+          type="button"
+          onClick={openModal}
+          className="btn w-fit btn-primary"
+        >
           Start a Discussion
+        </button>
+      ) : ctaType == "bug" ? (
+        <button onClick={openModal} className="flex text-error hover:link">
+          Report a Bug <FaBug />
+        </button>
+      ) : ctaType == "tag" ? (
+        <button className="input border-amber-100" onClick={openModal}>
+          Thoughts on {params.name}?
+        </button>
+      ) : (
+        // player feedback
+        <button className="flex hover:link" onClick={openModal}>
+          How can we improve? <FaCommentMedical />
         </button>
       )}
       <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
 
-      <dialog id="my_modal_4" className="modal modal-bottom sm:modal-middle">
+      <dialog id={modalId} className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           <form onSubmit={handleSubmit}>
             <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
               <legend className="fieldset-legend font-bold text-lg">
-                What's on your mind?
+                {/* What's on your mind? */}
+                {ctaType == "game"
+                  ? `${params.slug} Discussion`
+                  : ctaType == "tag"
+                    ? `${params.name} Discussion`
+                    : ctaType == "bug"
+                      ? "Bug Report"
+                      : ctaType == "feedback"
+                        ? "Player Feedback"
+                        : //  input
+                          "What's on your Mind"}
               </legend>
 
               <label className="label">Post Title</label>
@@ -116,11 +158,26 @@ const CreateDiscussion: React.FC<{ ctaType?: "input" | "button" }> = ({
                 value={content}
                 required
               /> */}
-              <MarkdownText text={content} setText={setContent} />
+              <MarkdownText
+                text={content}
+                setText={setContent}
+                // {...(ctaType == "bug" && {
+                //   placeholderText:
+                //     "Thank you for your diligence. Please inform us how and when this bug occurred! We will do our best to address it and solve it shortly.",
+                // })}
+                placeholderText={
+                  ctaType == "bug"
+                    ? "Thanks for reporting this issue. Please inform us how and when this bug occurred! We will do our best to address and solve it shortly."
+                    : ctaType == "feedback"
+                      ? "Tell us your ideas on how can we improve the Save Room!"
+                      : "What's on your mind?"
+                }
+              />
 
               <TagSection
                 // canSearchGame={true}
-                recommendedTags={recommendedTags}
+                recommendedTags={initialTags}
+                lockedTags={initialTags}
                 tags={tags}
                 setTags={setTags}
               />

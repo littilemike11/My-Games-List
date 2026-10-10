@@ -10,18 +10,20 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
 }) => {
   return (
     <>
-      <div className="card bg-base-100 w-full rounded-lg border border-base-200 hover:shadow-lg shadow-sm transition-all duration-200">
-        <div className="card-body space-y-2">
-          {/* Title */}
-          <div className="flex justify-between">
+      <article className="w-full overflow-hidden rounded-lg border border-base-200 bg-base-100 shadow-sm transition-shadow hover:shadow-md">
+        {/* Header */}
+        <div className="p-3 sm:p-4">
+          {/* Title + options */}
+          <div className="flex items-start gap-2">
             <Link
-              className="link link-hover decoration-primary"
               href={`/discussion/${discussion.id}`}
+              className="min-w-0 flex-1"
             >
-              <h2 className="card-title text-primary line-clamp-2 font-bold">
+              <h2 className="text-base font-bold leading-tight text-primary sm:text-lg line-clamp-2 link link-hover decoration-primary">
                 {discussion.title}
               </h2>
             </Link>
+
             <PostOptions
               postType="discussion"
               postID={discussion.id}
@@ -30,45 +32,43 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
             />
           </div>
 
-          {/* Author info and date */}
-          <div className="flex items-center justify-between text-sm ">
-            <div className="flex items-center gap-3">
-              <Link
-                className="link link-hover"
-                href={`/user/${discussion.profile?.username}`}
-              >
-                <figure>
-                  <div className="avatar avatar-placeholder">
-                    <div className="bg-neutral text-neutral-content w-8 rounded-full">
-                      <span>
-                        {discussion.profile?.username[0].toUpperCase()}
-                      </span>
-                    </div>
-                  </div>
-
-                  <span className="ml-2 font-medium italic">
-                    {discussion.profile?.username || "(deleted)"}
-                  </span>
-                </figure>
-              </Link>
+          {/* Author + date */}
+          <div className="mt-1 flex flex-wrap items-center gap-x-2 text-xs sm:text-sm opacity-70">
+            <div className="avatar avatar-placeholder">
+              <div className="bg-neutral text-neutral-content w-6 rounded-full">
+                <span>{discussion.profile?.username[0].toUpperCase()}</span>
+              </div>
             </div>
-            <time className="opacity-50">
-              {formatDate(discussion.created_at)}
-            </time>
-          </div>
+            <Link
+              href={`/user/${discussion.profile?.username}`}
+              className="font-medium hover:underline"
+            >
+              @{discussion.profile?.username || "deleted"}
+            </Link>
 
-          {/* Content preview */}
-          <Paragraph text={discussion.content} />
+            <span>·</span>
+
+            <time>{formatDate(discussion.created_at)}</time>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="border-t border-base-200 px-3 pb-3 sm:px-4 sm:pb-4">
+          <div className="text-sm leading-relaxed sm:text-base">
+            <Paragraph text={discussion.content} />
+          </div>
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-2">
-            {discussion.tags?.map((tag) => (
-              <TagItem key={tag.id} tag={tag} />
-            ))}
-          </div>
+          {discussion.tags && discussion.tags.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {discussion.tags.map((tag) => (
+                <TagItem key={tag.id} tag={tag} />
+              ))}
+            </div>
+          )}
 
-          {/* Actions */}
-          <div className="card-actions flex items-center gap-6 text-sm">
+          {/* Reactions */}
+          <div className="mt-3 flex items-center">
             <Reactions
               likeCount={discussion.likes}
               dislikeCount={discussion.dislikes}
@@ -78,7 +78,7 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
             />
           </div>
         </div>
-      </div>
+      </article>
     </>
   );
 };

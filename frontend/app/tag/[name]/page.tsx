@@ -5,6 +5,7 @@ import FollowTagButton from "@/app/components/FollowTagButton";
 import PostList from "@/app/components/PostList";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import CreateDiscussion from "@/app/components/CreateDiscussion";
 
 interface Props {
   params: Promise<{ name: string }>;
@@ -41,9 +42,11 @@ export default async function TagPage({ params }: Props) {
           <FollowTagButton size="large" TagID={tag.id} />
         </div>
 
-        <p className="mt-2 opacity-70">
+        <p className="mt-2 opacity-70 mb-4">
           {tag?.description || `Posts tagged with "${tag.name}"`}
         </p>
+
+        <CreateDiscussion ctaType="tag" />
 
         {/* Posts feed */}
         {posts.length > 0 ? (

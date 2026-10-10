@@ -57,12 +57,12 @@ const PostOptions: React.FC<{
         onClose={() => setIsOpen(false)}
       />
       <div className="dropdown dropdown-end">
-        <div tabIndex={0} role="button" className="btn m-1">
+        <div tabIndex={0} role="button" className="btn btn-ghost btn-sm m-1">
           <FaEllipsis />
         </div>
         <ul
           tabIndex={-1}
-          className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+          className="dropdown-content menu bg-base-300 rounded-box z-1 w-52 p-2 shadow-sm"
         >
           {isOwner ? (
             <>

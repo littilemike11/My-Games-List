@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CreateDiscussion from "./CreateDiscussion";
 const Footer = () => {
   return (
     <footer className="footer footer-horizontal h-80 footer-center bg-base-200 text-base-content rounded p-10">
@@ -34,7 +35,8 @@ const Footer = () => {
 
         {/* <Link href={"/reviews"} className="link link-hover">Reviews</Link> */}
       </nav>
-      <nav>
+      {/* Social Medias */}
+      {/* <nav>
         <div className="grid grid-flow-col gap-4">
           <a>
             <svg
@@ -70,7 +72,9 @@ const Footer = () => {
             </svg>
           </a>
         </div>
-      </nav>
+      </nav> */}
+      <CreateDiscussion ctaType="bug" />
+      <CreateDiscussion ctaType="feedback" />
       <aside>
         <p>
           Copyright © {new Date().getFullYear()} - All right reserved by LMG

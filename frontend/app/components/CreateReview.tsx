@@ -62,7 +62,7 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
         session.user.id,
         platform,
         hoursPlayed,
-        tags
+        tags,
       );
 
       console.log("Created review:", result);
@@ -90,14 +90,14 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
       return;
     }
     const modal = document.getElementById(
-      "my_modal_5"
+      "my_modal_5",
     ) as HTMLDialogElement | null;
     modal?.showModal();
   };
   const closeModal = () => {
     resetForm();
     const modal = document.getElementById(
-      "my_modal_5"
+      "my_modal_5",
     ) as HTMLDialogElement | null;
     modal?.close();
   };
@@ -117,7 +117,10 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
 
   return (
     <>
-      <button className="btn btn-primary btn-sm md:btn-md" onClick={openModal}>
+      <button
+        className="btn btn-primary btn-sm md:btn-md w-fit"
+        onClick={openModal}
+      >
         <FaSquarePen />
         Write a Review
       </button>
@@ -177,6 +180,7 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
               <RatingInput value={rating} onChange={setRating} />
               <TagSection
                 recommendedTags={recommendedTags}
+                lockedTags={[game.slug]}
                 tags={tags}
                 setTags={setTags}
               />

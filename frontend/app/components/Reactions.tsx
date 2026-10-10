@@ -27,7 +27,7 @@ const Reactions: React.FC<ReactionProps> = ({
   parent_id,
 }) => {
   const [userReaction, setUserReaction] = useState<"like" | "dislike" | null>(
-    null
+    null,
   );
   const [likes, setLikes] = useState(likeCount);
   const [dislikes, setDislikes] = useState(dislikeCount);
@@ -67,7 +67,7 @@ const Reactions: React.FC<ReactionProps> = ({
         userID,
         parent_type,
         parent_id,
-        type === "like"
+        type === "like",
       );
 
       if (type === "like") setLikes((l) => l + 1);
@@ -95,7 +95,7 @@ const Reactions: React.FC<ReactionProps> = ({
 
   return (
     <>
-      <div className="flex gap-2 pr-4">
+      <div className="flex gap-2 pr-4 text-sm">
         <div className="flex items-center gap-1">
           <span>{likes} </span>
           <button

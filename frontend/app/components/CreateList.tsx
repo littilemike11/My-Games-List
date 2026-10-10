@@ -20,7 +20,7 @@ const CreateList = () => {
   return (
     <>
       {/* <Link href={"/list/new"}> */}
-      <button onClick={handleLink} className="btn btn-primary">
+      <button onClick={handleLink} className="btn btn-primary w-fit">
         {session ? "Start a new list here" : "Sign in to create a list"}
       </button>
       {/* </Link> */}
