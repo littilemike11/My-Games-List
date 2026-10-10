@@ -21,6 +21,7 @@ export type TrendingGameHighlight = {
 interface TrendingGameShowcaseProps {
   highlights: TrendingGameHighlight[];
   title?: string;
+  link?: string;
 }
 
 const getThumbnail = (thumbnail?: string, isStream: boolean = true) => {
@@ -49,6 +50,7 @@ const TwitchEmbed: React.FC<{
 const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
   highlights,
   title = "Whats the Meta?",
+  link,
 }) => {
   const [activeIndex, setActiveIndex] = useState(0); //index on carousel
   const [playing, setPlaying] = useState(false);
@@ -58,7 +60,6 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
     return (
       <section>
         <h2 className="text-xl sm:text-2xl font-semibold">{title}</h2>
-
         <p className="mt-3 text-sm opacity-60">
           Stay tuned for what's trending!
         </p>
@@ -112,7 +113,15 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
       {/* Section heading */}
       <div className="flex items-start justify-between gap-4 mb-4 ">
         <div className="min-w-0">
-          <h2 className="text-xl sm:text-2xl font-semibold">{title}</h2>
+          {link ? (
+            <Link href={link}>
+              <h2 className="text-xl sm:text-2xl font-semibold text-secondary hover:link">
+                {title}
+              </h2>
+            </Link>
+          ) : (
+            <h2 className="text-xl sm:text-2xl font-semibold">{title}</h2>
+          )}
 
           <p className="text-sm opacity-60 mt-1">
             See what games people are playing.

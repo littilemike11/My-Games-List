@@ -211,7 +211,10 @@ limit 10;`,
         link="/games/hype/75/sort/date_desc"
         games={trendingGames}
       /> */}
-      <TwitchStreamShowcase highlights={trendingHighlights} />
+      <TwitchStreamShowcase
+        highlights={trendingHighlights}
+        link={"/games/hype/75/sort/date_desc"}
+      />
       {/* popular reviews */}
       <section className="mt-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
