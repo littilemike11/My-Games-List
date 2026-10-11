@@ -71,7 +71,7 @@ limit 10;`,
   fields name, description, event_logo.*, event_networks.*, start_time, time_zone, live_stream_url; 
   where start_time < ${todayTimestamp};
   sort start_time desc ;
-  limit 6;
+  limit 4;
 `;
 
   const upcomingEventsQuery = `

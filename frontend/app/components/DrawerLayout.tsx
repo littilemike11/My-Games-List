@@ -204,7 +204,10 @@ export default function DrawerLayout({
               </li>
 
               <li>
-                <Link href="/games" className="flex items-center gap-2">
+                <Link
+                  href="/games/sort/rating_count_desc"
+                  className="flex items-center gap-2"
+                >
                   <FaGamepad />
                   Games
                 </Link>
