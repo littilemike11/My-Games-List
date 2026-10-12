@@ -10,6 +10,7 @@ import {
   FaReddit,
   FaLinkedin,
 } from "react-icons/fa";
+import Paragraph from "./Paragraph";
 import { FaThreads, FaBluesky } from "react-icons/fa6";
 import { FiExternalLink } from "react-icons/fi";
 const EventShowcase: React.FC<{
@@ -23,11 +24,6 @@ const EventShowcase: React.FC<{
         <p className="mt-4 opacity-60">Stay tuned for more events!</p>
       </section>
     );
-  }
-
-  interface Website {
-    name: string;
-    icon: any;
   }
 
   const parseLink = (link: string) => {
@@ -112,10 +108,10 @@ const EventShowcase: React.FC<{
             {/* Content */}
             <div className="card-body flex flex-col">
               <h3 className="card-title line-clamp-2">{event.name}</h3>
-
-              <p className="text-sm opacity-90 line-clamp-3">
-                {event.description || "No description available."}
-              </p>
+              <Paragraph
+                text={event.description || "No description available."}
+                isPost={false}
+              />
 
               {/* Date */}
               <time className="text-sm opacity-50 mt-auto pt-4">

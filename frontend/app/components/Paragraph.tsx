@@ -3,21 +3,25 @@ import { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-const Paragraph: React.FC<{ text: string }> = ({ text }) => {
+const Paragraph: React.FC<{ text: string; isPost?: boolean }> = ({
+  text,
+  isPost = true,
+}) => {
   const [showMore, setShowMore] = useState(false);
   const [shouldShowButton, setShouldShowButton] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
+  const lineClampmax = isPost ? "line-clamp-6" : "line-clamp-4";
 
   useEffect(() => {
     const el = textRef.current;
     if (!el) return;
 
     // Temporarily remove the clamp to measure full height
-    el.classList.remove("line-clamp-6");
+    el.classList.remove(lineClampmax);
     const fullHeight = el.scrollHeight;
 
     // Apply clamp again to measure clamped height
-    el.classList.add("line-clamp-6");
+    el.classList.add(lineClampmax);
     const clampedHeight = el.clientHeight;
 
     // If full content height is greater than clamped height → show button
@@ -37,36 +41,44 @@ const Paragraph: React.FC<{ text: string }> = ({ text }) => {
         >
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{text}</ReactMarkdown>
         </div> */}
-
-        <article
-          ref={textRef}
-          className={`prose-sm sm:prose !max-w-full !mx-0 w-full
+        {isPost ? (
+          <article
+            ref={textRef}
+            className={`prose-sm sm:prose !max-w-full !mx-0 w-full
              break-words overflow-wrap-anywhere
-             prose-p:my-2 prose-h1:my-3 prose-h2:my-3 prose-h3:my-2
+             prose-p:my-1 prose-h1:my-3 prose-h2:my-3 prose-h3:my-2
              prose-ul:my-2 prose-ol:my-2
              prose-pre:whitespace-pre-wrap prose-pre:break-words
              prose-code:break-words
              prose-img:max-w-full prose-img:h-auto
              
-             ${showMore ? "line-clamp-none" : "line-clamp-6"}`}
-        >
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            components={{
-              img: ({ ...props }) => (
-                <img {...props} className="max-w-full h-auto rounded-md" />
-              ),
-              pre: ({ ...props }) => (
-                <pre
-                  {...props}
-                  className="max-w-full !bg-base-200 rounded-md p-2 sm:p-3 w-full whitespace-pre  break-words       "
-                />
-              ),
-            }}
+             ${showMore ? "line-clamp-none" : lineClampmax}`}
+          >
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                img: ({ ...props }) => (
+                  <img {...props} className="max-w-full h-auto rounded-md" />
+                ),
+                pre: ({ ...props }) => (
+                  <pre
+                    {...props}
+                    className="max-w-full !bg-base-200 rounded-md p-2 sm:p-3 w-full whitespace-pre  break-words       "
+                  />
+                ),
+              }}
+            >
+              {text}
+            </ReactMarkdown>
+          </article>
+        ) : (
+          <p
+            ref={textRef}
+            className={`text-sm opacity-90 ${showMore ? "line-clamp-none" : lineClampmax}`}
           >
             {text}
-          </ReactMarkdown>
-        </article>
+          </p>
+        )}
 
         {shouldShowButton && (
           <button

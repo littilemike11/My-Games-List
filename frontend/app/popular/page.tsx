@@ -71,7 +71,7 @@ limit 10;`,
   fields name, description, event_logo.*, event_networks.*, start_time, time_zone, live_stream_url; 
   where start_time < ${todayTimestamp};
   sort start_time desc ;
-  limit 6;
+  limit 4;
 `;
 
   const upcomingEventsQuery = `
@@ -132,6 +132,7 @@ limit 10;`,
     const featuredGames = gameResponses[1]
       .filter((game: any) => game.artworks?.length)
       .map((game: any) => ({
+        slug: game.slug,
         name: game.name,
         artwork: game.artworks[0].url,
       }));
@@ -200,6 +201,7 @@ limit 10;`,
           heading={heading}
           subHeading="A Community Hub for Gamers by Gamers"
           gameName={featuredGame.name}
+          gameSlug={featuredGame.slug}
         />
       )}
       <Quote content={randomQuote.text} origin={randomQuote.origin} />
@@ -211,7 +213,10 @@ limit 10;`,
         link="/games/hype/75/sort/date_desc"
         games={trendingGames}
       /> */}
-      <TwitchStreamShowcase highlights={trendingHighlights} />
+      <TwitchStreamShowcase
+        highlights={trendingHighlights}
+        link={"/games/hype/75/sort/date_desc"}
+      />
       {/* popular reviews */}
       <section className="mt-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
