@@ -25,7 +25,6 @@ import DiscussionItem from "../components/DiscussionItem";
 import ListItem from "../components/ListItem";
 import GameHero from "../components/GameHero";
 import Quote from "../components/Quote";
-import { welcomeQuotes } from "../mockData/quotes";
 import WhyUsSection from "../components/WhyUsSection";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -37,7 +36,7 @@ import TwitchStreamShowcase, {
 export const metadata: Metadata = {
   title: "Popular",
   description:
-    "Browse the most trending content in the community on The Save Room",
+    "Browse the most trending content in the gaming community on The Save Room",
 };
 
 export default async function Home() {
@@ -95,8 +94,6 @@ limit 10;`,
   let upcomingEvents: EventDetails[] = [];
   let trendingHighlights: TrendingGameHighlight[] = [];
 
-  let randomQuote =
-    welcomeQuotes[Math.floor(Math.random() * welcomeQuotes.length)];
   const heading = (
     <>
       Welcome to <span className="italic">The Save Room</span>
@@ -192,7 +189,7 @@ limit 10;`,
   }
 
   return (
-    <div className="flex flex-col gap-2 items-center ">
+    <div className="grid grid-cols-1 gap-2 ">
       {/* Above the Fold */}
       {featuredGame && (
         <GameHero
@@ -202,7 +199,7 @@ limit 10;`,
           gameName={featuredGame.name}
         />
       )}
-      <Quote content={randomQuote.text} origin={randomQuote.origin} />
+      <Quote type="welcome" />
       <Tabs />
       {/* Above the Fold */}
       {/* shows popular lists and members */}

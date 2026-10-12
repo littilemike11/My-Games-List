@@ -1,18 +1,29 @@
-const Quote: React.FC<{ content: string; origin?: string }> = ({
-  content,
-  origin,
-}) => {
+"use client";
+
+import { useEffect, useState } from "react";
+import { getRandomQuote, QuoteType } from "../mockData/quotes";
+
+const Quote: React.FC<{ type: QuoteType }> = ({ type }) => {
+  const [quote, setQuote] = useState<{
+    text: string;
+    origin: string;
+  } | null>(null);
+
+  useEffect(() => {
+    setQuote(getRandomQuote(type));
+  }, [type]);
+
+  if (!quote) return <div className="min-h-16" />;
+
   return (
-    <>
-      <div className="quote ">
-        <p className="italic text-base sm:text-lg text-pretty">“{content}”</p>
-        {origin && (
-          <p className="mt-2 text-right text-secondary text-sm opacity-70">
-            — {origin}
-          </p>
-        )}
-      </div>
-    </>
+    <div>
+      <p className="text-center italic text-base sm:text-lg text-pretty">
+        “{quote.text}”
+      </p>
+      <p className="mt-2 text-right text-secondary text-sm opacity-70">
+        — {quote.origin}
+      </p>
+    </div>
   );
 };
 

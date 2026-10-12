@@ -1,13 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import getGames from "../api/igdb-api-server";
-import { searchDiscussions } from "../api/supabase-api/discussion-api";
-import { searchLists } from "../api/supabase-api/list-api";
-import { searchPlayers } from "../api/supabase-api/profile-api";
-import { searchReviews } from "../api/supabase-api/review-api";
-import { searchTags } from "../api/supabase-api/tag-api";
+
 import Carousel from "../components/Carousel";
 import DiscussionItem from "../components/DiscussionItem";
 import ListItem from "../components/ListItem";
@@ -15,7 +9,6 @@ import { ProfileItem } from "../components/ProfileItem";
 import Quote from "../components/Quote";
 import ReviewItem from "../components/ReviewItem";
 import TagItem from "../components/TagItem";
-import { searchQuotes } from "../mockData/quotes";
 import {
   GamePreview,
   Profile,
@@ -77,15 +70,13 @@ export default function SearchResults({
   //   fetchResults();
   // }, [query]);
 
-  let randomQuote =
-    searchQuotes[Math.floor(Math.random() * searchQuotes.length)];
   if (!query) {
     // render quote or default content
     return (
       <main>
         <div className="flex flex-col space-y-12 pt-4 p-4 items-center w-full">
           <div>
-            <Quote content={randomQuote.text} origin={randomQuote.origin} />
+            <Quote type="search" />
           </div>
           <div className="bg-base-300 p-4">
             <p>
