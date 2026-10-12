@@ -5,8 +5,9 @@ const GameHero: React.FC<{
   heading: React.ReactNode | string;
   subHeading: string;
   gameName?: string;
+  gameSlug?: string;
   CTA?: boolean;
-}> = ({ bgImage, heading, subHeading, gameName, CTA = true }) => {
+}> = ({ bgImage, heading, subHeading, gameName, gameSlug, CTA = true }) => {
   return (
     <>
       {CTA ? (
@@ -31,7 +32,7 @@ const GameHero: React.FC<{
           />
 
           {/* Game name */}
-          {gameName && (
+          {gameName && gameSlug && (
             <div className="absolute top-2 right-2 sm:top-4 sm:right-4 max-w-[45%] sm:max-w-xs z-10">
               <div className="flex items-start justify-end gap-2">
                 <span className="mt-1.5 h-px w-6 shrink-0 bg-primary" />
@@ -51,7 +52,9 @@ const GameHero: React.FC<{
             line-clamp-2
           "
                 >
-                  {gameName}
+                  <Link href={`/game/${gameSlug}`} className="hover:link">
+                    {gameName}
+                  </Link>
                 </span>
               </div>
             </div>

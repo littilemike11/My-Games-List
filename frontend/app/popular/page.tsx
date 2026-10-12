@@ -129,6 +129,7 @@ limit 10;`,
     const featuredGames = gameResponses[1]
       .filter((game: any) => game.artworks?.length)
       .map((game: any) => ({
+        slug: game.slug,
         name: game.name,
         artwork: game.artworks[0].url,
       }));
@@ -197,6 +198,7 @@ limit 10;`,
           heading={heading}
           subHeading="A Community Hub for Gamers by Gamers"
           gameName={featuredGame.name}
+          gameSlug={featuredGame.slug}
         />
       )}
       <Quote type="welcome" />
