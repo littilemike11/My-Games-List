@@ -86,6 +86,8 @@ export default function Feed() {
             heading={`Welcome ${profile?.username}`}
             subHeading=""
             gameName={featuredGame.name}
+            gameSlug={featuredGame.slug}
+            isUser={true}
             // CTA={false}
           />
         ) : (
