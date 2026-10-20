@@ -82,9 +82,7 @@ const GameHero: React.FC<{
                   {subHeading}
                 </p>
               )}
-              {isUser ? (
-                <CreateDiscussion /> // maybe change to general post options like in navbar
-              ) : (
+              {!isUser && (
                 <Link href="/auth/sign-up" className="btn w-fit btn-primary">
                   Get Started
                 </Link>
