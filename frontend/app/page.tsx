@@ -2,10 +2,7 @@
 import { useAuth } from "@/app/auth/auth-context";
 import { useEffect, useState } from "react";
 import { getFollowedTagIDs } from "@/app/api/supabase-api/tag-api";
-import {
-  getFollowing,
-  getFollowingIDs,
-} from "@/app/api/supabase-api/profile-api";
+import { getFollowingIDs } from "@/app/api/supabase-api/profile-api";
 import {
   getPostsByTags,
   getPostsByUserIds,
@@ -28,7 +25,7 @@ export default function Feed() {
   const [recommendedGames, setRecommendedGames] = useState<GamePreview[]>([]);
   const [loading, setLoading] = useState(true);
   const userID = session?.user.id;
-  const [featuredGame, setFeaturedGame] = useState<Game>();
+  const [featuredGame, setFeaturedGame] = useState<Game | null>();
   // let featuredGame;
 
   useEffect(() => {
@@ -36,9 +33,14 @@ export default function Feed() {
       if (userID) {
         try {
           // get tags
-          const favTags = await getFollowedTagIDs(userID);
+          const [favTags, following, userGames] = await Promise.all([
+            getFollowedTagIDs(userID),
+            getFollowingIDs(userID),
+            getUserGames(userID),
+          ]);
+          // const favTags = await getFollowedTagIDs(userID);
           console.log("tags", favTags);
-          const following = await getFollowingIDs(userID);
+          // const following = await getFollowingIDs(userID);
           if (favTags.length > 0) {
             const response = await getPostsByTags(favTags);
             setPostsByTags(response);
@@ -52,20 +54,25 @@ export default function Feed() {
             console.log("user posts", response);
           }
           // get random game
-          const userGames = await getUserGames(userID);
+          // const userGames = await getUserGames(userID);
           setGames(userGames);
-          if (userGames.length > 0) {
-            const randomIndex = Math.floor(Math.random() * userGames.length);
-            let game = userGames[randomIndex].game;
-            console.log(game);
-            const query = `fields cover.url, first_release_date, genres.name, name, slug, platforms.name, storyline, summary, themes.name, involved_companies.developer, involved_companies.publisher, involved_companies.company.name, screenshots.url, rating, rating_count, similar_games.name, similar_games.slug, similar_games.cover.url,hypes, franchises.games.name, franchises.games.slug, franchises.games.cover.url, videos.name, videos.video_id , artworks.url; where slug = "${game.slug}";`;
-            const response = await getGames(query);
-            setFeaturedGame(parseGame(response[0]));
-            console.log("featured game ", response[0]);
-            // featuredGame.game.artwork=response.artwork.replace("t_thumb", "t_original")
-            setRecommendedGames(parseGame(response[0]).similarGames);
-            console.log(recommendedGames);
+
+          if (userGames.length === 0) {
+            setFeaturedGame(null);
+            setRecommendedGames([]);
+            return;
           }
+
+          const randomIndex = Math.floor(Math.random() * userGames.length);
+          let game = userGames[randomIndex].game;
+          console.log(game);
+          const query = `fields cover.url, first_release_date, genres.name, name, slug, platforms.name, storyline, summary, themes.name, involved_companies.developer, involved_companies.publisher, involved_companies.company.name, screenshots.url, rating, rating_count, similar_games.name, similar_games.slug, similar_games.cover.url,hypes, franchises.games.name, franchises.games.slug, franchises.games.cover.url, videos.name, videos.video_id , artworks.url; where slug = "${game.slug}";`;
+          const response = await getGames(query);
+          setFeaturedGame(parseGame(response[0]));
+          console.log("featured game ", response[0]);
+          // featuredGame.game.artwork=response.artwork.replace("t_thumb", "t_original")
+          setRecommendedGames(parseGame(response[0]).similarGames);
+          console.log(recommendedGames);
 
           console.log(userGames);
         } catch (error) {
@@ -117,7 +124,7 @@ export default function Feed() {
           </div>
         )}
         {/* name of each tab group should be unique */}
-        <div className="tabs tabs-lift">
+        <div className="tabs tabs-lift mt-4">
           <input
             type="radio"
             name="my_tabs_3"

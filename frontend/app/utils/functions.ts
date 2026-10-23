@@ -171,6 +171,7 @@ export function parseFilters(segments: string[] | string = []): Filters {
         break;
       case "theme":
         filters.theme = value.split("+");
+        break;
       case "rating":
         filters.rating = value.split(" ");
         break;

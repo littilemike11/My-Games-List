@@ -1,10 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import Link from "next/link";
 import { getPlayerByName } from "@/app/api/supabase-api/profile-api";
 import { getUserGames } from "@/app/api/supabase-api/list-api";
-import { UserGameList, StatusKey, GameEntry } from "@/app/types/models";
+import { StatusKey, GameEntry } from "@/app/types/models";
 import GamePreviewLink from "@/app/components/GamePreviewLink";
 export default function UserGamesTabs() {
   const { name } = useParams<{ name: string }>();

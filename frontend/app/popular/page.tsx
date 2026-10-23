@@ -32,6 +32,7 @@ import EventShowcase from "../components/EventShowcase";
 import TwitchStreamShowcase, {
   TrendingGameHighlight,
 } from "../components/TwitchStreamShowcase";
+import { classicGames } from "../mockData/games";
 
 export const metadata: Metadata = {
   title: "Popular",
@@ -44,14 +45,15 @@ export default async function Home() {
   console.log(todayTimestamp);
 
   const gameQueries = [
-    // classic
-    "fields cover.url, name, slug;where version_parent=null & rating > 85 ;sort rating_count desc; limit 10;",
     // trending/popular
-    `
-fields cover.url, name, slug, artworks.url;
-where first_release_date < ${todayTimestamp} & version_parent = null & hypes > 75;
-sort first_release_date desc;
-limit 10;`,
+    `fields cover.url, name, artworks.url, slug;where version_parent=null & first_release_date < ${todayTimestamp} & themes = (19) & rating >= 75 & rating_count >= 5 ; limit 10;`,
+
+    //     `
+    // fields cover.url, name, slug, artworks.url;
+    // where first_release_date < ${todayTimestamp} & version_parent = null & hypes > 75;
+    // sort first_release_date desc;
+    // limit 10;`,
+
     // most antipated
     ` fields cover.url, name, slug, first_release_date, hypes, rating, rating_count;where version_parent=null& first_release_date > ${todayTimestamp} & hypes >= 50 ; sort hypes desc; limit 10;`,
     // recent
@@ -70,7 +72,7 @@ limit 10;`,
   fields name, description, event_logo.*, event_networks.*, start_time, time_zone, live_stream_url; 
   where start_time < ${todayTimestamp};
   sort start_time desc ;
-  limit 4;
+  limit 3;
 `;
 
   const upcomingEventsQuery = `
@@ -111,20 +113,20 @@ limit 10;`,
       // trendingStreamRes,
     ] = await Promise.all([
       Promise.all(gameQueries.map((q) => getGames(q))), // array of game arrays
-      getReviews(5, "date"),
-      getDiscussions(5, "date"),
+      getReviews(3, "date"),
+      getDiscussions(3, "date"),
       getLists(4, "date"),
       getEvents(recentEventsQuery),
       getEvents(upcomingEventsQuery),
     ]);
 
     // Parse game groups
-    popularGames = gameResponses[0].map(parseGamePreview);
-    trendingGames = gameResponses[1].map(parseGamePreview);
-    anticipatedGames = gameResponses[2].map(parseGamePreview);
-    recentGames = gameResponses[3].map(parseGamePreview);
-    comingGames = gameResponses[4].map(parseGamePreview);
-
+    popularGames = classicGames;
+    trendingGames = gameResponses[0].map(parseGamePreview);
+    anticipatedGames = gameResponses[1].map(parseGamePreview);
+    recentGames = gameResponses[2].map(parseGamePreview);
+    comingGames = gameResponses[3].map(parseGamePreview);
+    console.log("popularGames", popularGames);
     // get game hero
     const featuredGames = gameResponses[1]
       .filter((game: any) => game.artworks?.length)
@@ -211,12 +213,13 @@ limit 10;`,
         games={trendingGames}
       /> */}
       <TwitchStreamShowcase
+        title="It's Spooky Season"
         highlights={trendingHighlights}
-        link={"/games/hype/75/sort/date_desc"}
+        link={"/games/theme/horror/rating/75/rating_count/5/"}
       />
       {/* popular reviews */}
       <section className="mt-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
+        <div className="grid grid-cols-1 gap-4 ">
           {/* Reviews */}
           <div>
             <h2 className="text-xl sm:text-2xl font-semibold mb-6">
