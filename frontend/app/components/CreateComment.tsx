@@ -66,6 +66,7 @@ const CreateComment: React.FC<{
           />
           <div className="flex gap-2 self-end">
             <button
+              type="button"
               className="btn btn-ghost"
               onClick={() => setIsCommenting(false)}
               disabled={isSubmitting}
@@ -76,12 +77,13 @@ const CreateComment: React.FC<{
               className="btn btn-primary"
               onClick={addComment}
               disabled={isSubmitting}
+              type="button"
             >
               {isSubmitting
                 ? "Posting..."
                 : parentType === "comment"
-                ? "Reply"
-                : "Comment"}
+                  ? "Reply"
+                  : "Comment"}
             </button>
           </div>
         </div>
@@ -90,6 +92,7 @@ const CreateComment: React.FC<{
           <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
 
           <button
+            type="button"
             onClick={handleComment}
             className="btn btn-primary self-start"
           >

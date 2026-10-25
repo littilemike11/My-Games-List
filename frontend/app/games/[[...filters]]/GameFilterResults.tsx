@@ -10,7 +10,6 @@ import { FaSortAlphaDown } from "react-icons/fa";
 import { FaSortAmountDown } from "react-icons/fa";
 import { FaSortAlphaDownAlt } from "react-icons/fa";
 import { FaList } from "react-icons/fa";
-import { FaSquare } from "react-icons/fa";
 import { BsFillGrid3X3GapFill } from "react-icons/bs";
 
 import { FaTrash } from "react-icons/fa";
@@ -87,6 +86,7 @@ const GameFilterResults: React.FC<{
       return [];
     }
   });
+  const isFavorite = favoriteFilters.includes(pathname);
 
   let currentDec = Math.floor(new Date().getFullYear() / 10) * 10;
   let currentYear = new Date().getFullYear();
@@ -174,13 +174,14 @@ const GameFilterResults: React.FC<{
     "1980s",
     "early",
   ];
+  // can add check on if filters is already empty
   const removeFilterOfType = (...types: (keyof Filters)[]) => {
     const updates = Object.fromEntries(types.map((type) => [type, []]));
     router.push(buildURL(updates));
   };
 
   const clearAllFilters = () => {
-    router.push("/games/");
+    if (filters.length) router.push("/games/");
   };
 
   useEffect(() => {
@@ -333,10 +334,49 @@ const GameFilterResults: React.FC<{
     localStorage.setItem(STORAGE_KEY, JSON.stringify(favoriteFilters));
   }, [favoriteFilters]);
 
+  const sortingoptions = [
+    // {
+    //   sortName: "title",
+    //   sortDesc: "title_desc",
+    //   sortAsc: "title_asc",
+    //   iconDesc: FaSortAlphaDownAlt,
+    //   iconAsc: FaSortAlphaDown,
+    // },
+    {
+      sortName: "rating",
+      sortDesc: "rating_desc",
+      sortAsc: "rating_asc",
+      iconDesc: FaSortAmountDown,
+      iconAsc: FaSortAmountDownAlt,
+    },
+    {
+      sortName: "rating_count",
+      sortDesc: "rating_count_desc",
+      sortAsc: "rating_count_asc",
+      iconDesc: FaSortAmountDown,
+      iconAsc: FaSortAmountDownAlt,
+    },
+    {
+      sortName: "hypes",
+      sortDesc: "hypes_desc",
+      sortAsc: "hypes_asc",
+      iconDesc: FaSortAmountDown,
+      iconAsc: FaSortAmountDownAlt,
+    },
+    {
+      sortName: "date",
+      sortDesc: "date_desc",
+      sortAsc: "date_asc",
+      iconDesc: FaSortAmountDown,
+      iconAsc: FaSortAmountDownAlt,
+    },
+  ];
+
   return (
     <>
       <div>
         {/* name of each tab group should be unique */}
+        {/* role tablist and tab and aria-selected */}
         <div className="tabs tabs-lift">
           {/* Platform */}
           <input
@@ -347,29 +387,29 @@ const GameFilterResults: React.FC<{
             defaultChecked
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
-            <p className="text-2xl mb-2">Platforms</p>
+            <h2 className="text-2xl mb-2">Platforms</h2>
             <form
               onReset={() => removeFilterOfType("platform")}
               className="flex flex-wrap gap-2"
             >
-              {platforms.map((p, index) => (
+              {platforms.map((p) => (
                 <input
-                  key={index}
+                  key={p.slug}
                   onChange={() => toggleFilter(p.slug, "platform")}
                   className="btn btn-outline"
                   checked={filteredPlatforms.includes(platformSlugMap[p.name])}
-                  aria-checked={filteredPlatforms.includes(p.name)}
                   type="checkbox"
-                  name="frameworks"
+                  name="platforms"
                   aria-label={p.name}
                 />
               ))}
-              <input
-                title="Reset Platform Filters"
-                className="btn btn-square btn-error"
+              <button
                 type="reset"
-                value="×"
-              />
+                aria-label="Reset platform filters"
+                className="btn btn-square btn-error"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
             </form>
           </div>
           {/* Release */}
@@ -380,7 +420,7 @@ const GameFilterResults: React.FC<{
             aria-label="Release"
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
-            <p className="text-2xl mb-2 ">Decades</p>
+            <h2 className="text-2xl mb-2 ">Decades</h2>
             <form
               className="flex flex-col gap-2"
               onReset={() => removeFilterOfType("year", "decade")}
@@ -392,14 +432,13 @@ const GameFilterResults: React.FC<{
                     onChange={() => toggleFilter(decade, "decade")}
                     className="btn btn-outline"
                     checked={filteredDecade.includes(decade)}
-                    aria-checked={filteredDecade.includes(decade)}
                     type="checkbox"
-                    name="frameworks"
+                    name="decade"
                     aria-label={decade}
                   />
                 ))}
               </div>
-              <p className="text-2xl mb-2 block">Years</p>
+              <h2 className="text-2xl mb-2 block">Years</h2>
               <div className="flex flex-wrap space-y-2">
                 {years.map((yr) => (
                   <input
@@ -409,18 +448,18 @@ const GameFilterResults: React.FC<{
                     checked={filteredYears.includes(yr.toString())}
                     aria-checked={filteredYears.includes(yr.toString())}
                     type="checkbox"
-                    name="frameworks"
+                    name="years"
                     aria-label={yr.toString()}
                   />
                 ))}
               </div>
-
-              <input
-                title="Reset Date Filters"
-                className="btn btn-square btn-error"
+              <button
                 type="reset"
-                value="×"
-              />
+                aria-label="Reset date filters"
+                className="btn btn-square btn-error"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
             </form>
           </div>
           {/* GENRE/THEMES */}
@@ -431,7 +470,7 @@ const GameFilterResults: React.FC<{
             aria-label="Genres & Themes"
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
-            <p className="text-2xl mb-2">Genres</p>
+            <h2 className="text-2xl mb-2">Genres</h2>
             <form
               onReset={() => removeFilterOfType("genre")}
               className="flex flex-wrap gap-2"
@@ -442,21 +481,21 @@ const GameFilterResults: React.FC<{
                   onChange={() => toggleFilter(g.slug, "genre")}
                   className="btn btn-sm sm:btn-md btn-outline"
                   checked={filteredGenres.includes(genreSlugMap[g.name])}
-                  aria-checked={filteredGenres.includes(genreSlugMap[g.name])}
                   type="checkbox"
-                  name="frameworks"
+                  name="genre"
                   aria-label={g.name}
                 />
               ))}
 
-              <input
-                title="Reset Genre Filters"
-                className="btn btn-square btn-error"
+              <button
                 type="reset"
-                value="×"
-              />
+                aria-label="Reset genre filters"
+                className="btn btn-square btn-error"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
             </form>
-            <p className="text-2xl mb-2">Themes</p>
+            <h2 className="text-2xl mb-2">Themes</h2>
             <form
               onReset={() => removeFilterOfType("theme")}
               className="flex flex-wrap gap-2"
@@ -467,20 +506,19 @@ const GameFilterResults: React.FC<{
                   onChange={() => toggleFilter(t.slug, "theme")}
                   className="btn btn-outline"
                   checked={filteredThemes.includes(themeSlugMap[t.name])}
-                  aria-checked={filteredThemes.includes(themeSlugMap[t.name])}
                   type="checkbox"
-                  name="frameworks"
+                  name="themes"
                   aria-label={t.name}
                 />
               ))}
 
-              <input
-                title="Reset Theme Filters"
-                onClick={() => removeFilterOfType("theme")}
-                className="btn btn-square btn-error"
+              <button
                 type="reset"
-                value="×"
-              />
+                aria-label="Reset theme filters"
+                className="btn btn-square btn-error"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
             </form>
           </div>
 
@@ -492,52 +530,61 @@ const GameFilterResults: React.FC<{
             aria-label="Rating"
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
+            <h2>
+              <label htmlFor="min-rating" className="text-2xl">
+                Minimum rating
+              </label>
+            </h2>
             <form
               onReset={() => removeFilterOfType("rating", "rating_count")}
               className="flex flex-wrap gap-2"
             >
               <div className="flex flex-col gap-2 w-full">
-                <p className="text-2xl mb-2">Rating</p>
                 <input
-                  onChange={(e) => setMinRating(e.target.value)}
+                  id="min-rating"
                   type="range"
                   min={0}
-                  max="100"
+                  max={100}
                   value={minRating ?? 0}
+                  onChange={(e) => setMinRating(e.target.value)}
                   className="range range-secondary w-full sm:w-96"
                 />
-                <div className="flex w-full gap-2">
-                  <div className="w-fit">
-                    <input
-                      type="number"
-                      className="input validator w-96 "
-                      placeholder="Enter a rating between 0 to 100"
-                      min="0"
-                      max="100"
-                      value={minRating}
-                      title="Must be between be 0 to 100"
-                      onChange={(e) => setMinRating(e.target.value)}
-                    />
-                    <p className="validator-hint">
-                      Rating must be between 0-100
-                    </p>
-                  </div>
-                </div>
-                <p className="text-2xl mb-2">Rating Count</p>
+                <label htmlFor="min-rating-number">
+                  Minimum rating (0–100)
+                </label>
                 <input
+                  id="min-rating-number"
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={minRating ?? ""}
+                  onChange={(e) => setMinRating(e.target.value)}
+                  className="input validator w-full sm:w-96"
+                />
+                <p id="rating-hint" className="validator-hint">
+                  Rating must be between 0 and 100.
+                </p>
+                <h2>
+                  <label htmlFor="rating-count" className="text-2xl mb-2">
+                    Rating Count
+                  </label>
+                </h2>
+                <input
+                  id="rating-count"
                   onChange={(e) => setMinRatingCount(e.target.value)}
                   type="number"
                   className="input validator"
                   placeholder="choose # of ratings"
-                  min="0"
+                  min={0}
                   value={minRatingCount}
                 />
-                <input
-                  title="Reset Rating Filters"
-                  className="btn btn-square btn-error"
+                <button
                   type="reset"
-                  value="×"
-                />{" "}
+                  aria-label="Reset rating filters"
+                  className="btn btn-square btn-error"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
               </div>
             </form>
           </div>
@@ -550,25 +597,32 @@ const GameFilterResults: React.FC<{
             aria-label="Popularity"
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
-            <p className="text-2xl mb-2">Hypes</p>
             <form
               onReset={() => removeFilterOfType("hype")}
               className="flex flex-wrap gap-2"
             >
-              <input
-                onChange={(e) => setMinHypes(e.target.value)}
-                type="number"
-                className="input validator"
-                placeholder="choose # of hypes"
-                min="0"
-                value={minHypes}
-              />
-              <input
-                title="Reset Hype Filter"
-                className="btn btn-square btn-error"
-                type="reset"
-                value="×"
-              />
+              <div className="flex flex-col gap-2 w-full">
+                <h2>
+                  <label htmlFor="hype-count" className="text-2xl mb-2">
+                    Hypes
+                  </label>
+                </h2>
+                <input
+                  onChange={(e) => setMinHypes(e.target.value)}
+                  type="number"
+                  className="input validator"
+                  placeholder="choose # of hypes"
+                  min={0}
+                  value={minHypes}
+                />
+                <button
+                  type="reset"
+                  aria-label="Reset hype filters"
+                  className="btn btn-square btn-error"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
             </form>
           </div>
           {/* Favorites */}
@@ -579,7 +633,7 @@ const GameFilterResults: React.FC<{
             aria-label="Saved Filters"
           />
           <div className="tab-content bg-base-100 border-base-300 p-6">
-            <p className="text-2xl mb-2">Saved Filters</p>
+            <h2 className="text-2xl mb-2">Saved Filters</h2>
 
             <ul className="space-y-6 sm:space-y-4">
               {favoriteFilters.length > 0 ? (
@@ -653,63 +707,85 @@ const GameFilterResults: React.FC<{
         {/*Active Filters list */}
         <div className="flex flex-wrap gap-2 mt-4">
           {filters.length > 0 &&
-            filters.map((filter, index) => (
+            filters.map((filter) => (
               <button
-                key={index}
+                key={`${filter.filterType}-${filter.name}`}
+                type="button"
+                aria-label={`Remove filter: ${
+                  filter.filterType === "rating"
+                    ? `Minimum rating ${filter.name}`
+                    : filter.filterType === "hype"
+                      ? `Minimum hypes ${filter.name}`
+                      : filter.filterType === "rating_count"
+                        ? `Minimum rating count ${filter.name}`
+                        : filter.name
+                }`}
                 className="btn btn-secondary btn-sm rounded-4xl"
                 onClick={() => toggleFilter(filter.name, filter.filterType)}
               >
                 {filter.filterType === "rating"
-                  ? `Min Rating: ${filter.name} `
+                  ? `Min Rating: ${filter.name}`
                   : filter.filterType === "hype"
-                    ? `Hypes >= ${filter.name} `
+                    ? `Hypes ≥ ${filter.name}`
                     : filter.filterType === "rating_count"
-                      ? `Rating Count >= ${filter.name} `
+                      ? `Rating Count ≥ ${filter.name}`
                       : filter.name}
-                <div className="text-red-500">x</div>
+                <span aria-hidden="true" className="text-red-500">
+                  ×
+                </span>
               </button>
             ))}
         </div>
         {/* favorite button */}
         {filters.length > 0 && (
           <div className="flex mt-2 px-2 justify-between">
-            {favoriteFilters.includes(pathname) ? (
+            {
               <button
-                title="Remove search from Favorites"
+                type="button"
+                aria-label={
+                  isFavorite
+                    ? "Remove search from favorites"
+                    : "Add search to favorites"
+                }
+                aria-pressed={isFavorite}
+                title={
+                  isFavorite
+                    ? "Remove search from favorites"
+                    : "Add search to favorites"
+                }
                 className="btn btn-circle btn-ghost group"
                 onClick={() => {
                   setFavoriteFilters((favorites) =>
-                    favorites.filter((f) => f !== pathname),
+                    isFavorite
+                      ? favorites.filter((f) => f !== pathname)
+                      : [...favorites, pathname],
                   );
                 }}
               >
-                ❤️
+                {isFavorite ? (
+                  <span aria-hidden="true">❤️</span>
+                ) : (
+                  <svg
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2.5"
+                    stroke="red"
+                    className="size-[1.2em] group-hover:fill-red-500 transition-colors"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                    />
+                  </svg>
+                )}
               </button>
-            ) : (
-              <button
-                title="Add search to Favorites"
-                className="btn btn-circle btn-ghost group"
-                onClick={() => {
-                  setFavoriteFilters((favorites) => [...favorites, pathname]);
-                }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="2.5"
-                  stroke="red"
-                  className="size-[1.2em] group-hover:fill-red-500 transition-colors"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                  />
-                </svg>
-              </button>
-            )}
+            }
+            {/* can be a link instead */}
             <button
+              type="button"
               onClick={() => clearAllFilters()}
               className="btn btn-sm btn-error"
             >
@@ -719,16 +795,24 @@ const GameFilterResults: React.FC<{
         )}
       </div>
       {/* SORT OPTIONS */}
-      <div className="flex mt-4 mb-2 pb-1 justify-between border-b-2">
+      <div
+        role="group"
+        aria-label="Sort games by"
+        className="flex mt-4 mb-2 pb-1 justify-between border-b-2"
+      >
         <div className="flex items-center gap-x-1">
           <div className="flex">
-            {isGridLayout ? (
-              <button
-                type="button"
-                aria-label={`Switch to list layout`}
-                title="View List Layout"
-                onClick={() => setIsGridLayout(false)}
-                className="
+            <button
+              type="button"
+              aria-pressed={isGridLayout}
+              aria-label={
+                isGridLayout ? "Switch to list layout" : "Switch to grid layout"
+              }
+              title={
+                isGridLayout ? "Switch to list layout" : "Switch to grid layout"
+              }
+              onClick={() => setIsGridLayout((prev) => !prev)}
+              className="
                 p-1
                 rounded
                 cursor-pointer
@@ -739,37 +823,24 @@ const GameFilterResults: React.FC<{
                 focus-visible:outline-offset-2
                 focus-visible:outline-current
                 transition-colors"
-              >
-                <FaList />
-              </button>
-            ) : (
-              <button
-                type="button"
-                aria-label={`Switch to Grid layout`}
-                title="View Grid Layout"
-                onClick={() => setIsGridLayout(true)}
-                className="
-                p-1
-                rounded
-                cursor-pointer
-                text-base-content
-                hover:text-base-content/60
-                hover:bg-base-200
-                focus-visible:outline-2
-                focus-visible:outline-offset-2
-                focus-visible:outline-current
-                transition-colors"
-              >
-                <BsFillGrid3X3GapFill />
-              </button>
-            )}
+            >
+              <span aria-hidden="true">
+                {isGridLayout ? <FaList /> : <BsFillGrid3X3GapFill />}
+              </span>
+            </button>
           </div>
           <button
-            onClick={
-              sortOption[0] == "title_asc"
-                ? () => toggleFilter("title_desc", "sort")
-                : () => toggleFilter("title_asc", "sort")
+            type="button"
+            onClick={() =>
+              toggleFilter(
+                sortOption[0] === "title_desc" ? "title_asc" : "title_desc",
+                "sort",
+              )
             }
+            aria-pressed={
+              sortOption[0] === "title_desc" || sortOption[0] === "title_asc"
+            }
+            aria-label={`Sort by title${sortOption[0] === "title_desc" ? ", descending" : sortOption[0] === "title_asc" ? ", ascending" : ""}`}
             className={`btn btn-xs sm:btn-md ${
               (sortOption[0] === "title_desc" ||
                 sortOption[0] === "title_asc") &&
@@ -777,99 +848,59 @@ const GameFilterResults: React.FC<{
             }`}
           >
             Title
-            {sortOption[0] === "title_desc" ? (
-              <FaSortAlphaDownAlt />
-            ) : sortOption[0] === "title_asc" ? (
-              <FaSortAlphaDown />
-            ) : (
-              <FaSort />
-            )}
+            <span aria-hidden="true">
+              {sortOption[0] === "title_desc" ? (
+                <FaSortAlphaDownAlt />
+              ) : sortOption[0] === "title_asc" ? (
+                <FaSortAlphaDown />
+              ) : (
+                <FaSort />
+              )}
+            </span>
           </button>
         </div>
         <div className="flex gap-1">
-          <button
-            onClick={
-              sortOption[0] == "rating_desc"
-                ? () => toggleFilter("rating_asc", "sort")
-                : () => toggleFilter("rating_desc", "sort")
-            }
-            className={`btn btn-xs sm:btn-md ${
-              (sortOption[0] === "rating_desc" ||
-                sortOption[0] === "rating_asc") &&
-              "font-bold text-primary"
-            }`}
-          >
-            Rating
-            {sortOption[0] === "rating_desc" ? (
-              <FaSortAmountDown />
-            ) : sortOption[0] === "rating_asc" ? (
-              <FaSortAmountDownAlt />
-            ) : (
-              <FaSort />
-            )}
-          </button>
-          <button
-            onClick={
-              sortOption[0] == "rating_count_desc"
-                ? () => toggleFilter("rating_count_asc", "sort")
-                : () => toggleFilter("rating_count_desc", "sort")
-            }
-            className={`btn btn-xs sm:btn-md ${
-              (sortOption[0] === "rating_count_desc" ||
-                sortOption[0] === "rating_count_asc") &&
-              "font-bold text-primary"
-            }`}
-          >
-            Rating Count
-            {sortOption[0] === "rating_count_desc" ? (
-              <FaSortAmountDown />
-            ) : sortOption[0] === "rating_count_asc" ? (
-              <FaSortAmountDownAlt />
-            ) : (
-              <FaSort />
-            )}
-          </button>
-          <button
-            onClick={
-              sortOption[0] == "hypes_desc"
-                ? () => toggleFilter("hypes_asc", "sort")
-                : () => toggleFilter("hypes_desc", "sort")
-            }
-            className={`btn btn-xs sm:btn-md ${
-              (sortOption[0] === "hypes_desc" ||
-                sortOption[0] === "hypes_asc") &&
-              "font-bold text-primary"
-            }`}
-          >
-            Hypes
-            {sortOption[0] === "hypes_desc" ? (
-              <FaSortAmountDown />
-            ) : sortOption[0] === "hypes_asc" ? (
-              <FaSortAmountDownAlt />
-            ) : (
-              <FaSort />
-            )}
-          </button>
-          <button
-            onClick={
-              sortOption[0] == "date_desc"
-                ? () => toggleFilter("date_asc", "sort")
-                : () => toggleFilter("date_desc", "sort")
-            }
-            className={`btn btn-xs sm:btn-md ${
-              (sortOption[0] === "date_desc" || sortOption[0] === "date_asc") &&
-              "font-bold text-primary"
-            }`}
-          >
-            Date
-            {sortOption[0] === "date_desc" ? (
-              <FaSortAmountDown />
-            ) : sortOption[0] === "date_asc" ? (
-              <FaSortAmountDownAlt />
-            ) : (
-              <FaSort />
-            )}
-          </button>
+          {sortingoptions.map((option) => {
+            const isDesc = sortOption[0] === option.sortDesc;
+            const isAsc = sortOption[0] === option.sortAsc;
+            const isActive = isDesc || isAsc;
+
+            const SortIcon = isDesc
+              ? option.iconDesc
+              : isAsc
+                ? option.iconAsc
+                : FaSort;
+
+            const direction = isDesc ? "descending" : isAsc ? "ascending" : "";
+
+            return (
+              <button
+                key={option.sortName}
+                type="button"
+                onClick={() =>
+                  toggleFilter(
+                    isDesc ? option.sortAsc : option.sortDesc,
+                    "sort",
+                  )
+                }
+                aria-pressed={isActive}
+                aria-label={`Sort by ${option.sortName.replace("_", " ")}${
+                  direction ? `, ${direction}` : ""
+                }`}
+                title={`Sort by ${option.sortName.replace("_", " ")}${
+                  direction ? `, ${direction}` : ""
+                }`}
+                className={`btn btn-xs sm:btn-md ${
+                  isActive ? "font-bold text-primary" : ""
+                } capitalize`}
+              >
+                {option.sortName.replace("_", " ")}
+                <span aria-hidden="true">
+                  <SortIcon />
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
       {/* Games Display */}
@@ -878,6 +909,9 @@ const GameFilterResults: React.FC<{
         {games.length > 0 && isGridLayout ? (
           games.map((game: any) => (
             <div className="w-24 sm:w-36 h-32 sm:h-48 " key={game.id}>
+              <p role="status" aria-live="polite" className="sr-only">
+                {games.length} {games.length === 1 ? "game" : "games"} found.
+              </p>
               <GamePreviewLink
                 game={{
                   id: game.id,
@@ -891,9 +925,9 @@ const GameFilterResults: React.FC<{
           ))
         ) : // List Layout
         games.length > 0 && !isGridLayout ? (
-          <div className="flex flex-col gap-4">
+          <ul className="flex flex-col gap-4">
             {games.map((game: any) => (
-              <div
+              <li
                 key={game.id}
                 className="flex w-full gap-4 rounded-lg border border-base-300 bg-base-100 p-3 shadow-sm transition hover:shadow-md sm:gap-6 sm:p-4"
               >
@@ -941,11 +975,13 @@ const GameFilterResults: React.FC<{
                     </p>
                   </div>
                 </div>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
         ) : (
-          <p className="text-error">No Games Found</p>
+          <p className="text-error" role="status">
+            No games found. Try adjusting your filters.
+          </p>
         )}
       </div>
     </>

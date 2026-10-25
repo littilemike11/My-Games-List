@@ -53,13 +53,25 @@ export default function UserGamesTabs() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-4 border-b border-base-300 mb-6">
+      <div
+        role="tablist"
+        aria-label={`${currentUser.username}'s game library`}
+        className="flex gap-4 border-b border-base-300 mb-6"
+      >
         {sections.map((s) => {
           const count = getGamesByStatus(s.key).length;
           const isActive = s.key === activeTab;
+          const tabId = `games-tab-${s.key}`;
+          const panelId = `games-panel-${s.key}`;
           return (
             <button
               key={s.key}
+              id={tabId}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              aria-controls={panelId}
+              tabIndex={isActive ? 0 : -1}
               onClick={() => setActiveTab(s.key)}
               className={
                 "pb-2 font-medium border-b-2 transition-colors cursor-pointer " +
@@ -68,7 +80,7 @@ export default function UserGamesTabs() {
                   : "border-transparent text-base-content/70 hover:text-base-content")
               }
             >
-              {s.icon} {s.label} ({count})
+              <span aria-hidden="true">{s.icon}</span> {s.label} ({count})
             </button>
           );
         })}

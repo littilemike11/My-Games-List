@@ -49,7 +49,7 @@ export default function EditDiscussionForm({
         userId,
         initialTagIds,
         tags,
-        { title, content }
+        { title, content },
       );
 
       console.log("Created discussion:", result);
@@ -153,6 +153,7 @@ export default function EditDiscussionForm({
               type="submit"
               className="btn btn-success"
               aria-disabled={updating}
+              aria-busy={updating}
             >
               {updating ? "Updating ..." : "Save"}
             </button>

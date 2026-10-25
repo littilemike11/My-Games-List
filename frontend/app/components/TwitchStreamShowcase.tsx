@@ -60,7 +60,7 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
     return (
       <section>
         <h2 className="text-xl sm:text-2xl font-semibold">{title}</h2>
-        <p className="mt-3 text-sm opacity-60">
+        <p className="mt-3 text-sm opacity-80">
           Stay tuned for what's trending!
         </p>
       </section>
@@ -123,12 +123,15 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
             <h2 className="text-xl sm:text-2xl font-semibold">{title}</h2>
           )}
 
-          <p className="text-sm opacity-60 mt-1">
+          <p className="text-sm opacity-80 mt-1">
             See what games people are playing.
           </p>
         </div>
 
-        <FaTwitch className="text-xl opacity-60 shrink-0 mt-1" />
+        <FaTwitch
+          aria-hidden="true"
+          className="text-xl opacity-80 shrink-0 mt-1"
+        />
       </div>
       {/* Carousel controls */}
       {highlights.length > 1 && (
@@ -139,18 +142,21 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
             className="btn btn-circle btn-sm btn-ghost"
             aria-label="Previous trending game"
           >
-            <FaArrowLeft />
+            <FaArrowLeft aria-hidden="true" />
           </button>
 
           <div className="grid grid-cols-5 sm:grid-cols-10 gap-2 sm:gap-3 py-3">
             {" "}
             {highlights.map((highlight, index) => (
               <button
+                type="button"
+                aria-label={`Show ${highlight.game.name}`}
+                aria-pressed={index === activeIndex}
                 key={highlight.game.id}
                 onClick={() => selectSlide(index)}
                 className={`
         group flex-none hover:cursor-pointer
-        ${index === activeIndex ? "opacity-100" : "opacity-60"}
+        ${index === activeIndex ? "opacity-100" : "opacity-80"}
       `}
               >
                 <div
@@ -162,7 +168,7 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
                   <img
                     className="hover:scale-105"
                     src={highlight.game.cover}
-                    alt={`${highlight.game.name}'s cover`}
+                    alt={`${highlight.game.name}'s cover image`}
                   />
                 </div>
 
@@ -179,7 +185,7 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
             className="btn btn-circle btn-sm btn-ghost"
             aria-label="Next trending game"
           >
-            <FaArrowRight />
+            <FaArrowRight aria-hidden="true" />
           </button>
         </div>
       )}
@@ -204,7 +210,7 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
                   <span className="text-error font-medium">Live now</span>
                 </div>
               ) : (
-                <p className="mt-2 text-sm opacity-60">Recent videos</p>
+                <p className="mt-2 text-sm opacity-80">Recent videos</p>
               )}
             </div>
           </div>
@@ -219,17 +225,18 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
                   <>
                     <img
                       src={thumbnail ?? ""}
-                      alt={featuredStream.title}
+                      alt={`${featuredStream.title}'s thumbnail image`}
                       className="absolute inset-0 w-full h-full object-cover"
                     />
 
                     <div className="absolute inset-0 flex items-center justify-center">
                       <button
+                        aria-label="Play Video"
                         type="button"
                         onClick={() => setPlaying(true)}
                         className="btn btn-circle btn-primary btn-lg"
                       >
-                        <FaPlay />
+                        <FaPlay aria-hidden="true" />
                       </button>
                     </div>
 
@@ -248,7 +255,7 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
               <>
                 <img
                   src={getThumbnail(featuredVideo.thumbnail, false) ?? ""}
-                  alt={featuredVideo.title}
+                  alt={`${featuredVideo.title}'s thumbnail image`}
                   className="absolute inset-0 w-full h-full object-cover"
                 />
 
@@ -260,7 +267,7 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
                       rel="noopener noreferrer"
                       className="btn btn-circle btn-primary btn-lg"
                     >
-                      <FaPlay />
+                      <FaPlay aria-hidden="true" />
                     </a>
                   )}
                 </div>
@@ -282,8 +289,8 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
           </div>
           {hasLiveStream ? (
             <>
-              <p className="text-sm opacity-60">
-                <FaTwitch className="inline mr-1" />
+              <p className="text-sm opacity-80">
+                <FaTwitch aria-hidden="true" className="inline mr-1" />
                 <a
                   className="hover:link"
                   href={`https://www.twitch.tv/${featuredStream.username}`}
@@ -306,13 +313,13 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
                 className="btn btn-primary btn-sm mt-4"
                 disabled={playing}
               >
-                <FaTwitch />
+                <FaTwitch aria-hidden="true" />
                 {playing ? "Watching Live" : "Watch Live"}
               </button>
             </>
           ) : featuredVideo ? (
             <>
-              <p className="text-sm opacity-60">@{featuredVideo.username}</p>
+              <p className="text-sm opacity-80">@{featuredVideo.username}</p>
 
               <h3 className="font-semibold text-lg sm:text-xl line-clamp-2 mt-1">
                 {featuredVideo.title}
@@ -331,7 +338,7 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
                   rel="noopener noreferrer"
                   className="btn btn-primary btn-sm mt-4"
                 >
-                  <FaPlay />
+                  <FaPlay aria-hidden="true" />
                   Watch VOD
                 </a>
               )}
@@ -366,12 +373,12 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
                       {videoThumbnail ? (
                         <img
                           src={videoThumbnail}
-                          alt={video.title}
+                          alt={`${video.title}'s thumbail image`}
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <FaPlay className="opacity-30" />
+                          <FaPlay aria-hidden="true" className="opacity-30" />
                         </div>
                       )}
 
@@ -380,7 +387,7 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
                       </div>
                     </div>
 
-                    <p className="text-xs opacity-60 mt-2">@{video.username}</p>
+                    <p className="text-xs opacity-80 mt-2">@{video.username}</p>
 
                     <h4 className="text-sm font-medium line-clamp-2 mt-0.5">
                       {video.title}
@@ -402,7 +409,7 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
             className="btn btn-circle btn-sm btn-ghost"
             aria-label="Previous trending game"
           >
-            <FaArrowLeft />
+            <FaArrowLeft aria-hidden="true" />
           </button>
 
           <div className="flex items-center gap-2">
@@ -427,7 +434,7 @@ const TrendingGameShowcase: React.FC<TrendingGameShowcaseProps> = ({
             className="btn btn-circle btn-sm btn-ghost"
             aria-label="Next trending game"
           >
-            <FaArrowRight />
+            <FaArrowRight aria-hidden="true" />
           </button>
         </div>
       )}

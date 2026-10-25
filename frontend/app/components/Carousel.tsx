@@ -55,6 +55,7 @@ const Carousel: React.FC<CarouselProps> = ({
       <div className="relative group">
         {/* LEFT ARROW (desktop only) */}
         <button
+          aria-label="Scroll Carousel Left"
           onClick={() => scroll("left")}
           className="
             hidden md:flex
@@ -69,7 +70,7 @@ const Carousel: React.FC<CarouselProps> = ({
             opacity-0 transition
           "
         >
-          <FaArrowLeft size={18} />
+          <FaArrowLeft aria-hidden="true" size={18} />
         </button>
 
         {/* SCROLL CONTAINER */}
@@ -100,6 +101,7 @@ const Carousel: React.FC<CarouselProps> = ({
 
         {/* RIGHT ARROW (desktop only) */}
         <button
+          aria-label="Scroll Carousel Left"
           onClick={() => scroll("right")}
           className="
             hidden md:flex
@@ -114,7 +116,7 @@ const Carousel: React.FC<CarouselProps> = ({
             opacity-0 transition
           "
         >
-          <FaArrowRight size={18} />
+          <FaArrowRight aria-hidden="true" size={18} />
         </button>
       </div>
     </section>

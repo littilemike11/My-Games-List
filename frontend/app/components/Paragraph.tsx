@@ -83,8 +83,9 @@ const Paragraph: React.FC<{ text: string; isPost?: boolean }> = ({
         {shouldShowButton && (
           <button
             type="button"
-            className="btn  btn-sm mt-2 w-fit self-start"
+            className="btn btn-sm mt-2 w-fit self-start"
             onClick={toggleExpand}
+            aria-expanded={showMore}
           >
             {showMore ? "Hide" : "See More ..."}
           </button>

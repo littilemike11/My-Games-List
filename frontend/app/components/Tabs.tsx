@@ -87,7 +87,7 @@ const Tabs = () => {
                 className={`tab px-4 lg:text-lg transition-colors ${
                   activeTab === tab.slug
                     ? "tab-active text-primary hover:text-primary border-primary"
-                    : "hover:text-primary/70"
+                    : "hover:!text-primary/80 !text-neutral-content/80 "
                 }`}
               >
                 {tab.name}

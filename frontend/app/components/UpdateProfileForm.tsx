@@ -29,7 +29,12 @@ const UpdateProfileForm: React.FC<{ userID: string; bio: string }> = ({
               placeholder="Write something about yourself..."
               onChange={(e) => setUpdatedBio(e.target.value)}
             />
-            <button type="submit" className="btn btn-primary h-auto">
+            <button
+              type="submit"
+              className="btn btn-primary h-auto"
+              disabled={loading}
+              aria-busy={loading}
+            >
               {loading ? "Saving ..." : "Save"}
             </button>
           </div>

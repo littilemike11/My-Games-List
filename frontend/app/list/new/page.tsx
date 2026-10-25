@@ -233,10 +233,12 @@ const page = () => {
                   <h3 className="text-3xl font-bold">{game.name}</h3>
                 </div>
                 <button
+                  type="button"
+                  aria-label={`Remove ${game.name} from list`}
                   onClick={() => removeGame(game.id)}
                   className="btn btn-ghost btn-xl"
                 >
-                  🗑️
+                  <span aria-hidden>🗑️</span>
                 </button>
               </div>
             ))}

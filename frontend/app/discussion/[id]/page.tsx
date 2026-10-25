@@ -61,9 +61,14 @@ export default async function DiscussionPage({
   return (
     <>
       <div className="my-8">
-        <DiscussionItem discussion={discussion} />
-        {/* comments of disscussion */}
-        <CommentSection parentType={"discussion"} parentID={discussionID} />
+        <main>
+          <DiscussionItem discussion={discussion} />
+
+          {/* comments of disscussion */}
+          <section>
+            <CommentSection parentType={"discussion"} parentID={discussionID} />
+          </section>
+        </main>
       </div>
     </>
   );

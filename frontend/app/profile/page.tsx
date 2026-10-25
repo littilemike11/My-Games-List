@@ -35,7 +35,7 @@ export default async function ProfilePage() {
       <UpdateProfileForm userID={profile.id} bio={profile.bio ?? ""} />
       <div className="space-y-2">
         <h2 className="text-2xl text-error font-bold">Danger Zone</h2>
-        <button onClick={DeleteAccount} className="btn btn-error">
+        <button type="button" onClick={DeleteAccount} className="btn btn-error">
           Delete Account
         </button>
       </div>

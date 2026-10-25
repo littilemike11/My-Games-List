@@ -8,7 +8,7 @@ const DeletePostModal: React.FC<{
   deletePost: (
     postType: taggableContent,
     postID: number,
-    ownerID: string
+    ownerID: string,
   ) => Promise<void>;
   // ownerName: string;
 }> = ({ postType, postID, ownerID, isOpen, deletePost, onClose }) => {
@@ -26,13 +26,14 @@ const DeletePostModal: React.FC<{
           <p className="py-4">Are you sure you want to delete?</p>
           <div className="modal-action justify-between">
             <button
+              type="button"
               onClick={async () => deletePost(postType, postID, ownerID)}
               className="btn btn-error"
             >
               Delete
             </button>
             {/* if there is a button in form, it will close the modal */}
-            <button onClick={onClose} className="btn">
+            <button type="button" onClick={onClose} className="btn">
               Close
             </button>
           </div>

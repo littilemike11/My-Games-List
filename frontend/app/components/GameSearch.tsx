@@ -76,6 +76,7 @@ const GameSearch: React.FC<{
               searchResults.map((game) => (
                 <li key={game.id} className="hover:bg-amber-100">
                   <button
+                    aria-label={`${game.name}`}
                     type="button"
                     onClick={() => handleClick(game)}
                     className="flex w-full cursor-pointer items-center gap-2 p-2"
@@ -84,7 +85,7 @@ const GameSearch: React.FC<{
                       <img
                         className="h-12 w-8 object-cover rounded"
                         src={game.cover}
-                        alt={`${game.name} cover`}
+                        alt={`${game.name} cover image`}
                       />
                     )}
                     <p className="font-bold line-clamp-1">{game.name}</p>

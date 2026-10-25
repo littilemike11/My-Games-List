@@ -44,7 +44,7 @@ const CTA: React.FC<CTAProps> = ({ game, gameID }) => {
           gameID,
           userID,
           status,
-          !gameStatus[status]
+          !gameStatus[status],
         );
         console.log(updateStatus);
       } else {
@@ -122,20 +122,23 @@ const CTA: React.FC<CTAProps> = ({ game, gameID }) => {
           <button
             onClick={() => toggleGameStatus("wishlist")}
             className="btn btn-primary btn-sm md:btn-md join-item"
+            type="button"
+            aria-pressed={gameStatus.wishlist}
           >
-            {gameStatus.wishlist ? "📝 Wishlisted" : "📝 Wishlist Now"}
+            <span aria-hidden="true">📝 </span>
+            {gameStatus.wishlist ? "Wishlisted" : "Wishlist Now"}
           </button>
 
           {/* Dropdown for all statuses */}
-          <button className="dropdown dropdown-end join-item">
-            <div
-              title="Add to other gameStatus"
-              tabIndex={0}
+          <div className="dropdown dropdown-end join-item">
+            <button
+              title="Manage game status"
+              // tabIndex={0}
               role="button"
               className="btn border btn-sm md:btn-md btn-primary rounded-r-full"
             >
-              <FaChevronDown />
-            </div>
+              <FaChevronDown aria-hidden="true" />
+            </button>
 
             <ul
               tabIndex={0}
@@ -146,43 +149,47 @@ const CTA: React.FC<CTAProps> = ({ game, gameID }) => {
                   gameStatus[status.key as keyof typeof gameStatus];
                 return (
                   <li key={status.key}>
-                    <a
+                    <button
+                      type="button"
+                      aria-pressed={isActive}
                       className={`flex items-center gap-2 px-2 py-1 rounded cursor-pointer transition text-gray-500
                       ${isActive ? `${status.color}` : " hover:bg-gray-200"}`}
                       onClick={() => toggleGameStatus(status.key)}
                     >
-                      {status.emoji}{" "}
+                      <span aria-hidden="true">{status.emoji}</span>
                       {isActive ? status.activeLabel : status.label}
-                    </a>
+                    </button>
                   </li>
                 );
               })}
             </ul>
-          </button>
+          </div>
         </div>
 
         <div>
           {/* favorite */}
-          {gameStatus.favorite ? (
-            <button
-              title="Remove from Favorites"
-              className="btn btn-circle btn-ghost group"
-              onClick={() => toggleGameStatus("favorite")}
-            >
-              ❤️
-            </button>
-          ) : (
-            <button
-              title="Add to Favorites"
-              className="btn btn-circle btn-ghost group"
-              onClick={() => toggleGameStatus("favorite")}
-            >
+          <button
+            type="button"
+            title={
+              gameStatus.favorite ? "Remove from favorites" : "Add to favorites"
+            }
+            aria-label={
+              gameStatus.favorite ? "Remove from favorites" : "Add to favorites"
+            }
+            aria-pressed={!!gameStatus.favorite}
+            className="btn btn-circle btn-ghost group"
+            onClick={() => toggleGameStatus("favorite")}
+          >
+            {gameStatus.favorite ? (
+              <span aria-hidden="true">❤️</span>
+            ) : (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="2.5"
                 stroke="red"
+                aria-hidden="true"
                 className="size-[1.2em] group-hover:fill-red-500 transition-colors"
               >
                 <path
@@ -191,8 +198,8 @@ const CTA: React.FC<CTAProps> = ({ game, gameID }) => {
                   d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
                 />
               </svg>
-            </button>
-          )}
+            )}
+          </button>
         </div>
       </div>
     </>

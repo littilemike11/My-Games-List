@@ -72,7 +72,7 @@ const MarketTable = () => {
                       <div className="mask mask-squircle h-12 w-12">
                         <img
                           src={media.consume.logo}
-                          alt={`${media.consume.name} logo`}
+                          alt={`${media.consume.name}'s logo`}
                         />
                       </div>
                     </div>
@@ -88,7 +88,7 @@ const MarketTable = () => {
                       <div className="mask mask-squircle h-12 w-12">
                         <img
                           src={media.community.logo}
-                          alt={`${media.community.name} logo`}
+                          alt={`${media.community.name}'s logo`}
                         />
                       </div>
                     </div>

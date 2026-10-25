@@ -129,6 +129,7 @@ export default function SignUpPage() {
           {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
 
           <button
+            type="button"
             className="btn btn-primary w-full mb-2"
             onClick={handleSubmit}
             disabled={loading}
