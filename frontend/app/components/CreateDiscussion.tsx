@@ -95,7 +95,11 @@ const CreateDiscussion: React.FC<{
         open modal
       </button> */}
       {ctaType == "input" ? (
-        <button className="input border-amber-100" onClick={openModal}>
+        <button
+          type="button"
+          className="input border-amber-100"
+          onClick={openModal}
+        >
           What's on your mind?
         </button>
       ) : ctaType == "game" ? (
@@ -107,17 +111,25 @@ const CreateDiscussion: React.FC<{
           Start a Discussion
         </button>
       ) : ctaType == "bug" ? (
-        <button onClick={openModal} className="flex text-error hover:link">
-          Report a Bug <FaBug />
+        <button
+          type="button"
+          onClick={openModal}
+          className="flex text-error hover:link"
+        >
+          Report a Bug <FaBug aria-hidden="true" />
         </button>
       ) : ctaType == "tag" ? (
-        <button className="input border-amber-100" onClick={openModal}>
+        <button
+          type="button"
+          className="input border-amber-100"
+          onClick={openModal}
+        >
           Thoughts on {params.name}?
         </button>
       ) : (
         // player feedback
         <button className="flex hover:link" onClick={openModal}>
-          How can we improve? <FaCommentMedical />
+          How can we improve? <FaCommentMedical aria-hidden="true" />
         </button>
       )}
       <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
@@ -140,8 +152,11 @@ const CreateDiscussion: React.FC<{
                           "What's on your Mind"}
               </legend>
 
-              <label className="label">Post Title</label>
+              <label htmlFor="discussion-title" className="label">
+                Post Title
+              </label>
               <input
+                id="discussion-title"
                 onChange={(e) => setTitle(e.target.value)}
                 type="text"
                 className="input"

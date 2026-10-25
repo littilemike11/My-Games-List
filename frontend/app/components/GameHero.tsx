@@ -95,7 +95,7 @@ const GameHero: React.FC<{
           {/* Background image */}
           <img
             src={bgImage}
-            alt={`artwork`}
+            alt={`artwork from ${gameName}`}
             className="absolute inset-0 w-full h-full "
             // object-center object-cover scale-110 sm:scale-105 transition-all
           />

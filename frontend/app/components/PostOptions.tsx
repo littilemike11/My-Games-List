@@ -57,9 +57,14 @@ const PostOptions: React.FC<{
         onClose={() => setIsOpen(false)}
       />
       <div className="dropdown dropdown-end">
-        <div tabIndex={0} role="button" className="btn btn-ghost btn-sm m-1">
-          <FaEllipsis />
-        </div>
+        <button
+          tabIndex={0}
+          role="button"
+          aria-label="Open post options"
+          className="btn btn-ghost btn-sm m-1"
+        >
+          <FaEllipsis aria-hidden />
+        </button>
         <ul
           tabIndex={-1}
           className="dropdown-content menu bg-base-300 rounded-box z-1 w-52 p-2 shadow-sm"
@@ -71,7 +76,9 @@ const PostOptions: React.FC<{
               </li>
               {/* delete modal */}
               <li>
-                <button onClick={() => setIsOpen(true)}>Delete</button>
+                <button type="submit" onClick={() => setIsOpen(true)}>
+                  Delete
+                </button>
               </li>
             </>
           ) : (

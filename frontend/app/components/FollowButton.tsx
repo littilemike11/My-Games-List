@@ -69,12 +69,12 @@ const FollowButton: React.FC<{ playerID: string }> = ({ playerID }) => {
   }
 
   return isFollowing ? (
-    <button onClick={toggleFollow} className="btn btn-secondary">
+    <button type="button" onClick={toggleFollow} className="btn btn-secondary">
       Unfollow
     </button>
   ) : (
     <div>
-      <button onClick={toggleFollow} className="btn btn-primary">
+      <button type="button" onClick={toggleFollow} className="btn btn-primary">
         Follow
       </button>
       <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />

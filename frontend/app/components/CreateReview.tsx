@@ -121,7 +121,7 @@ const CreateReview: React.FC<ReviewProps> = ({ game }) => {
         className="btn btn-primary btn-sm md:btn-md w-fit"
         onClick={openModal}
       >
-        <FaSquarePen />
+        <FaSquarePen aria-hidden="true" />
         Write a Review
       </button>
       <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />

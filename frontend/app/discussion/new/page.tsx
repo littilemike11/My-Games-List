@@ -47,48 +47,50 @@ const CreateDiscussion = () => {
 
       <div>
         <div>
-          <form className="max-w-3xl mx-auto my-8" onSubmit={handleSubmit}>
-            <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
-              <legend className="fieldset-legend font-bold text-xl">
-                What's on your mind?
-              </legend>
+          <main>
+            <form className="max-w-3xl mx-auto my-8" onSubmit={handleSubmit}>
+              <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+                <legend className="fieldset-legend font-bold text-xl">
+                  What's on your mind?
+                </legend>
 
-              <label className="label">Post Title</label>
-              <input
-                onChange={(e) => setTitle(e.target.value)}
-                type="text"
-                className="input"
-                value={title}
-                required
-                autoFocus
-                placeholder="What's this post about?"
-              />
-              <label className="label">Content</label>
-              {/* <textarea
+                <label className="label">Post Title</label>
+                <input
+                  onChange={(e) => setTitle(e.target.value)}
+                  type="text"
+                  className="input"
+                  value={title}
+                  required
+                  autoFocus
+                  placeholder="What's this post about?"
+                />
+                <label className="label">Content</label>
+                {/* <textarea
                 className="textarea"
                 placeholder="What's on your mind?"
                 onChange={(e) => setContent(e.target.value)}
                 value={content}
                 required
               /> */}
-              <MarkdownText text={content} setText={setContent} />
+                <MarkdownText text={content} setText={setContent} />
 
-              <TagSection
-                // canSearchGame={true}
-                recommendedTags={[]}
-                tags={tags}
-                setTags={setTags}
-              />
-            </fieldset>
-            <div className="modal-action flex justify-between w-full">
-              <button type="submit" className="btn btn-success">
-                Post
-              </button>
-              <Link className="btn btn-error" href={"/popular/discussions"}>
-                Cancel
-              </Link>
-            </div>
-          </form>
+                <TagSection
+                  // canSearchGame={true}
+                  recommendedTags={[]}
+                  tags={tags}
+                  setTags={setTags}
+                />
+              </fieldset>
+              <div className="modal-action flex justify-between w-full">
+                <button type="submit" className="btn btn-success">
+                  Post
+                </button>
+                <Link className="btn btn-error" href={"/popular/discussions"}>
+                  Cancel
+                </Link>
+              </div>
+            </form>
+          </main>
         </div>
       </div>
     </>

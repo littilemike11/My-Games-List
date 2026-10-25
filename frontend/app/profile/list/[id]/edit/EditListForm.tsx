@@ -88,7 +88,7 @@ export default function EditListForm({
           title,
           visibility,
           description,
-        }
+        },
       );
       console.log("updated list:", updatedList);
       setOldTagIds(updatedList.tags);
@@ -233,10 +233,12 @@ export default function EditListForm({
                     <h3 className="text-3xl font-bold">{game.name}</h3>
                   </div>
                   <button
+                    type="button"
+                    aria-label={`Remove ${game.name} from list`}
                     onClick={() => removeGame(game.id)}
                     className="btn btn-ghost btn-xl"
                   >
-                    🗑️
+                    <span aria-hidden="true">🗑️</span>
                   </button>
                 </div>
               ))}
@@ -248,12 +250,13 @@ export default function EditListForm({
                 type="submit"
                 className="btn btn-success"
                 aria-disabled={updating}
+                aria-busy={updating}
               >
                 {updating ? "Updating ..." : "Save"}
               </button>
             ) : (
               <button disabled className="btn cursor-not-allowed">
-                Add a game
+                Must a game
               </button>
             )}
             <Link href={"/popular/lists"}>

@@ -21,7 +21,7 @@ const EventShowcase: React.FC<{
     return (
       <section>
         <h2 className="text-xl sm:text-2xl font-semibold">{title}</h2>
-        <p className="mt-4 opacity-60">Stay tuned for more events!</p>
+        <p className="mt-4 opacity-80">Stay tuned for more events!</p>
       </section>
     );
   }
@@ -99,7 +99,7 @@ const EventShowcase: React.FC<{
                 />
               ) : (
                 <div className="flex items-center justify-center w-full h-full">
-                  <span className="opacity-50">No event image</span>
+                  <span className="opacity-70">No event image</span>
                 </div>
               )}
             </figure>
@@ -113,7 +113,7 @@ const EventShowcase: React.FC<{
               />
 
               {/* Date */}
-              <time className="text-sm opacity-50 mt-auto pt-4">
+              <time className="text-sm opacity-70 mt-auto pt-4">
                 {event.start_time}
               </time>
 
@@ -182,7 +182,7 @@ const EventShowcase: React.FC<{
                 />
               ) : (
                 <div className="flex items-center justify-center w-full h-full">
-                  <span className="opacity-50">No event image</span>
+                  <span className="opacity-70">No event image</span>
                 </div>
               )}
             </figure>
@@ -196,7 +196,7 @@ const EventShowcase: React.FC<{
               />
 
               {/* Date */}
-              <time className="text-sm opacity-50 mt-auto pt-4">
+              <time className="text-sm opacity-70 mt-auto pt-4">
                 {event.start_time}
               </time>
 

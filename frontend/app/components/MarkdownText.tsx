@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useId } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -8,7 +8,8 @@ const MarkdownText: React.FC<{
   placeholderText?: string;
 }> = ({ text, setText, placeholderText = "What are your thoughts?" }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
+  const editorId = useId();
+  const textareaId = `${editorId}-content`;
   const apply = (before: string, after = "") => {
     if (!textareaRef.current) return;
     const updated = insertMarkdown(textareaRef.current, before, after);
@@ -53,11 +54,13 @@ const MarkdownText: React.FC<{
       <div className="tab-content  bg-base-100 border-base-300 p-2 space-y-2">
         {/* Toolbar */}
         <div className="flex flex-wrap gap-1 ">
-          <div className="tooltip tooltip-bottom" data-tip="Bold">
+          <div className="tooltip tooltip-bottom">
             <button
               type="button"
               className="btn btn-sm"
               onClick={() => apply("**", "**")}
+              aria-label="Insert bold formatting"
+              data-tip="Bold"
             >
               <svg
                 aria-hidden="true"
@@ -73,10 +76,12 @@ const MarkdownText: React.FC<{
               </svg>
             </button>
           </div>
-          <div className="tooltip tooltip-bottom" data-tip="Italic">
+          <div className="tooltip tooltip-bottom">
             <button
               type="button"
               className="btn btn-sm italic"
+              data-tip="Italic"
+              aria-label="Insert italic formatting"
               onClick={() => apply("_", "_")}
             >
               <svg
@@ -93,47 +98,57 @@ const MarkdownText: React.FC<{
               </svg>
             </button>
           </div>
-          <div className="tooltip tooltip-bottom" data-tip="Strikethrough">
+          <div className="tooltip tooltip-bottom">
             <button
               type="button"
               className="btn btn-sm line-through"
+              data-tip="Strikethrough"
+              aria-label="Insert strikethrough formatting"
               onClick={() => apply("~", "~")}
             >
               S
             </button>
           </div>
 
-          <div className="tooltip tooltip-bottom" data-tip="Heading 1">
+          <div className="tooltip tooltip-bottom">
             <button
               type="button"
               className="btn btn-sm"
+              data-tip="Heading 1"
+              aria-label="Insert heading level 1"
               onClick={() => apply("# ")}
             >
               H1
             </button>
           </div>
-          <div className="tooltip tooltip-bottom" data-tip="Heading 2">
+          <div className="tooltip tooltip-bottom">
             <button
               type="button"
               className="btn btn-sm"
+              aria-label="Insert heading level 2"
+              data-tip="Heading 2"
               onClick={() => apply("## ")}
             >
               H2
             </button>
           </div>
-          <div className="tooltip tooltip-bottom" data-tip="Heading 3">
+          <div className="tooltip tooltip-bottom">
             <button
               type="button"
               className="btn btn-sm"
+              aria-label="Insert heading level 3"
+              data-tip="Heading 3"
               onClick={() => apply("### ")}
             >
               H3
             </button>
           </div>
-          <div className="tooltip tooltip-bottom" data-tip="Quote">
+          <div className="tooltip tooltip-bottom">
             <button
               type="button"
               className="btn btn-sm"
+              data-tip="Quote"
+              aria-label="Insert block quote"
               onClick={() => apply("> ")}
             >
               <svg
@@ -151,10 +166,12 @@ const MarkdownText: React.FC<{
             </button>
           </div>
 
-          <div className="tooltip tooltip-bottom" data-tip="Link">
+          <div className="tooltip tooltip-bottom">
             <button
               type="button"
               className="btn btn-sm"
+              data-tip="Link"
+              aria-label="Insert link"
               onClick={() => apply("[", "](url)")}
             >
               <svg
@@ -171,8 +188,10 @@ const MarkdownText: React.FC<{
               </svg>
             </button>
           </div>
-          <div className="tooltip tooltip-bottom" data-tip="Image">
+          <div className="tooltip tooltip-bottom">
             <button
+              data-tip="Image"
+              aria-label="Insert image"
               type="button"
               className="btn btn-sm"
               onClick={() => apply("![", "](url)")}
@@ -182,10 +201,14 @@ const MarkdownText: React.FC<{
           </div>
         </div>
 
-        {/* Textarea */}
+        <label htmlFor={textareaId} className="label">
+          Write content in Markdown
+        </label>
+
         <textarea
+          id={textareaId}
           ref={textareaRef}
-          className="textarea w-full min-h-[160px] "
+          className="textarea w-full min-h-[160px]"
           placeholder={placeholderText}
           value={text}
           onChange={(e) => setText(e.target.value)}

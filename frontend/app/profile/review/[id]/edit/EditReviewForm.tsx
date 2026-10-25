@@ -132,6 +132,7 @@ export default function EditReviewForm({
               type="submit"
               className="btn btn-success"
               aria-disabled={updating}
+              aria-busy={updating}
             >
               {updating ? "Updating ..." : "Save"}
             </button>

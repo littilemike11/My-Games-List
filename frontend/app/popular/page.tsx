@@ -192,141 +192,143 @@ limit 10;`,
   }
 
   return (
-    <div className="grid grid-cols-1 gap-2 ">
-      {/* Above the Fold */}
-      {featuredGame && (
-        <GameHero
-          bgImage={featuredGame.artwork.replace("t_thumb", "t_original")}
-          heading={heading}
-          subHeading="A Community Hub for Gamers by Gamers"
-          gameName={featuredGame.name}
-          gameSlug={featuredGame.slug}
-        />
-      )}
-      <Quote type="welcome" />
-      <Tabs />
-      {/* Above the Fold */}
-      {/* shows popular lists and members */}
-      {/* <Carousel
+    <main>
+      <div className="grid grid-cols-1 gap-2 ">
+        {/* Above the Fold */}
+        {featuredGame && (
+          <GameHero
+            bgImage={featuredGame.artwork.replace("t_thumb", "t_original")}
+            heading={heading}
+            subHeading="A Community Hub for Gamers by Gamers"
+            gameName={featuredGame.name}
+            gameSlug={featuredGame.slug}
+          />
+        )}
+        <Quote type="welcome" />
+        <Tabs />
+        {/* Above the Fold */}
+        {/* shows popular lists and members */}
+        {/* <Carousel
         title="What's the Meta?"
         link="/games/hype/75/sort/date_desc"
         games={trendingGames}
       /> */}
-      <TwitchStreamShowcase
-        title="It's Spooky Season"
-        highlights={trendingHighlights}
-        link={"/games/theme/horror/rating/75/rating_count/5/"}
-      />
-      {/* popular reviews */}
-      <section className="mt-4">
-        <div className="grid grid-cols-1 gap-4 ">
-          {/* Reviews */}
-          <div>
-            <h2 className="text-xl sm:text-2xl font-semibold mb-6">
-              Trending{" "}
-              <Link
-                href={"/popular/reviews"}
-                className="text-secondary hover:link"
-              >
-                Reviews
-              </Link>
-            </h2>
-            <div className="flex flex-col space-y-10">
-              {reviews.map((review) => (
-                <ReviewItem key={review.id} review={review} />
-              ))}
+        <TwitchStreamShowcase
+          title="It's Spooky Season"
+          highlights={trendingHighlights}
+          link={"/games/theme/horror/rating/75/rating_count/5/"}
+        />
+        {/* popular reviews */}
+        <section className="mt-4">
+          <div className="grid grid-cols-1 gap-4 ">
+            {/* Reviews */}
+            <div>
+              <h2 className="text-xl sm:text-2xl font-semibold mb-6">
+                Trending{" "}
+                <Link
+                  href={"/popular/reviews"}
+                  className="text-secondary hover:link"
+                >
+                  Reviews
+                </Link>
+              </h2>
+              <div className="flex flex-col space-y-10">
+                {reviews.map((review) => (
+                  <ReviewItem key={review.id} review={review} />
+                ))}
+              </div>
+              <div className="flex justify-end w-full my-2">
+                <Link className="link text-secondary" href={`/popular/reviews`}>
+                  view more reviews...
+                </Link>
+              </div>
             </div>
-            <div className="flex justify-end w-full my-2">
-              <Link className="link text-secondary" href={`/popular/reviews`}>
-                view more reviews...
-              </Link>
+            {/* Discussions */}
+            <div>
+              <h2 className="text-xl sm:text-2xl font-semibold mb-6">
+                Trending{" "}
+                <Link
+                  href={"/popular/discussions"}
+                  className="text-secondary hover:link"
+                >
+                  Discussions
+                </Link>
+              </h2>
+              <div className="flex flex-col space-y-10">
+                {discussions.map((discussion) => (
+                  <DiscussionItem key={discussion.id} discussion={discussion} />
+                ))}
+              </div>
+              <div className="flex justify-end w-full my-2">
+                <Link
+                  className="link text-secondary"
+                  href={`/popular/discussions`}
+                >
+                  view more discussions...
+                </Link>
+              </div>
             </div>
           </div>
-          {/* Discussions */}
-          <div>
-            <h2 className="text-xl sm:text-2xl font-semibold mb-6">
-              Trending{" "}
-              <Link
-                href={"/popular/discussions"}
-                className="text-secondary hover:link"
-              >
-                Discussions
-              </Link>
-            </h2>
-            <div className="flex flex-col space-y-10">
-              {discussions.map((discussion) => (
-                <DiscussionItem key={discussion.id} discussion={discussion} />
-              ))}
-            </div>
-            <div className="flex justify-end w-full my-2">
-              <Link
-                className="link text-secondary"
-                href={`/popular/discussions`}
-              >
-                view more discussions...
-              </Link>
-            </div>
+        </section>
+
+        {/* Discover */}
+        <section className="grid grid-cols-1 space-y-10 mb-4">
+          <Carousel
+            title="Most Recent"
+            games={recentGames}
+            link="games/rating/75/sort/date_desc"
+          />
+
+          <Carousel
+            title="Most Anticipated"
+            games={anticipatedGames}
+            link="/games/decade/upcoming/hype/50/sort/hypes_desc"
+          />
+          <Carousel
+            title="Coming Soon"
+            games={comingGames}
+            link="/games/decade/upcoming/hype/10/sort/date_asc"
+          />
+        </section>
+
+        {/* events */}
+        <section className="mb-4">
+          <div className="grid grid-cols-1 space-y-10 ">
+            {/* maybe highlight single events for full width */}
+            <EventShowcase title="Upcoming Events" events={upcomingEvents} />
+
+            <EventShowcase title="Recent Events" events={recentEvents} />
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Discover */}
-      <section className="grid grid-cols-1 space-y-10 mb-4">
+        {/* popular lists */}
+        <section className="mb-4">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-6">
+            Trending{" "}
+            <Link href={"/popular/lists"} className="text-secondary hover:link">
+              Lists
+            </Link>
+          </h2>
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 ">
+            {lists.map((list, index) => (
+              <ListItem key={index} list={list} />
+            ))}
+          </div>
+          <div className="flex justify-end w-full my-2">
+            <Link className="link text-secondary" href={`/popular/lists`}>
+              view more lists...
+            </Link>
+          </div>
+        </section>
+        <WhyUsSection />
+
         <Carousel
-          title="Most Recent"
-          games={recentGames}
-          link="games/rating/75/sort/date_desc"
+          title="Classic Gems"
+          games={popularGames}
+          link="/games/rating/85/sort/rating_count_desc"
         />
-
-        <Carousel
-          title="Most Anticipated"
-          games={anticipatedGames}
-          link="/games/decade/upcoming/hype/50/sort/hypes_desc"
-        />
-        <Carousel
-          title="Coming Soon"
-          games={comingGames}
-          link="/games/decade/upcoming/hype/10/sort/date_asc"
-        />
-      </section>
-
-      {/* events */}
-      <section className="mb-4">
-        <div className="grid grid-cols-1 space-y-10 ">
-          {/* maybe highlight single events for full width */}
-          <EventShowcase title="Upcoming Events" events={upcomingEvents} />
-
-          <EventShowcase title="Recent Events" events={recentEvents} />
-        </div>
-      </section>
-
-      {/* popular lists */}
-      <section className="mb-4">
-        <h2 className="text-xl sm:text-2xl font-semibold mb-6">
-          Trending{" "}
-          <Link href={"/popular/lists"} className="text-secondary hover:link">
-            Lists
-          </Link>
-        </h2>
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 ">
-          {lists.map((list, index) => (
-            <ListItem key={index} list={list} />
-          ))}
-        </div>
-        <div className="flex justify-end w-full my-2">
-          <Link className="link text-secondary" href={`/popular/lists`}>
-            view more lists...
-          </Link>
-        </div>
-      </section>
-      <WhyUsSection />
-
-      <Carousel
-        title="Classic Gems"
-        games={popularGames}
-        link="/games/rating/85/sort/rating_count_desc"
-      />
-      {/* possibly add top players/tags + add recent games carousel */}
-    </div>
+        {/* possibly add top players/tags + add recent games carousel */}
+      </div>
+    </main>
   );
 }

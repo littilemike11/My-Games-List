@@ -59,6 +59,7 @@ const FollowTagButton: React.FC<{
   return (
     <>
       <button
+        type="button"
         onClick={handleSubmit}
         className={`btn ${
           loading ? " btn-neutral" : isFollowing ? "btn-error" : "btn-primary"

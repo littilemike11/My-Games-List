@@ -1,8 +1,16 @@
 "use client";
-import { useState } from "react";
+
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+} from "react";
+import { useRouter } from "next/navigation";
 import supabase from "@/app/utils/supabase/client";
-import { redirect } from "next/navigation";
 import { checkUsername } from "../api/supabase-api/profile-api";
+
 export default function AuthModal({
   isOpen,
   onClose,
@@ -17,176 +25,323 @@ export default function AuthModal({
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
 
-    // Allow only letters, numbers, underscore, dash — and max 12 chars
-    const cleaned = value
-      .replace(/[^a-zA-Z0-9_-]/g, "") // remove disallowed chars
-      .slice(0, 16); // enforce max length
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
-    setUsername(cleaned);
-  };
+  // Use the native dialog API for modal behavior and focus management.
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
 
-  const handleSubmit = async () => {
-    setLoading(true);
-    setError(null);
-    const validUserName = username.toLocaleLowerCase();
-
-    if (mode === "signup") {
-      if (confirmPassword !== password) {
-        setError("passwords must match");
-        setLoading(false);
-
-        return;
-      }
-      const usernameExists = await checkUsername(validUserName);
-      if (usernameExists) {
-        setError("Username is taken");
-        setLoading(false);
-
-        return;
-      }
-      const { data: newUser, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { username: validUserName }, // pass username in user metadata
-        },
-      });
-
-      if (signUpError) {
-        setError(signUpError.message);
-        setLoading(false);
-        return;
-      }
-      setLoading(false);
-      clear();
-      onClose();
-      redirect("/welcome");
-
-      // No need to manually insert into profiles or call createDefaultLists()
-      // The trigger handles both automatically
-      //   onClose(); // Close modal or redirect to onboarding
-    } else {
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      setLoading(false);
-      if (signInError) {
-        setError(signInError.message);
-      } else {
-        clear();
-        onClose();
-      }
+    if (isOpen && !dialog.open) {
+      dialog.showModal();
+      emailRef.current?.focus();
+    } else if (!isOpen && dialog.open) {
+      dialog.close();
     }
-    setLoading(false);
-    // ideally redirect to the page you tried to go to previously
-    // redirect("/");
-  };
+  }, [isOpen]);
 
   const clear = () => {
     setEmail("");
     setUsername("");
     setPassword("");
     setConfirmPassword("");
+    setError(null);
+  };
+
+  const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const cleaned = e.target.value.replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 16);
+
+    setUsername(cleaned);
+    setError(null);
+  };
+
+  const handleClose = () => {
+    if (loading) return;
+    onClose();
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (loading) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const validUsername = username.toLowerCase();
+
+      if (mode === "signup") {
+        if (password !== confirmPassword) {
+          setError("Passwords do not match.");
+          return;
+        }
+
+        const usernameExists = await checkUsername(validUsername);
+
+        if (usernameExists) {
+          setError("That username is already taken. Please choose another.");
+          return;
+        }
+
+        const { error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { username: validUsername },
+          },
+        });
+
+        if (signUpError) {
+          setError(signUpError.message);
+          return;
+        }
+
+        clear();
+        onClose();
+        router.push("/welcome");
+        return;
+      }
+
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        setError(signInError.message);
+        return;
+      }
+
+      clear();
+      onClose();
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const switchMode = (nextMode: "login" | "signup") => {
+    setMode(nextMode);
+    setError(null);
   };
 
   return (
-    <>
-      <dialog
-        id="auth_modal"
-        className={`modal modal-bottom sm:modal-middle ${
-          isOpen ? "modal-open" : ""
-        }`}
-      >
-        <div className="modal-box">
-          <h3 className="font-bold text-lg mb-4">
-            {mode === "signup" ? "Sign Up" : "Log In"}
-          </h3>
+    <dialog
+      ref={dialogRef}
+      aria-labelledby="auth-modal-title"
+      aria-describedby="auth-modal-description"
+      className="modal modal-bottom sm:modal-middle"
+      onCancel={(event) => {
+        // Keep the dialog open while a request is in progress.
+        if (loading) {
+          event.preventDefault();
+          return;
+        }
+
+        onClose();
+      }}
+      onClick={(event) => {
+        // Close when the user clicks the backdrop, not the dialog content.
+        if (event.target === dialogRef.current) {
+          handleClose();
+        }
+      }}
+    >
+      <div className="modal-box">
+        <h2 id="auth-modal-title" className="mb-2 text-lg font-bold">
+          {mode === "signup" ? "Create your account" : "Log in"}
+        </h2>
+
+        <p id="auth-modal-description" className="mb-4 text-sm">
+          {mode === "signup"
+            ? "Create an account to join The Save Room community."
+            : "Log in to continue to The Save Room."}
+        </p>
+
+        <form onSubmit={handleSubmit} aria-busy={loading}>
+          {mode === "signup" && (
+            <div className="mb-3">
+              <label
+                htmlFor="auth-username"
+                className="mb-1 block text-sm font-medium"
+              >
+                Username
+              </label>
+              <input
+                ref={undefined}
+                id="auth-username"
+                name="username"
+                type="text"
+                autoComplete="username"
+                required
+                maxLength={16}
+                pattern="[a-zA-Z0-9_-]+"
+                title="Use only letters, numbers, underscores, and hyphens."
+                placeholder="Choose a username"
+                className="input input-bordered w-full"
+                value={username}
+                onChange={handleUsernameChange}
+                disabled={loading}
+                aria-describedby="auth-username-help"
+              />
+              <p id="auth-username-help" className="mt-1 text-xs opacity-70">
+                Up to 16 characters: letters, numbers, underscores, or hyphens.
+              </p>
+            </div>
+          )}
+
+          <div className="mb-3">
+            <label
+              htmlFor="auth-email"
+              className="mb-1 block text-sm font-medium"
+            >
+              Email address
+            </label>
+            <input
+              ref={emailRef}
+              id="auth-email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              placeholder="you@example.com"
+              className="input input-bordered w-full"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError(null);
+              }}
+              disabled={loading}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label
+              htmlFor="auth-password"
+              className="mb-1 block text-sm font-medium"
+            >
+              Password
+            </label>
+            <input
+              id="auth-password"
+              name="password"
+              type="password"
+              autoComplete={
+                mode === "signup" ? "new-password" : "current-password"
+              }
+              required
+              placeholder="Enter your password"
+              className="input input-bordered w-full"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError(null);
+              }}
+              disabled={loading}
+            />
+          </div>
 
           {mode === "signup" && (
-            <input
-              required
-              type="text"
-              placeholder="Username"
-              className="input input-bordered w-full mb-2"
-              value={username}
-              onChange={handleUsernameChange}
-            />
+            <div className="mb-3">
+              <label
+                htmlFor="auth-confirm-password"
+                className="mb-1 block text-sm font-medium"
+              >
+                Confirm password
+              </label>
+              <input
+                id="auth-confirm-password"
+                name="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+                required
+                placeholder="Re-enter your password"
+                className="input input-bordered w-full"
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  setError(null);
+                }}
+                disabled={loading}
+                aria-invalid={
+                  confirmPassword.length > 0 && confirmPassword !== password
+                }
+                aria-describedby="auth-confirm-password-help"
+              />
+              <p
+                id="auth-confirm-password-help"
+                className="mt-1 text-xs opacity-70"
+              >
+                Enter the same password again.
+              </p>
+            </div>
           )}
 
-          <input
-            required
-            type="email"
-            placeholder="Email"
-            className="input input-bordered w-full mb-2"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-
-          <input
-            required
-            type="password"
-            placeholder="Password"
-            className="input input-bordered w-full mb-2"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {mode == "signup" && (
-            <input
-              required
-              type="password"
-              placeholder="Confirm Password"
-              className="input input-bordered w-full mb-2"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
+          {error && (
+            <p role="alert" className="mb-3 text-sm text-error">
+              {error}
+            </p>
           )}
-          {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
 
           <button
-            className="btn btn-primary w-full mb-2"
-            onClick={handleSubmit}
+            type="submit"
+            className="btn btn-primary mb-2 w-full"
             disabled={loading}
           >
-            {loading ? "Loading..." : mode === "signup" ? "Sign Up" : "Log In"}
+            {loading
+              ? mode === "signup"
+                ? "Creating account…"
+                : "Logging in…"
+              : mode === "signup"
+                ? "Sign up"
+                : "Log in"}
           </button>
 
           <p className="text-center text-sm">
             {mode === "signup" ? (
               <>
                 Already have an account?{" "}
-                <span
-                  onClick={() => setMode("login")}
-                  className="text-blue-500 cursor-pointer"
+                <button
+                  type="button"
+                  className="link link-primary"
+                  onClick={() => switchMode("login")}
+                  disabled={loading}
                 >
-                  Log In
-                </span>
+                  Log in
+                </button>
               </>
             ) : (
               <>
-                Don't have an account?{" "}
-                <span
-                  onClick={() => setMode("signup")}
-                  className="text-blue-500 cursor-pointer"
+                Don&apos;t have an account?{" "}
+                <button
+                  type="button"
+                  className="link link-primary"
+                  onClick={() => switchMode("signup")}
+                  disabled={loading}
                 >
-                  Sign Up
-                </span>
+                  Sign up
+                </button>
               </>
             )}
           </p>
+        </form>
 
-          <div className="modal-action">
-            <form method="dialog">
-              <button onClick={onClose} className="btn">
-                Close
-              </button>
-            </form>
-          </div>
+        <div className="modal-action">
+          <button
+            type="button"
+            onClick={handleClose}
+            className="btn"
+            disabled={loading}
+          >
+            Close
+          </button>
         </div>
-      </dialog>
-    </>
+      </div>
+    </dialog>
   );
 }

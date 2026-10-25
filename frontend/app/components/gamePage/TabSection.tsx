@@ -133,7 +133,7 @@ const TabSection: React.FC<TabProps> = ({
               <img
                 key={index}
                 src={url}
-                alt={`screenshot-${index}`}
+                alt={`screenshot-${index} from ${game.name}`}
                 className="rounded-xl shadow-md w-full object-cover"
               />
             ))}
@@ -148,7 +148,7 @@ const TabSection: React.FC<TabProps> = ({
               <img
                 key={index}
                 src={url}
-                alt={`artwork-${index}`}
+                alt={`artwork-${index} from ${game.name}`}
                 className="rounded-xl shadow-md w-full object-cover"
               />
             ))}
@@ -237,22 +237,33 @@ const TabSection: React.FC<TabProps> = ({
           </div> */}
 
           <div className="w-full border-b-2 flex justify-center mt-4 mb-6">
-            <div className="overflow-x-auto max-w-full ">
-              <div role="tablist" className="tabs tabs-border min-w-max ">
-                {tabs.map((tab) => (
-                  <div
-                    key={tab}
-                    role="tab"
-                    onClick={() => setActiveTab(tab)}
-                    className={`tab px-4 transition-colors ${
-                      activeTab === tab
-                        ? "tab-active text-primary hover:text-primary border-primary"
-                        : "hover:text-primary/70"
-                    }`}
-                  >
-                    {tab}
-                  </div>
-                ))}
+            <div className="overflow-x-auto max-w-full">
+              <div
+                role="tablist"
+                aria-label="Game content sections"
+                className="tabs tabs-border min-w-max"
+              >
+                {tabs.map((tab) => {
+                  const isActive = activeTab === tab;
+
+                  return (
+                    <button
+                      key={tab}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      tabIndex={isActive ? 0 : -1}
+                      onClick={() => setActiveTab(tab)}
+                      className={`tab px-4 transition-colors ${
+                        isActive
+                          ? "tab-active text-primary hover:text-primary border-primary"
+                          : "hover:text-primary/70"
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>

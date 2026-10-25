@@ -33,7 +33,7 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({
           </div>
 
           {/* Author + date */}
-          <div className="mt-1 flex flex-wrap items-center gap-x-2 text-xs sm:text-sm opacity-70">
+          <div className="mt-1 flex flex-wrap items-center gap-x-2 text-xs sm:text-sm opacity-80">
             <div className="avatar avatar-placeholder">
               <div className="bg-neutral text-neutral-content w-6 rounded-full">
                 <span>{discussion.profile?.username[0].toUpperCase()}</span>

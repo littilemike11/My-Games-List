@@ -108,12 +108,17 @@ const TagSection: React.FC<{
   return (
     <>
       {/* Tag Input */}
-      <label className="label">Tags</label>
+      <label htmlFor="tag-input" className="label">
+        Tags
+      </label>
       {canSearchGame && (
         <GameSearch onClickFunction={addTag} argumentType={"string"} />
       )}
-      {error && <p className="text-error">This is restricted tag</p>}
-
+      {error && (
+        <p id="tag-error" role="alert" className="text-error">
+          This is restricted tag
+        </p>
+      )}
       <div className="join mb-4 mt-2  ">
         <div className="group relative w-full">
           <input
@@ -123,11 +128,16 @@ const TagSection: React.FC<{
                 e.target.value.replace(/[^a-zA-Z0-9_-]/g, "-"), // remove disallowed chars - make it slug safe
               )
             }
-            onKeyDown={(e) =>
-              e.key === "Enter" && (e.preventDefault(), addTag(tagInput))
-            }
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                addTag(tagInput);
+              }
+            }}
             type="search"
             placeholder="Add a tag"
+            aria-invalid={error || undefined}
+            aria-describedby={error ? "tag-error" : undefined}
             className="input join-item w-full"
           />
           <div
@@ -140,6 +150,8 @@ const TagSection: React.FC<{
                 searchResults.map((tag) => (
                   <li key={tag.id} className="hover:bg-amber-100">
                     <button
+                      type="button"
+                      aria-label={`Add Tag: ${tag.name}`}
                       onClick={(e) => {
                         e.preventDefault();
                         addTag(tag.name);
@@ -147,6 +159,7 @@ const TagSection: React.FC<{
                       className="flex w-full h-full p-1 cursor-pointer items-center space-x-2"
                     >
                       <svg
+                        aria-hidden="true"
                         className="h-[1em] opacity-50"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -180,9 +193,7 @@ const TagSection: React.FC<{
           {searchResults.length > 0 ? "add" : "create"}
         </button>
       </div>
-
       {/* Grouped Tag Buttons */}
-
       {Object.entries(groupedTags).map(([group, tagsInGroup]) => {
         const expanded = expandedGroups[group] || false;
         const visibleTags = expanded
@@ -199,6 +210,7 @@ const TagSection: React.FC<{
                 <button
                   key={tag}
                   type="button"
+                  aria-pressed={tags.includes(tag)}
                   className={`badge badge-outline ${
                     tags.includes(tag || genres[tag])
                       ? "badge-accent"
@@ -212,6 +224,7 @@ const TagSection: React.FC<{
             </div>
             {tagsInGroup.length > LIMIT && (
               <button
+                aria-expanded={expanded}
                 type="button"
                 className=" btn btn-ghost btn-sm mt-2"
                 onClick={() => toggleExpand(group)}
@@ -222,7 +235,6 @@ const TagSection: React.FC<{
           </div>
         );
       })}
-
       {/* Display selected tags */}
       {tags.length > 0 && (
         <div>
@@ -232,16 +244,19 @@ const TagSection: React.FC<{
                 key={tag}
                 className="badge badge-outline badge-lg flex items-center gap-2"
               >
-                {tag}
+                <span>{tag}</span>
                 {lockedTags.includes(tag) ? (
-                  <FaLock />
+                  <span>
+                    <FaLock aria-hidden="true" />
+                  </span>
                 ) : (
                   <button
+                    aria-label={`Remove tag: ${tag}`}
                     type="button"
                     className="text-error font-bold cursor-pointer"
                     onClick={() => removeTag(tag)}
                   >
-                    ×
+                    <span aria-hidden="true">x</span>
                   </button>
                 )}
               </span>
@@ -252,7 +267,7 @@ const TagSection: React.FC<{
             type="button"
             className="btn btn-ghost btn-sm mt-2 block"
           >
-            clear
+            Clear tags
           </button>
         </div>
       )}

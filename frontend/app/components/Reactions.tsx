@@ -97,42 +97,53 @@ const Reactions: React.FC<ReactionProps> = ({
     <>
       <div className="flex gap-2 pr-4 text-sm">
         <div className="flex items-center gap-1">
-          <span>{likes} </span>
+          <span aria-label={`${likes} likes`}>{likes}</span>
           <button
+            type="button"
+            aria-label="Like"
+            aria-pressed={userReaction === "like"}
             className={`btn btn-ghost btn-square size-6 ${
-              userReaction === "like" ? "bg-blue-600 text-blue-600" : ""
+              userReaction === "like" ? "bg-blue-600 text-white" : ""
             }`}
             onClick={() => handleReaction("like")}
           >
-            👍
+            <span aria-hidden="true">👍</span>
           </button>
         </div>
-        <div className="flex items-center gap-1">
-          <span>{dislikes} </span>
 
+        <div className="flex items-center gap-1">
+          <span aria-label={`${dislikes} dislikes`}>{dislikes}</span>
           <button
+            type="button"
+            aria-label="Dislike"
+            aria-pressed={userReaction === "dislike"}
             className={`btn btn-ghost btn-square size-6 ${
-              userReaction === "dislike" ? "bg-error text-red-600" : ""
+              userReaction === "dislike" ? "bg-error text-white" : ""
             }`}
             onClick={() => handleReaction("dislike")}
           >
-            👎
+            <span aria-hidden="true">👎</span>
           </button>
         </div>
-        {/* go to post's og page */}
+
         <div className="flex items-center gap-1">
-          <span>{commentCount} </span>
+          <span aria-label={`${commentCount} comments`}>{commentCount}</span>
+
           {parent_type !== "comment" ? (
-            <Link href={`/${parent_type}/${parent_id}`}>
-              <button className="btn btn-ghost btn-square size-6 ">💬</button>
+            <Link
+              href={`/${parent_type}/${parent_id}`}
+              aria-label={`View ${commentCount} comments`}
+              className="btn btn-ghost btn-square size-6"
+            >
+              <span aria-hidden="true">💬</span>
             </Link>
           ) : (
-            <div>💬</div>
+            <span aria-hidden="true">💬</span>
           )}
         </div>
-        {/* only auth users can leave reactions */}
-        <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
       </div>
+
+      <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
     </>
   );
 };

@@ -71,6 +71,7 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
               {/* Rating */}
               <div
                 className="rating rating-half rating-xs"
+                role="img"
                 aria-label={`Rating: ${review.rating} out of 10`}
               >
                 {[...Array(20)].map((_, index) => {
@@ -82,8 +83,7 @@ const ReviewItem: React.FC<{ review: Review; showCover?: boolean }> = ({
                       className={`mask mask-star-2 bg-green-500 ${
                         index % 2 === 0 ? "mask-half-1" : "mask-half-2"
                       }`}
-                      aria-label={`${rating} star`}
-                      aria-checked={rating === review.rating}
+                      aria-hidden="true"
                     />
                   );
                 })}
