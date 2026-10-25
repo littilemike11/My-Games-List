@@ -60,3 +60,10 @@ export const classicGames = [
     cover: "//images.igdb.com/igdb/image/upload/t_cover_big/co1nmw.jpg",
   },
 ];
+
+export const fallbackFeaturedGame = {
+  name: "Alien Isolation",
+  slug: "alien-isolation",
+  artwork:
+    "//images.igdb.com/igdb/image/upload/t_cover_big/op3ir1tjuhb7gn50rqhm.jpg",
+};

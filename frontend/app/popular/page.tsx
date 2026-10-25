@@ -32,7 +32,7 @@ import EventShowcase from "../components/EventShowcase";
 import TwitchStreamShowcase, {
   TrendingGameHighlight,
 } from "../components/TwitchStreamShowcase";
-import { classicGames } from "../mockData/games";
+import { classicGames, fallbackFeaturedGame } from "../mockData/games";
 
 export const metadata: Metadata = {
   title: "Popular",
@@ -128,7 +128,7 @@ limit 10;`,
     comingGames = gameResponses[3].map(parseGamePreview);
     console.log("popularGames", popularGames);
     // get game hero
-    const featuredGames = gameResponses[1]
+    const featuredGames = gameResponses[0]
       .filter((game: any) => game.artworks?.length)
       .map((game: any) => ({
         slug: game.slug,
@@ -137,7 +137,7 @@ limit 10;`,
       }));
 
     const randomIndex = Math.floor(Math.random() * featuredGames.length);
-    featuredGame = featuredGames[randomIndex];
+    featuredGame = featuredGames[randomIndex] || fallbackFeaturedGame;
 
     // Get Posts
     reviews = reviewsRes;
