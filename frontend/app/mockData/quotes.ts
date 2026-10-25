@@ -1,7 +1,9 @@
-type quote = {
+export type quote = {
   text: string;
-  origin?: string;
+  origin: string;
 };
+
+export type QuoteType = "welcome" | "search" | "error";
 
 const quotes: quote[] = [
   // rule enforcement
@@ -10,7 +12,7 @@ const quotes: quote[] = [
     origin: "Bioshock",
   },
 ];
-export const errorQuotes: quote[] = [
+const errorQuotes: quote[] = [
   {
     text: "Stop right there, criminal scum",
     origin: "The Elder Scrolls",
@@ -25,7 +27,7 @@ export const errorQuotes: quote[] = [
   },
 ];
 
-export const welcomeQuotes: quote[] = [
+const welcomeQuotes: quote[] = [
   // {
   //   text: "Rest now, Traveler",
   //   origin: "",
@@ -92,7 +94,7 @@ export const welcomeQuotes: quote[] = [
   },
 ];
 
-export const searchQuotes: quote[] = [
+const searchQuotes: quote[] = [
   {
     text: "It's dangerous to go alone, take this!",
     origin: "The Legend of Zelda",
@@ -118,6 +120,17 @@ export const searchQuotes: quote[] = [
     origin: "Kingdom Hearts",
   },
 ];
+const quoteCollections: Record<QuoteType, quote[]> = {
+  welcome: welcomeQuotes,
+  search: searchQuotes,
+  error: errorQuotes,
+};
+
+export function getRandomQuote(type: QuoteType) {
+  const quotes = quoteCollections[type];
+  return quotes[Math.floor(Math.random() * quotes.length)];
+}
+
 /*
 // “It’s dangerous to go alone, take this!” – The Legend of Zelda
 // “Praise the sun!” – Dark Souls

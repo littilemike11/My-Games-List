@@ -30,6 +30,8 @@ export const metadata: Metadata = {
     "The Save Room",
     "gaming forums",
     "game posts",
+    "thesaveroom",
+    "gaming news",
   ],
 };
 
@@ -39,7 +41,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="night">
+    // usually is night
+    <html lang="en" data-theme="halloween">
       <GoogleTagManager gtmId="G-QZJ4XTV4BJ" />
 
       <body

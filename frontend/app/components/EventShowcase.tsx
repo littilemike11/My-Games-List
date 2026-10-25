@@ -79,16 +79,15 @@ const EventShowcase: React.FC<{
 
     return { name: "Website", icon: FiExternalLink };
   };
-
-  return (
-    <section>
-      <h2 className="text-xl sm:text-2xl font-semibold mb-4">{title}</h2>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 shadow-2xl">
-        {events.map((event) => (
+  if (events.length == 1) {
+    const event = events[0];
+    return (
+      <>
+        <section>
+          <h2 className="text-xl sm:text-2xl font-semibold mb-4">{title}</h2>
           <article
             key={event.id}
-            className="card bg-base-100 shadow-sm h-full overflow-hidden"
+            className="card card-side bg-base-100 shadow-sm h-full overflow-hidden"
           >
             {/* Logo */}
             <figure className="h-40 sm:h-48 bg-base-200">
@@ -106,7 +105,90 @@ const EventShowcase: React.FC<{
             </figure>
 
             {/* Content */}
-            <div className="card-body flex flex-col">
+            <div className="card-body flex flex-1 flex-col">
+              <h3 className="card-title line-clamp-2">{event.name}</h3>
+              <Paragraph
+                text={event.description || "No description available."}
+                isPost={false}
+              />
+
+              {/* Date */}
+              <time className="text-sm opacity-50 mt-auto pt-4">
+                {event.start_time}
+              </time>
+
+              {/* Actions */}
+              <div className="card-actions justify-between items-center mt-2">
+                <div className="flex flex-wrap gap-2">
+                  {event.live_stream_url ? (
+                    <a
+                      href={event.live_stream_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-primary btn-sm"
+                    >
+                      Go Now
+                    </a>
+                  ) : (
+                    <span className="btn btn-sm btn-disabled">
+                      No Livestream
+                    </span>
+                  )}
+
+                  {event.links?.map((link) => {
+                    const { name, icon: Icon } = parseLink(link);
+
+                    return (
+                      <a
+                        key={link}
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-ghost btn-sm"
+                      >
+                        <Icon size={16} />
+                        {name}
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+      </>
+    );
+  }
+
+  return (
+    <section>
+      <h2 className="text-xl sm:text-2xl font-semibold mb-4">{title}</h2>
+
+      <div
+        className={` grid grid-cols-1 sm:grid-cols-2 ${events.length === 3 && "lg:grid-cols-3"} gap-4 shadow-2xl`}
+      >
+        {events.map((event) => (
+          <article
+            key={event.id}
+            className="card-sm bg-base-100 shadow-sm h-full overflow-hidden"
+          >
+            {/* Logo */}
+            <figure className="h-40 sm:h-48 bg-base-200">
+              {event.event_logo ? (
+                <img
+                  src={event.event_logo}
+                  alt={`${event.name} event logo`}
+                  className="w-full h-full object-contain p-4"
+                />
+              ) : (
+                <div className="flex items-center justify-center w-full h-full">
+                  <span className="opacity-50">No event image</span>
+                </div>
+              )}
+            </figure>
+
+            {/* Content */}
+            <div className="card-body flex-col">
               <h3 className="card-title line-clamp-2">{event.name}</h3>
               <Paragraph
                 text={event.description || "No description available."}

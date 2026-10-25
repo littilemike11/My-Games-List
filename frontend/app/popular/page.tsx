@@ -25,7 +25,6 @@ import DiscussionItem from "../components/DiscussionItem";
 import ListItem from "../components/ListItem";
 import GameHero from "../components/GameHero";
 import Quote from "../components/Quote";
-import { welcomeQuotes } from "../mockData/quotes";
 import WhyUsSection from "../components/WhyUsSection";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -33,11 +32,12 @@ import EventShowcase from "../components/EventShowcase";
 import TwitchStreamShowcase, {
   TrendingGameHighlight,
 } from "../components/TwitchStreamShowcase";
+import { classicGames, fallbackFeaturedGame } from "../mockData/games";
 
 export const metadata: Metadata = {
   title: "Popular",
   description:
-    "Browse the most trending content in the community on The Save Room",
+    "Browse the most trending content in the gaming community on The Save Room",
 };
 
 export default async function Home() {
@@ -45,14 +45,15 @@ export default async function Home() {
   console.log(todayTimestamp);
 
   const gameQueries = [
-    // classic
-    "fields cover.url, name, slug;where version_parent=null & rating > 85 ;sort rating_count desc; limit 10;",
     // trending/popular
-    `
-fields cover.url, name, slug, artworks.url;
-where first_release_date < ${todayTimestamp} & version_parent = null & hypes > 75;
-sort first_release_date desc;
-limit 10;`,
+    `fields cover.url, name, artworks.url, slug;where version_parent=null & first_release_date < ${todayTimestamp} & themes = (19) & rating >= 75 & rating_count >= 5 ; limit 10;`,
+
+    //     `
+    // fields cover.url, name, slug, artworks.url;
+    // where first_release_date < ${todayTimestamp} & version_parent = null & hypes > 75;
+    // sort first_release_date desc;
+    // limit 10;`,
+
     // most antipated
     ` fields cover.url, name, slug, first_release_date, hypes, rating, rating_count;where version_parent=null& first_release_date > ${todayTimestamp} & hypes >= 50 ; sort hypes desc; limit 10;`,
     // recent
@@ -71,7 +72,7 @@ limit 10;`,
   fields name, description, event_logo.*, event_networks.*, start_time, time_zone, live_stream_url; 
   where start_time < ${todayTimestamp};
   sort start_time desc ;
-  limit 4;
+  limit 3;
 `;
 
   const upcomingEventsQuery = `
@@ -95,8 +96,6 @@ limit 10;`,
   let upcomingEvents: EventDetails[] = [];
   let trendingHighlights: TrendingGameHighlight[] = [];
 
-  let randomQuote =
-    welcomeQuotes[Math.floor(Math.random() * welcomeQuotes.length)];
   const heading = (
     <>
       Welcome to <span className="italic">The Save Room</span>
@@ -114,22 +113,22 @@ limit 10;`,
       // trendingStreamRes,
     ] = await Promise.all([
       Promise.all(gameQueries.map((q) => getGames(q))), // array of game arrays
-      getReviews(5, "date"),
-      getDiscussions(5, "date"),
+      getReviews(3, "date"),
+      getDiscussions(3, "date"),
       getLists(4, "date"),
       getEvents(recentEventsQuery),
       getEvents(upcomingEventsQuery),
     ]);
 
     // Parse game groups
-    popularGames = gameResponses[0].map(parseGamePreview);
-    trendingGames = gameResponses[1].map(parseGamePreview);
-    anticipatedGames = gameResponses[2].map(parseGamePreview);
-    recentGames = gameResponses[3].map(parseGamePreview);
-    comingGames = gameResponses[4].map(parseGamePreview);
-
+    popularGames = classicGames;
+    trendingGames = gameResponses[0].map(parseGamePreview);
+    anticipatedGames = gameResponses[1].map(parseGamePreview);
+    recentGames = gameResponses[2].map(parseGamePreview);
+    comingGames = gameResponses[3].map(parseGamePreview);
+    console.log("popularGames", popularGames);
     // get game hero
-    const featuredGames = gameResponses[1]
+    const featuredGames = gameResponses[0]
       .filter((game: any) => game.artworks?.length)
       .map((game: any) => ({
         slug: game.slug,
@@ -138,7 +137,7 @@ limit 10;`,
       }));
 
     const randomIndex = Math.floor(Math.random() * featuredGames.length);
-    featuredGame = featuredGames[randomIndex];
+    featuredGame = featuredGames[randomIndex] || fallbackFeaturedGame;
 
     // Get Posts
     reviews = reviewsRes;
@@ -193,7 +192,7 @@ limit 10;`,
   }
 
   return (
-    <div className="flex flex-col gap-2 items-center ">
+    <div className="grid grid-cols-1 gap-2 ">
       {/* Above the Fold */}
       {featuredGame && (
         <GameHero
@@ -204,7 +203,7 @@ limit 10;`,
           gameSlug={featuredGame.slug}
         />
       )}
-      <Quote content={randomQuote.text} origin={randomQuote.origin} />
+      <Quote type="welcome" />
       <Tabs />
       {/* Above the Fold */}
       {/* shows popular lists and members */}
@@ -214,12 +213,13 @@ limit 10;`,
         games={trendingGames}
       /> */}
       <TwitchStreamShowcase
+        title="It's Spooky Season"
         highlights={trendingHighlights}
-        link={"/games/hype/75/sort/date_desc"}
+        link={"/games/theme/horror/rating/75/rating_count/5/"}
       />
       {/* popular reviews */}
       <section className="mt-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
+        <div className="grid grid-cols-1 gap-4 ">
           {/* Reviews */}
           <div>
             <h2 className="text-xl sm:text-2xl font-semibold mb-6">

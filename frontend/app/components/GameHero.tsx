@@ -1,13 +1,23 @@
 import Link from "next/link";
+import CreateDiscussion from "./CreateDiscussion";
 
 const GameHero: React.FC<{
   bgImage: string;
   heading: React.ReactNode | string;
-  subHeading: string;
+  subHeading?: string;
   gameName?: string;
   gameSlug?: string;
   CTA?: boolean;
-}> = ({ bgImage, heading, subHeading, gameName, gameSlug, CTA = true }) => {
+  isUser?: boolean;
+}> = ({
+  bgImage,
+  heading,
+  subHeading,
+  gameName,
+  gameSlug,
+  CTA = true,
+  isUser = false,
+}) => {
   return (
     <>
       {CTA ? (
@@ -67,13 +77,16 @@ const GameHero: React.FC<{
                 {heading}
               </h1>
 
-              <p className="mb-5 text-sm sm:text-lg drop-shadow">
-                {subHeading}
-              </p>
-
-              <Link href="/auth/sign-up" className="btn w-fit btn-primary">
-                Get Started
-              </Link>
+              {subHeading && (
+                <p className="mb-5 text-sm sm:text-lg drop-shadow">
+                  {subHeading}
+                </p>
+              )}
+              {!isUser && (
+                <Link href="/auth/sign-up" className="btn w-fit btn-primary">
+                  Get Started
+                </Link>
+              )}
             </div>
           </div>
         </div>
