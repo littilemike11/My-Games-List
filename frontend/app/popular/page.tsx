@@ -214,7 +214,7 @@ limit 10;`,
         games={trendingGames}
       /> */}
         <TwitchStreamShowcase
-          title="It's Spooky Season"
+          title="Halloween Horrors"
           highlights={trendingHighlights}
           link={"/games/theme/horror/rating/75/rating_count/5/"}
         />
