@@ -42,7 +42,7 @@ export default function RootLayout({
 }>) {
   return (
     // usually is night
-    <html lang="en" data-theme="halloween">
+    <html lang="en" data-theme="night">
       <GoogleTagManager gtmId="G-QZJ4XTV4BJ" />
 
       <body

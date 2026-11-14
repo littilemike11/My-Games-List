@@ -45,14 +45,14 @@ export default async function Home() {
   console.log(todayTimestamp);
 
   const gameQueries = [
+    //  halloween
+    // `fields cover.url, name, artworks.url, slug;where version_parent=null & first_release_date < ${todayTimestamp} & themes = (19) & rating >= 75 & rating_count >= 5 ; limit 10;`,
     // trending/popular
-    `fields cover.url, name, artworks.url, slug;where version_parent=null & first_release_date < ${todayTimestamp} & themes = (19) & rating >= 75 & rating_count >= 5 ; limit 10;`,
-
-    //     `
-    // fields cover.url, name, slug, artworks.url;
-    // where first_release_date < ${todayTimestamp} & version_parent = null & hypes > 75;
-    // sort first_release_date desc;
-    // limit 10;`,
+    `
+    fields cover.url, name, slug, artworks.url;
+    where first_release_date < ${todayTimestamp} & version_parent = null & hypes > 75;
+    sort first_release_date desc;
+    limit 10;`,
 
     // most antipated
     ` fields cover.url, name, slug, first_release_date, hypes, rating, rating_count;where version_parent=null& first_release_date > ${todayTimestamp} & hypes >= 50 ; sort hypes desc; limit 10;`,
@@ -214,7 +214,7 @@ limit 10;`,
         games={trendingGames}
       /> */}
         <TwitchStreamShowcase
-          title="Halloween Horrors"
+          title="What's the Meta?"
           highlights={trendingHighlights}
           link={"/games/theme/horror/rating/75/rating_count/5/"}
         />
