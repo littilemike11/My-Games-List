@@ -212,11 +212,12 @@ limit 10;`,
         title="What's the Meta?"
         link="/games/hype/75/sort/date_desc"
         games={trendingGames}
+        // /games/theme/horror/rating/75/rating_count/5/
       /> */}
         <TwitchStreamShowcase
           title="What's the Meta?"
           highlights={trendingHighlights}
-          link={"/games/theme/horror/rating/75/rating_count/5/"}
+          link={"/games/hype/75/sort/date_desc"}
         />
         {/* popular reviews */}
         <section className="mt-4">
